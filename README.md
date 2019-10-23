@@ -1,7 +1,7 @@
 # Database Management Term Project
 By Devin Hopkins and Tristan Hess
 
-# Setup
+# Local Setup
 If you want to run this software locally, you will need to download a few things first.
 
 I am using XAMPP, which can be downloaded at this site:
