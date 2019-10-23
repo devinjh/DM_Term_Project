@@ -1,3 +1,2 @@
-# DM_Term_Project
-Term Project for Database Management class.
-#Test
+# Database Management Term Project
+By Devin Hopkins and Tristan Hess
