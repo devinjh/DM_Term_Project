@@ -179,33 +179,13 @@ This is the TLC page for Devin Hopkins and Tristan Hess' database management ter
 	
 	// This function displays the entire table given a table name
 	function displayTable($table_name)
-	{
-		// Connecting to the remote MySQL and verifying that we do
-		$db = mysqli_connect("remotemysql.com:3306", "ITt7W4LVtm", "2RdcJaMtQp");
-		if (!$db)
-		{
-			print "<p>Error - could not connect to MySQL.</p>";
-			exit;
-		}
-		
-		// Selecting which database we want and verifying that we do
-		$er = mysqli_select_db($db, "ITt7W4LVtm");
-		if (!$er)
-		{
-			print "<p>Error - could not connect to the database.</p>";
-			exit;
-		}
-		
+	{		
 		// Getting all the information from the Person table and verifying that we do
-		$person_query = "SELECT * FROM " . $table_name;
-		$result = mysqli_query($db, $person_query);
-		if (!$result)
-		{
-			print "<p>Error - the query could not be executed.</p>";
-			$error = mysqli_error($db);
-			print "<p>" . $error . "</p>";
-			exit;
-		}
+		$query = "SELECT * FROM " . $table_name;
+		
+		// Getting the result of the query
+		$result = performQuery($query);
+		// The query is already checked for an error in performQuery(), so we don't need to check it again (I think)
 		
 		// This gets the array of the first row of data in the table
 		$row = mysqli_fetch_array($result);
@@ -221,6 +201,7 @@ This is the TLC page for Devin Hopkins and Tristan Hess' database management ter
 		
 		// Starting the first row of the table
 		print "<tr align = 'center'>";
+		
 		// Looping through and displaying all of the column keys
 		for ($index = 0; $index < $num_fields; $index++)
 		{
@@ -229,6 +210,7 @@ This is the TLC page for Devin Hopkins and Tristan Hess' database management ter
 			// Using the + 1 is required because the first index is the integer, and the index following it is the column key
 			print "<th>" . $keys[2 * $index + 1] . "</th>";
 		}
+		
 		// Ending the row of column headers
 		print "</tr>";
 		
@@ -259,9 +241,6 @@ This is the TLC page for Devin Hopkins and Tristan Hess' database management ter
 		
 		// Ending the table
 		print "</table>";
-		
-		// Closing the database connection
-		mysqli_close($db);
 	}
 	
 	// Determines the operation being performed and performs it
@@ -331,7 +310,36 @@ This is the TLC page for Devin Hopkins and Tristan Hess' database management ter
 	
 	function performQuery($query)
 	{
-		// to do
+		// Connecting to the remote MySQL and verifying that we do
+		$db = mysqli_connect("remotemysql.com:3306", "ITt7W4LVtm", "2RdcJaMtQp");
+		if (!$db)
+		{
+			print "<p>Error - could not connect to MySQL.</p>";
+			exit;
+		}
+		
+		// Selecting which database we want and verifying that we do
+		$er = mysqli_select_db($db, "ITt7W4LVtm");
+		if (!$er)
+		{
+			print "<p>Error - could not connect to the database.</p>";
+			exit;
+		}
+		
+		$result = mysqli_query($db, $query);
+		if (!$result)
+		{
+			print "<p>Error - the query could not be executed.</p>";
+			$error = mysqli_error($db);
+			print "<p>" . $error . "</p>";
+			exit;
+		}
+		
+		// Closing the database connection
+		mysqli_close($db);
+		
+		// Returning the result
+		return $result;
 	}
 	
 	function getTableNames()
