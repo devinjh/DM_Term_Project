@@ -9,7 +9,11 @@ This is the TLC page for Devin Hopkins and Tristan Hess' database management ter
 		<meta charset = "utf-8">
 		<title> TLC Page </title>
 		<style type = "text/css">
-		td, th, table {border: thin solid black; }
+		
+			td, th, table {
+				border: thin solid black;
+			}
+			
 		</style>
 	</head>
 <body>
@@ -162,97 +166,114 @@ This is the TLC page for Devin Hopkins and Tristan Hess' database management ter
 		TLC Information (TLC)
 	</h1>
 	
-	<!-- Figuring out what operation they would like to perform. -->
-	<p>
-		What operation would you like to do?
-	</p>
-	<input type="radio" name="operation" value="view" checked>View
-	<input type="radio" name="operation" value="insert">Insert
-	<input type="radio" name="operation" value="search">Search
-	<input type="radio" name="operation" value="update">Update
-	<input type="radio" name="operation" value="delete">Delete<br><br>
-
-	<!-- Figuring out which table they would like to perform it on. -->
-	<p>
-		What table would you like to perform that operation on?
-	</p>
-	<?php
-		// Connecting to the remote MySQL and verifying that we do
-		$db = mysqli_connect("remotemysql.com:3306", "ITt7W4LVtm", "2RdcJaMtQp");
-		if (!$db)
-		{
-			print "<p>Error - could not connect to MySQL.</p>";
-			exit;
-		}
-		
-		// Selecting which database we want and verifying that we do
-		$er = mysqli_select_db($db, "ITt7W4LVtm");
-		if (!$er)
-		{
-			print "<p>Error - could not connect to the database.</p>";
-			exit;
-		}
-		
-		$query = "SELECT TABLE_NAME
-				  FROM INFORMATION_SCHEMA.TABLES
-				  WHERE TABLE_TYPE = 'BASE TABLE' AND TABLE_SCHEMA='ITt7W4LVtm'";
-		
-		$result = mysqli_query($db, $query);
-		if (!$result)
-		{
-			print "<p>Error - could not perform the query.</p>";
-			$error = mysqli_error($db);
-			print "<p>" . $error . "</p>";
-			exit;
-		}
-		
-		// This gets the array of the first row of data in the table
-		$row = mysqli_fetch_array($result);
-		
-		// This gets the number of fields in the table
-		$num_fields = mysqli_num_fields($result);
-		
-		// Getting the number of rows from our table
-		$num_rows = mysqli_num_rows($result);
-		// Going through each row and displaying all of the data
-		for ($row_num = 0; $row_num < $num_rows; $row_num++)
-		{
-			// Getting the values, but not the keys, from the row
-			$values = array_values($row);
-			// Looping through the data to display all of the values
-			for ($index = 0; $index < $num_fields; $index++)
+	<form action = <?php print getLocation("TLC.php"); ?>>
+		<!-- Figuring out what operation they would like to perform. -->
+		<p>
+			What operation would you like to do?
+		</p>
+		<input type="radio" name="operation" value="view" checked>View
+		<input type="radio" name="operation" value="insert">Insert
+		<input type="radio" name="operation" value="search">Search
+		<input type="radio" name="operation" value="update">Update
+		<input type="radio" name="operation" value="delete">Delete<br><br>
+	
+		<!-- Figuring out which table they would like to perform it on. -->
+		<p>
+			What table would you like to perform that operation on?
+		</p>
+		<?php
+			// Connecting to the remote MySQL and verifying that we do
+			$db = mysqli_connect("remotemysql.com:3306", "ITt7W4LVtm", "2RdcJaMtQp");
+			if (!$db)
 			{
-				// Displaying all of the values in the rows
-				// Using 2 * $index is required because every other value is an integer with the corresponding column number, and we don't care about that
-				// Using the + 1 is required because the first index is the integer, and the index following it is the value
-				$value = htmlspecialchars($values[2 * $index + 1]);
-				
-				if ($row_num != 0) // Goes here if the radio button is not the first to be added
-				{
-					print "<input type=\"radio\" name=\"table\" value=\"" . $value . "\">" . $value;
-				}
-				else // Goes here if the radio button is the first radio button to be added
-				{
-					print "<input type=\"radio\" name=\"table\" value=\"" . $value . "\" checked>" . $value;
-				}
+				print "<p>Error - could not connect to MySQL.</p>";
+				exit;
 			}
 			
-			// Getting the next row
+			// Selecting which database we want and verifying that we do
+			$er = mysqli_select_db($db, "ITt7W4LVtm");
+			if (!$er)
+			{
+				print "<p>Error - could not connect to the database.</p>";
+				exit;
+			}
+			
+			$query = "SELECT TABLE_NAME
+					FROM INFORMATION_SCHEMA.TABLES
+					WHERE TABLE_TYPE = 'BASE TABLE' AND TABLE_SCHEMA='ITt7W4LVtm'";
+			
+			$result = mysqli_query($db, $query);
+			if (!$result)
+			{
+				print "<p>Error - could not perform the query.</p>";
+				$error = mysqli_error($db);
+				print "<p>" . $error . "</p>";
+				exit;
+			}
+			
+			// This gets the array of the first row of data in the table
 			$row = mysqli_fetch_array($result);
-		}
+			
+			// This gets the number of fields in the table
+			$num_fields = mysqli_num_fields($result);
+			
+			// Getting the number of rows from our table
+			$num_rows = mysqli_num_rows($result);
+			// Going through each row and displaying all of the data
+			for ($row_num = 0; $row_num < $num_rows; $row_num++)
+			{
+				// Getting the values, but not the keys, from the row
+				$values = array_values($row);
+				// Looping through the data to display all of the values
+				for ($index = 0; $index < $num_fields; $index++)
+				{
+					// Displaying all of the values in the rows
+					// Using 2 * $index is required because every other value is an integer with the corresponding column number, and we don't care about that
+					// Using the + 1 is required because the first index is the integer, and the index following it is the value
+					$value = htmlspecialchars($values[2 * $index + 1]);
+					
+					if ($row_num != 0) // Goes here if the radio button is not the first to be added
+					{
+						print "<input type=\"radio\" name=\"table\" value=\"" . $value . "\">" . $value;
+					}
+					else // Goes here if the radio button is the first radio button to be added
+					{
+						print "<input type=\"radio\" name=\"table\" value=\"" . $value . "\" checked>" . $value;
+					}
+				}
+				
+				// Getting the next row
+				$row = mysqli_fetch_array($result);
+			}
+			
+			print "<br><br>";
+			
+			// Closing the database connection
+			mysqli_close($db);
+		?>
 		
-		print "<br><br>";
-		
-		// Closing the database connection
-		mysqli_close($db);
-	?>
+		<!-- Getting all of the necessary input to perform the operation. -->
+		<p>
+			Please enter all of the appropriate information to perform the operation.
+		</p>
+		Extension: <input type="text" name="extension"><br>
+		Type: <input type="text" name="type"><br>
+		Cor: <input type="text" name="cor"><br>
+		Tn: <input type="text" name="tn"><br>
+		Coverpath: <input type="text" name="coverpath"><br>
+		Name: <input type="text" name="name"><br>
+		Cos: <input type="text" name="cos"><br>
+		Port: <input type="text" name="port"><br>
+		Room: <input type="text" name="room"><br>
+		Jack: <input type="text" name="jack"><br>
+		Cable: <input type="text" name="cable"><br>
+		Floor: <input type="text" name="floor"><br>
+		Building: <input type="text" name="building"><br>
+	
+		<input type="submit">
+	</form>
 	
 </center>
-
-<!-- Button to perform the operation. -->
-<?php
-	print "<div id=\"button\" align=\"center\"><a href=" . getLocation("TLC.php") . "><button>Perform Selected Operation</button></a></div>";
-?>
 
 <p></p>
 
