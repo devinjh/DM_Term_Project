@@ -1,0 +1,73 @@
+-- CREATE TABLES --
+-- Created on a schema named 'termproject', keep these queries please :) --
+CREATE TABLE `termproject`.`akron` (
+  `extension` INT(4) NOT NULL,
+  `type` VARCHAR(22) NOT NULL,
+  `cor` INT NULL,
+  `tn` INT NULL,
+  `coverpath` VARCHAR(3) NULL,
+  `name` VARCHAR(30) NULL,
+  `cos` INT NULL,
+  PRIMARY KEY (`extension`));
+
+CREATE TABLE `termproject`.`wayne` (
+  `extension` INT(5) NOT NULL,
+  `type` VARCHAR(29) NOT NULL,
+  `name` VARCHAR(30) NULL,
+  `cor` INT NULL,
+  `tn` INT NULL,
+  `coverpath` VARCHAR(3) NULL,
+  `cos` INT NULL,
+  PRIMARY KEY (`extension`));
+
+CREATE TABLE `termproject`.`export` (
+  `extension` INT(4) NOT NULL,
+  `type` VARCHAR(7) NOT NULL,
+  `port` VARCHAR(7) NULL,
+  `name` VARCHAR(28) NULL,
+  `room` VARCHAR(10) NULL,
+  `jack` VARCHAR(5) NULL,
+  `cable` VARCHAR(5) NULL,
+  `floor` VARCHAR(7) NULL,
+  `building` VARCHAR(8) NULL,
+  PRIMARY KEY (`extension`));
+
+-- INSERT QUESRIES --
+-- ONLY USE THESE TO INSERT ONE TIME!!! --
+-- If you run these again it will duplicate info and its a pain to remove duplicates --
+
+INSERT INTO akron(extension, type, cor, tn, coverpath, name, cos)
+VALUES('6554','station-user','1','1','99','PAYROLL,FRONT DESK','1'),
+('8668','station-user','60','1','99','VOICE,MAIL HELP','0'),
+('5031','station-user','20','1','99','ORR 324 RA','1'),
+('3621','station-user','1','1','','DL ZOOK 34','1'),
+('6638','station-user','1','1','99','BIRD,ROBERT','1'),
+('8634','station-user','1','1','99','WALKER,ANGELA','1'),
+('7703','station-user','1','1','99','MACKEY, BEN','1'),
+('6348','station-user','1','1','','PFOC CONF RM','1'),
+('7949','station-user','1','1','99','DANCE,INST','1'),
+('7394','station-user','1','1','99','STUDENT ACCOUNTS','1');
+
+INSERT INTO wayne(extension, type, name, cor, tn, coverpath, cos)
+VALUES('8710','station-user','FERRIS,AMBER','1','1','802','1'),
+('10875','VDN-extension','AAM for 8935','1','1','','1'),
+('3729','station-user','CTSY,WAYNE GYM NEAR E161','2','1','','1'),
+('8949','station-user','D102','1','1','887','1'),
+('3724','station-user','CTSY,WAYNE NEAR C205','2','1','','1'),
+('8781','station-user','C 113','3','1','','1'),
+('10863','VDN-extension','AAM for 8917','1','1','','1'),
+('3791','phantom-user','','96','1','','1'),
+('3713','station-user','WAYNE SX','1','1','','1'),
+('8969','station-user','CONFERENCE RM 103,UAWC','1','1','','1');
+
+INSERT INTO export (extension, type, port, name, room, jack, cable, floor, building)
+VALUES ('6947','8403B','03A1601','KANG, ENSU','162','','4047','1','FOLK'),	
+('2318','2420','15D1901','FIELDING, LORI','178A','','617','1','LIB'),
+('1585','2500','13B1010','CTSY,EXC 348','348','','66','','EXC'),
+('8208','8403B','03A1608','BUDD, KATE','188','F08-','4056','1','FOLK'),
+('2733','2500','02D0201','EM, SPR 5TH NW STAIR','','','5992','5','SPCR'),
+('7283','MLBOX','X','hold','','','','',''),
+('7856','2420','09D1704','SMITH, ADAM. A','301T','','763','3','SI'),
+('6261','2420','03C0822','PSIHOUNTAKIS. SARAH','183','195-3','8643','1','HCTR'),
+('4986','2500','02D0214','EM, LOT 36 ELEV B2 S','','','3538','','SCPD'),
+('7026','4620','S00076','CONFERENCE ROOM AICN 201H','201 H','12','','','AICN');
