@@ -44,6 +44,122 @@ This is the TLC page for Devin Hopkins and Tristan Hess' database management ter
 
 </script>
 
+<!-- Receiving previous page's information -->
+<?php
+	
+	// Setting all of the variables in case they aren't defined
+	$operation = "DNE";
+	$table = "DNE";
+	$extension = "DNE";
+	$type = "DNE";
+	$cor = "DNE";
+	$tn = "DNE";
+	$coverpath = "DNE";
+	$name = "DNE";
+	$cos = "DNE";
+	$port = "DNE";
+	$room = "DNE";
+	$jack = "DNE";
+	$cable = "DNE";
+	$floor = "DNE";
+	$building = "DNE";
+	
+	// This section goes through and grabs all of the variables that are defined
+	// operation
+	if (isset($_POST["operation"]))
+	{
+		$operation = $_POST["operation"];
+	}
+	// table
+	if (isset($_POST["table"]))
+	{
+		$table = $_POST["table"];
+	}
+	// extension
+	if (isset($_POST["extension"]))
+	{
+		$extension = $_POST["extension"];
+	}
+	// type
+	if (isset($_POST["type"]))
+	{
+		$type = $_POST["type"];
+	}
+	// cor
+	if (isset($_POST["cor"]))
+	{
+		$cor = $_POST["cor"];
+	}
+	// tn
+	if (isset($_POST["tn"]))
+	{
+		$tn = $_POST["tn"];
+	}
+	// coverpath
+	if (isset($_POST["coverpath"]))
+	{
+		$coverpath = $_POST["coverpath"];
+	}
+	// name
+	if (isset($_POST["name"]))
+	{
+		$name = $_POST["name"];
+	}
+	// cos
+	if (isset($_POST["cos"]))
+	{
+		$cos = $_POST["cos"];
+	}
+	// port
+	if (isset($_POST["port"]))
+	{
+		$port = $_POST["port"];
+	}
+	// room
+	if (isset($_POST["room"]))
+	{
+		$room = $_POST["room"];
+	}
+	// jack
+	if (isset($_POST["jack"]))
+	{
+		$jack = $_POST["jack"];
+	}
+	// cable
+	if (isset($_POST["cable"]))
+	{
+		$cable = $_POST["cable"];
+	}
+	// floor
+	if (isset($_POST["floor"]))
+	{
+		$floor = $_POST["floor"];
+	}
+	// building
+	if (isset($_POST["building"]))
+	{
+		$building = $_POST["building"];
+	}
+	
+	// TESTING
+	/*print "<p> operation:" . $operation . ":</p>";
+	print "<p> table:" . $table . ":</p>";
+	print "<p> extension:" . $extension . ":</p>";
+	print "<p> type:" . $type . ":</p>";
+	print "<p> cor:" . $cor . ":</p>";
+	print "<p> tn:" . $tn . ":</p>";
+	print "<p> coverpath:" . $coverpath . ":</p>";
+	print "<p> name:" . $name . ":</p>";
+	print "<p> cos:" . $cos . ":</p>";
+	print "<p> port:" . $port . ":</p>";
+	print "<p> room:" . $room . ":</p>";
+	print "<p> jack:" . $jack . ":</p>";
+	print "<p> cable:" . $cable . ":</p>";
+	print "<p> floor:" . $floor . ":</p>";
+	print "<p> building:" . $building . ":</p>";*/
+	
+?>
+
 <!-- Functions -->
 <?php
 
@@ -147,17 +263,146 @@ This is the TLC page for Devin Hopkins and Tristan Hess' database management ter
 		// Closing the database connection
 		mysqli_close($db);
 	}
+	
+	// Determines the operation being performed and performs it
+	function determineOperation()
+	{
+		// Using the global variable $operation in this function
+		global $operation;
+		
+		// Determining the operation
+		if (strcmp($operation, "DNE") != 0)
+		{
+			if (strcmp($operation, "view") == 0)
+			{
+				print "<p>View</p>";
+				performViewOperation();
+			}
+			else if (strcmp($operation, "insert") == 0)
+			{
+				print "<p>Insert</p>";
+			}
+			else if (strcmp($operation, "search") == 0)
+			{
+				print "<p>Search</p>";
+			}
+			else if (strcmp($operation, "update") == 0)
+			{
+				print "<p>Update</p>";
+			}
+			else if (strcmp($operation, "delete") == 0)
+			{
+				print "<p>Delete</p>";
+			}
+		}
+	}
+	
+	function performViewOperation()
+	{
+		// Using the global variable $table in this function
+		global $table;
+		
+		if (strcmp($table, "DNE") != 0)
+		{
+			$table_names = getTableNames();
+			
+			if (strcmp($table, "all") == 0) // The user wants to see every table
+			{
+				// Displaying each table, one at a time
+				for ($x = 0; $x < count($table_names); $x++)
+				{
+					displayTable($table_names[$x]);
+				}
+			}
+			else // The user wants to see one specific table
+			{
+				// Giong through each table to find the one the user wants
+				for ($x = 0; $x < count($table_names); $x++)
+				{
+					// If it's the table the user wants, display it. Otherwise, keep going
+					if (strcmp($table, $table_names[$x]) == 0)
+					{
+						displayTable($table_names[$x]);
+					}
+				}
+			}
+		}
+	}
+	
+	function performQuery($query)
+	{
+		// to do
+	}
+	
+	function getTableNames()
+	{
+		// Connecting to the remote MySQL and verifying that we do
+		$db = mysqli_connect("remotemysql.com:3306", "ITt7W4LVtm", "2RdcJaMtQp");
+		if (!$db)
+		{
+			print "<p>Error - could not connect to MySQL.</p>";
+			exit;
+		}
+		
+		// Selecting which database we want and verifying that we do
+		$er = mysqli_select_db($db, "ITt7W4LVtm");
+		if (!$er)
+		{
+			print "<p>Error - could not connect to the database.</p>";
+			exit;
+		}
+		
+		$query = "SELECT TABLE_NAME
+				FROM INFORMATION_SCHEMA.TABLES
+				WHERE TABLE_TYPE = 'BASE TABLE' AND TABLE_SCHEMA='ITt7W4LVtm'";
+		
+		$result = mysqli_query($db, $query);
+		if (!$result)
+		{
+			print "<p>Error - could not perform the query.</p>";
+			$error = mysqli_error($db);
+			print "<p>" . $error . "</p>";
+			exit;
+		}
+		
+		// This gets the array of the first row of data in the table
+		$row = mysqli_fetch_array($result);
+		
+		// This gets the number of fields in the table
+		$num_fields = mysqli_num_fields($result);
+		
+		// Getting the number of rows from our table
+		$num_rows = mysqli_num_rows($result);
+		
+		// The array of table names
+		$table_names = array();
+		
+		// Going through each row and displaying all of the data
+		for ($row_num = 0; $row_num < $num_rows; $row_num++)
+		{
+			// Getting the values, but not the keys, from the row
+			$values = array_values($row);
+			// Looping through the data to display all of the values
+			for ($index = 0; $index < $num_fields; $index++)
+			{
+				// Displaying all of the values in the rows
+				// Using 2 * $index is required because every other value is an integer with the corresponding column number, and we don't care about that
+				// Using the + 1 is required because the first index is the integer, and the index following it is the value
+				$value = htmlspecialchars($values[2 * $index + 1]);
+				array_push($table_names, $value);
+			}
+			
+			// Getting the next row
+			$row = mysqli_fetch_array($result);
+		}
+		
+		// Closing the database connection
+		mysqli_close($db);
+		
+		// Returning the array of table names
+		return $table_names;
+	}
 
-?>
-
-<!-- Displaying the tables of "akron", "export", and "wayne" -->
-<?php
-	/*displayTable("akron");
-	print "<p></p>";
-	displayTable("export");
-	print "<p></p>";
-	displayTable("wayne");
-	print "<p></p>";*/
 ?>
 
 <center>
@@ -166,7 +411,12 @@ This is the TLC page for Devin Hopkins and Tristan Hess' database management ter
 		TLC Information (TLC)
 	</h1>
 	
-	<form action = <?php print getLocation("TLC.php"); ?>>
+	<!-- Displaying the changes/information the user wanted. -->
+	<?php
+		determineOperation();
+	?>
+	
+	<form action=<?php print getLocation("TLC.php"); ?> method="post">
 		<!-- Figuring out what operation they would like to perform. -->
 		<p>
 			What operation would you like to do?
@@ -182,74 +432,19 @@ This is the TLC page for Devin Hopkins and Tristan Hess' database management ter
 			What table would you like to perform that operation on?
 		</p>
 		<?php
-			// Connecting to the remote MySQL and verifying that we do
-			$db = mysqli_connect("remotemysql.com:3306", "ITt7W4LVtm", "2RdcJaMtQp");
-			if (!$db)
+			
+			// Displaying the first radio button, making sure it's checked
+			print "<input type=\"radio\" name=\"table\" value=\"all\" checked>All";
+			
+			// Getting the table names
+			$table_names = getTableNames();
+			
+			// Displaying the table names with radio buttons
+			for ($x = 0; $x < count($table_names); $x++)
 			{
-				print "<p>Error - could not connect to MySQL.</p>";
-				exit;
+				print "<input type=\"radio\" name=\"table\" value=\"" . $table_names[$x] . "\">" . $table_names[$x];
 			}
 			
-			// Selecting which database we want and verifying that we do
-			$er = mysqli_select_db($db, "ITt7W4LVtm");
-			if (!$er)
-			{
-				print "<p>Error - could not connect to the database.</p>";
-				exit;
-			}
-			
-			$query = "SELECT TABLE_NAME
-					FROM INFORMATION_SCHEMA.TABLES
-					WHERE TABLE_TYPE = 'BASE TABLE' AND TABLE_SCHEMA='ITt7W4LVtm'";
-			
-			$result = mysqli_query($db, $query);
-			if (!$result)
-			{
-				print "<p>Error - could not perform the query.</p>";
-				$error = mysqli_error($db);
-				print "<p>" . $error . "</p>";
-				exit;
-			}
-			
-			// This gets the array of the first row of data in the table
-			$row = mysqli_fetch_array($result);
-			
-			// This gets the number of fields in the table
-			$num_fields = mysqli_num_fields($result);
-			
-			// Getting the number of rows from our table
-			$num_rows = mysqli_num_rows($result);
-			// Going through each row and displaying all of the data
-			for ($row_num = 0; $row_num < $num_rows; $row_num++)
-			{
-				// Getting the values, but not the keys, from the row
-				$values = array_values($row);
-				// Looping through the data to display all of the values
-				for ($index = 0; $index < $num_fields; $index++)
-				{
-					// Displaying all of the values in the rows
-					// Using 2 * $index is required because every other value is an integer with the corresponding column number, and we don't care about that
-					// Using the + 1 is required because the first index is the integer, and the index following it is the value
-					$value = htmlspecialchars($values[2 * $index + 1]);
-					
-					if ($row_num != 0) // Goes here if the radio button is not the first to be added
-					{
-						print "<input type=\"radio\" name=\"table\" value=\"" . $value . "\">" . $value;
-					}
-					else // Goes here if the radio button is the first radio button to be added
-					{
-						print "<input type=\"radio\" name=\"table\" value=\"" . $value . "\" checked>" . $value;
-					}
-				}
-				
-				// Getting the next row
-				$row = mysqli_fetch_array($result);
-			}
-			
-			print "<br><br>";
-			
-			// Closing the database connection
-			mysqli_close($db);
 		?>
 		
 		<!-- Getting all of the necessary input to perform the operation. -->
