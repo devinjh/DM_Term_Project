@@ -28,7 +28,14 @@ This is the TLC page for Devin Hopkins and Tristan Hess' database management ter
 			helpPage.close();
 		}
 		
-		// To do
+		// WRITE WHAT WE WANT THE HELP WINDOW TO DISPLAY HERE, STILL NEED TO DO
+		
+		// This is opening the new window with all of the differences added
+		helpWindow = window.open("", "Help Page", "width=2000,height=500");
+		helpWindow.document.write(helpPage);
+		
+		// This resets the page variable, and thus resets the window
+		helpPage = "<h1> Help Page </h1>";
 	}
 
 </script>
@@ -57,7 +64,7 @@ This is the TLC page for Devin Hopkins and Tristan Hess' database management ter
 		$db = mysqli_connect("remotemysql.com:3306", "ITt7W4LVtm", "2RdcJaMtQp");
 		if (!$db)
 		{
-			print "Error - could not connect to MySQL.";
+			print "<p>Error - could not connect to MySQL.</p>";
 			exit;
 		}
 		
@@ -74,7 +81,7 @@ This is the TLC page for Devin Hopkins and Tristan Hess' database management ter
 		$result = mysqli_query($db, $person_query);
 		if (!$result)
 		{
-			print "Error - the query could not be executed.";
+			print "<p>Error - the query could not be executed.</p>";
 			$error = mysqli_error($db);
 			print "<p>" . $error . "</p>";
 			exit;
@@ -141,17 +148,113 @@ This is the TLC page for Devin Hopkins and Tristan Hess' database management ter
 
 <!-- Displaying the tables of "akron", "export", and "wayne" -->
 <?php
-	displayTable("akron");
+	/*displayTable("akron");
 	print "<p></p>";
 	displayTable("export");
 	print "<p></p>";
 	displayTable("wayne");
-	print "<p></p>";
+	print "<p></p>";*/
 ?>
 
-<center><h1>
-	TLC Information (TLC)
-</h1></center>
+<center>
+
+	<h1>
+		TLC Information (TLC)
+	</h1>
+	
+	<!-- Figuring out what operation they would like to perform. -->
+	<p>
+		What operation would you like to do?
+	</p>
+	<input type="radio" name="operation" value="view" checked>View
+	<input type="radio" name="operation" value="insert">Insert
+	<input type="radio" name="operation" value="search">Search
+	<input type="radio" name="operation" value="update">Update
+	<input type="radio" name="operation" value="delete">Delete<br><br>
+
+	<!-- Figuring out which table they would like to perform it on. -->
+	<p>
+		What table would you like to perform that operation on?
+	</p>
+	<?php
+		// Connecting to the remote MySQL and verifying that we do
+		$db = mysqli_connect("remotemysql.com:3306", "ITt7W4LVtm", "2RdcJaMtQp");
+		if (!$db)
+		{
+			print "<p>Error - could not connect to MySQL.</p>";
+			exit;
+		}
+		
+		// Selecting which database we want and verifying that we do
+		$er = mysqli_select_db($db, "ITt7W4LVtm");
+		if (!$er)
+		{
+			print "<p>Error - could not connect to the database.</p>";
+			exit;
+		}
+		
+		$query = "SELECT TABLE_NAME
+				  FROM INFORMATION_SCHEMA.TABLES
+				  WHERE TABLE_TYPE = 'BASE TABLE' AND TABLE_SCHEMA='ITt7W4LVtm'";
+		
+		$result = mysqli_query($db, $query);
+		if (!$result)
+		{
+			print "<p>Error - could not perform the query.</p>";
+			$error = mysqli_error($db);
+			print "<p>" . $error . "</p>";
+			exit;
+		}
+		
+		// This gets the array of the first row of data in the table
+		$row = mysqli_fetch_array($result);
+		
+		// This gets the number of fields in the table
+		$num_fields = mysqli_num_fields($result);
+		
+		// Getting the number of rows from our table
+		$num_rows = mysqli_num_rows($result);
+		// Going through each row and displaying all of the data
+		for ($row_num = 0; $row_num < $num_rows; $row_num++)
+		{
+			// Getting the values, but not the keys, from the row
+			$values = array_values($row);
+			// Looping through the data to display all of the values
+			for ($index = 0; $index < $num_fields; $index++)
+			{
+				// Displaying all of the values in the rows
+				// Using 2 * $index is required because every other value is an integer with the corresponding column number, and we don't care about that
+				// Using the + 1 is required because the first index is the integer, and the index following it is the value
+				$value = htmlspecialchars($values[2 * $index + 1]);
+				
+				if ($row_num != 0) // Goes here if the radio button is not the first to be added
+				{
+					print "<input type=\"radio\" name=\"table\" value=\"" . $value . "\">" . $value;
+				}
+				else // Goes here if the radio button is the first radio button to be added
+				{
+					print "<input type=\"radio\" name=\"table\" value=\"" . $value . "\" checked>" . $value;
+				}
+			}
+			
+			// Getting the next row
+			$row = mysqli_fetch_array($result);
+		}
+		
+		print "<br><br>";
+		
+		// Closing the database connection
+		mysqli_close($db);
+	?>
+	
+</center>
+
+<!-- Button to perform the operation. -->
+<?php
+	print "<div id=\"button\" align=\"center\"><a href=" . getLocation("TLC.php") . "><button>Perform Selected Operation</button></a></div>";
+?>
+
+<p></p>
 
 <!-- Button to go the TLC page -->
 <?php
