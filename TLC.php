@@ -64,7 +64,7 @@ This is the TLC page for Devin Hopkins and Tristan Hess' database management ter
 	$floor = "DNE";
 	$building = "DNE";
 	
-	// This section goes through and grabs all of the variables that are defined
+	// This section goes through and grabs all of the variables that are defined (not including the updated ones)
 	// operation
 	if (isset($_POST["operation"]))
 	{
@@ -158,6 +158,88 @@ This is the TLC page for Devin Hopkins and Tristan Hess' database management ter
 	print "<p> floor:" . $floor . ":</p>";
 	print "<p> building:" . $building . ":</p>";*/
 	
+	// Setting all of the variables in case they aren't defined
+	$extension_update = "DNE";
+	$type_update = "DNE";
+	$cor_update = "DNE";
+	$tn_update = "DNE";
+	$coverpath_update = "DNE";
+	$name_update = "DNE";
+	$cos_update = "DNE";
+	$port_update = "DNE";
+	$room_update = "DNE";
+	$jack_update = "DNE";
+	$cable_update = "DNE";
+	$floor_update = "DNE";
+	$building_update = "DNE";
+	
+	// This section goes through and grabs all of the variables that are defined (only the update ones)
+	// extension_update
+	if (isset($_POST["extension_update"]))
+	{
+		$extension_update = $_POST["extension_update"];
+	}
+	// type_update
+	if (isset($_POST["type_update"]))
+	{
+		$type_update = $_POST["type_update"];
+	}
+	// cor_update
+	if (isset($_POST["cor_update"]))
+	{
+		$cor_update = $_POST["cor_update"];
+	}
+	// tn_update
+	if (isset($_POST["tn_update"]))
+	{
+		$tn_update = $_POST["tn_update"];
+	}
+	// coverpath_update
+	if (isset($_POST["coverpath_update"]))
+	{
+		$coverpath_update = $_POST["coverpath_update"];
+	}
+	// name_update
+	if (isset($_POST["name_update"]))
+	{
+		$name_update = $_POST["name_update"];
+	}
+	// cos_update
+	if (isset($_POST["cos_update"]))
+	{
+		$cos_update = $_POST["cos_update"];
+	}
+	// port_update
+	if (isset($_POST["port_update"]))
+	{
+		$port_update = $_POST["port_update"];
+	}
+	// room_update
+	if (isset($_POST["room_update"]))
+	{
+		$room_update = $_POST["room_update"];
+	}
+	// jack_update
+	if (isset($_POST["jack_update"]))
+	{
+		$jack_update = $_POST["jack_update"];
+	}
+	// cable_update
+	if (isset($_POST["cable_update"]))
+	{
+		$cable_update = $_POST["cable_update"];
+	}
+	// floor_update
+	if (isset($_POST["floor_update"]))
+	{
+		$floor_update = $_POST["floor_update"];
+	}
+	// building_update
+	if (isset($_POST["building_update"]))
+	{
+		$building_update = $_POST["building_update"];
+	}
+	
 ?>
 
 <!-- Functions -->
@@ -208,6 +290,9 @@ This is the TLC page for Devin Hopkins and Tristan Hess' database management ter
 		// If the result of the query was nothing, then nothing needs to be displayed
 		if (!empty($row))
 		{
+			// Display the table name
+			print "<center><p>" . $table_name . "</p></center>";
+			
 			// This gets all of the keys, but not the data, from the row
 			$keys = array_keys($row);
 		
@@ -338,7 +423,7 @@ This is the TLC page for Devin Hopkins and Tristan Hess' database management ter
 				$query = $query . $table_names[$x];
 				
 				// Construct the specific query needed
-				$query = constructSpecificViewOrDeleteQuery($table_names[$x], $query);
+				$query = constructSpecificViewOrDeleteOrUpdateQuery($table_names[$x], $query);
 				
 				// Getting the results of the query
 				displayOrModifyTable($table, $query);
@@ -353,7 +438,7 @@ This is the TLC page for Devin Hopkins and Tristan Hess' database management ter
 			$query = $query . $table;
 			
 			// Construct the specific query needed
-			$query = constructSpecificViewOrDeleteQuery($table, $query);
+			$query = constructSpecificViewOrDeleteOrUpdateQuery($table, $query);
 			
 			// Getting the results of the query
 			displayOrModifyTable($table, $query);
@@ -379,7 +464,7 @@ This is the TLC page for Devin Hopkins and Tristan Hess' database management ter
 				$query = $query . $table_names[$x];
 				
 				// Construct the specific query needed
-				$query = constructSpecificViewOrDeleteQuery($table_names[$x], $query);
+				$query = constructSpecificViewOrDeleteOrUpdateQuery($table_names[$x], $query);
 				
 				// Getting the results of the query
 				displayOrModifyTable($table, $query);
@@ -394,7 +479,7 @@ This is the TLC page for Devin Hopkins and Tristan Hess' database management ter
 			$query = $query . $table;
 			
 			// Construct the specific query needed
-			$query = constructSpecificViewOrDeleteQuery($table, $query);
+			$query = constructSpecificViewOrDeleteOrUpdateQuery($table, $query);
 			
 			// Getting the results of the query
 			displayOrModifyTable($table, $query);
@@ -403,7 +488,59 @@ This is the TLC page for Devin Hopkins and Tristan Hess' database management ter
 	
 	function performUpdateOperation()
 	{
-		//
+		// Using the global variable table
+		global $table;
+		
+		$query = "UPDATE ";
+		
+		if (strcmp($table, "all") == 0) // They are updating something from every table
+		{
+			// Getting all of the table names
+			$table_names = getTableNames();
+			
+			// Searching and displaying the results of each table, one at a time
+			for ($x = 0; $x < count($table_names); $x++)
+			{
+				// Honing the query in on the correct table
+				$query = $query . $table_names[$x];
+				
+				// Construct the SET portion of the query
+				$query = constructSetPortionOfUpdateQuery($table_names[$x], $query);
+				
+				// Construct the specific query needed
+				$query = constructSpecificViewOrDeleteOrUpdateQuery($table_names[$x], $query);
+				
+				if (strpos($query, "FALSE"))
+				{
+					print "<p> You tried to update something that wasn't in the table " . $table_names[$x] . ". Try again. </p>";
+				}
+				
+				// Getting the results of the query
+				displayOrModifyTable($table_names[$x], $query);
+				
+				// Reset the query
+				$query = "UPDATE ";
+			}
+		}
+		else // They are updating from one table
+		{
+			// Honing the query in on the correct table
+			$query = $query . $table;
+			
+			// Construct the SET portion of the query
+			$query = constructSetPortionOfUpdateQuery($table, $query);
+			
+			// Construct the specific query needed
+			$query = constructSpecificViewOrDeleteOrUpdateQuery($table, $query);
+			
+			if (strpos($query, "FALSE"))
+			{
+				print "<p> You tried to update something that wasn't in the table " . $table . ". Try again. </p>";
+			}
+			
+			// Getting the results of the query
+			displayOrModifyTable($table, $query);
+		}
 	}
 	
 	function performViewOperation()
@@ -427,10 +564,10 @@ This is the TLC page for Devin Hopkins and Tristan Hess' database management ter
 					$query = $query . $table_names[$x];
 					
 					// Construct the specific query needed
-					$query = constructSpecificViewOrDeleteQuery($table_names[$x], $query);
+					$query = constructSpecificViewOrDeleteOrUpdateQuery($table_names[$x], $query);
 					
 					// Getting the results of the query
-					displayOrModifyTable($table, $query);
+					displayOrModifyTable($table_names[$x], $query);
 					
 					// Resetting $query
 					$query = "SELECT * FROM ";
@@ -448,14 +585,242 @@ This is the TLC page for Devin Hopkins and Tristan Hess' database management ter
 						$query = $query . $table_names[$x];
 						
 						// Construct the specific query needed
-						$query = constructSpecificViewOrDeleteQuery($table_names[$x], $query);
+						$query = constructSpecificViewOrDeleteOrUpdateQuery($table_names[$x], $query);
 						
 						// Getting the results of the query
-						displayOrModifyTable($table, $query);
+						displayOrModifyTable($table_names[$x], $query);
 					}
 				}
 			}
 		}
+	}
+	
+	function constructSetPortionOfUpdateQuery($table, $query)
+	{
+		// Using all of these global variables
+		global $extension_update, $type_update, $cor_update, $tn_update, $coverpath_update, $name_update, $cos_update, $port_update, $room_update, $jack_update, $cable_update, $floor_update, $building_update;
+		
+		// Making sure we know when we've already done one addition to the query
+		$first_addition = false;
+		
+		// The next part of the query
+		$query = $query . " SET ";
+		
+		// extension_update
+		if (isModified($extension_update))
+		{
+			$first_addition = true;
+			$query = $query . "extension = " . $extension_update;
+		}
+		
+		// type_update
+		if(isModified($type_update))
+		{
+			if ($first_addition) // It's not the first addition
+			{
+				$query = $query . " AND type = \"" . $type_update . "\"";
+			}
+			else // It is the first addition
+			{
+				$first_addition = true;
+				$query = $query . "type = \"" . $type_update . "\"";
+			}
+		}
+		
+		// cor_update
+		if(isModified($cor_update) && strcmp($the_table, "export") != 0)
+		{
+			if ($first_addition) // It's not the first addition
+			{
+				$query = $query . " AND cor = " . $cor_update;
+			}
+			else // It is the first addition
+			{
+				$first_addition = true;
+				$query = $query . "cor = " . $cor_update;
+			}
+		}
+		else if (isModified($cor_update) && strcmp($the_table, "export") == 0) // If the issue was that the table doesn't contain the column searched for, the query is tanked
+		{
+			$query = $query . " FAKE ";
+		}
+		
+		// tn_update
+		if(isModified($tn_update) && strcmp($the_table, "export") != 0)
+		{
+			if ($first_addition) // It's not the first addition
+			{
+				$query = $query . " AND tn = " . $tn_update;
+			}
+			else // It is the first addition
+			{
+				$first_addition = true;
+				$query = $query . "tn = " . $tn_update;
+			}
+		}
+		else if (isModified($tn_update) && strcmp($the_table, "export") == 0) // If the issue was that the table doesn't contain the column searched for, the query is tanked
+		{
+			$query = $query . " FAKE ";
+		}
+		
+		// coverpath_update
+		if(isModified($coverpath_update) && strcmp($the_table, "export") != 0)
+		{
+			if ($first_addition) // It's not the first addition
+			{
+				$query = $query . " AND coverpath = \"" . $coverpath_update . "\"";
+			}
+			else // It is the first addition
+			{
+				$first_addition = true;
+				$query = $query . "coverpath = \"" . $coverpath_update . "\"";
+			}
+		}
+		else if (isModified($coverpath_update) && strcmp($the_table, "export") == 0) // If the issue was that the table doesn't contain the column searched for, the query is tanked
+		{
+			$query = $query . " FAKE ";
+		}
+		
+		// name_update
+		if(isModified($name_update))
+		{
+			if ($first_addition) // It's not the first addition
+			{
+				$query = $query . " AND name = \"" . $name_update . "\"";
+			}
+			else // It is the first addition
+			{
+				$first_addition = true;
+				$query = $query . "name = \"" . $name_update . "\"";
+			}
+		}
+		
+		// cos_update
+		if(isModified($cos_update) && strcmp($the_table, "export") != 0)
+		{
+			if ($first_addition) // It's not the first addition
+			{
+				$query = $query . " AND cos = " . $cos_update;
+			}
+			else // It is the first addition
+			{
+				$first_addition = true;
+				$query = $query . "cos = " . $cos_update;
+			}
+		}
+		else if (isModified($cos_update) && strcmp($the_table, "export") == 0) // If the issue was that the table doesn't contain the column searched for, the query is tanked
+		{
+			$query = $query . " FAKE ";
+		}
+		
+		// port_update
+		if(isModified($port_update) && strcmp($the_table, "akron") != 0 && strcmp($the_table, "wayne") != 0)
+		{
+			if ($first_addition) // It's not the first addition
+			{
+				$query = $query . " AND port = \"" . $port_update . "\"";
+			}
+			else // It is the first addition
+			{
+				$first_addition = true;
+				$query = $query . "port = \"" . $port_update . "\"";
+			}
+		}
+		else if (isModified($port_update) && (strcmp($the_table, "akron") == 0 || strcmp($the_table, "wayne") == 0)) // If the issue was that the table doesn't contain the column searched for, the query is tanked
+		{
+			$query = $query . " FAKE ";
+		}
+		
+		// room_update
+		if(isModified($room_update) && strcmp($the_table, "akron") != 0 && strcmp($the_table, "wayne") != 0)
+		{
+			if ($first_addition) // It's not the first addition
+			{
+				$query = $query . " AND room = \"" . $room_update . "\"";
+			}
+			else // It is the first addition
+			{
+				$first_addition = true;
+				$query = $query . "room = \"" . $room_update . "\"";
+			}
+		}
+		else if (isModified($room_update) && (strcmp($the_table, "akron") == 0 || strcmp($the_table, "wayne") == 0)) // If the issue was that the table doesn't contain the column searched for, the query is tanked
+		{
+			$query = $query . " FAKE ";
+		}
+		
+		// jack_update
+		if(isModified($jack_update) && strcmp($the_table, "akron") != 0 && strcmp($the_table, "wayne") != 0)
+		{
+			if ($first_addition) // It's not the first addition
+			{
+				$query = $query . " AND jack = \"" . $jack_update . "\"";
+			}
+			else // It is the first addition
+			{
+				$first_addition = true;
+				$query = $query . "jack = \"" . $jack_update . "\"";
+			}
+		}
+		else if (isModified($jack_update) && (strcmp($the_table, "akron") == 0 || strcmp($the_table, "wayne") == 0)) // If the issue was that the table doesn't contain the column searched for, the query is tanked
+		{
+			$query = $query . " FAKE ";
+		}
+		
+		// cable_update
+		if(isModified($cable_update) && strcmp($the_table, "akron") != 0 && strcmp($the_table, "wayne") != 0)
+		{
+			if ($first_addition) // It's not the first addition
+			{
+				$query = $query . " AND cable = \"" . $cable_update . "\"";
+			}
+			else // It is the first addition
+			{
+				$first_addition = true;
+				$query = $query . "cable = \"" . $cable_update . "\"";
+			}
+		}
+		else if (isModified($cable_update) && (strcmp($the_table, "akron") == 0 || strcmp($the_table, "wayne") == 0)) // If the issue was that the table doesn't contain the column searched for, the query is tanked
+		{
+			$query = $query . " FAKE ";
+		}
+		
+		// floor_update
+		if(isModified($floor_update) && strcmp($the_table, "akron") != 0 && strcmp($the_table, "wayne") != 0)
+		{
+			if ($first_addition) // It's not the first addition
+			{
+				$query = $query . " AND floor = \"" . $floor_update . "\"";
+			}
+			else // It is the first addition
+			{
+				$first_addition = true;
+				$query = $query . "floor = \"" . $floor_update . "\"";
+			}
+		}
+		else if (isModified($floor_update) && (strcmp($the_table, "akron") == 0 || strcmp($the_table, "wayne") == 0)) // If the issue was that the table doesn't contain the column searched for, the query is tanked
+		{
+			$query = $query . " FAKE ";
+		}
+		
+		// building_update
+		if(isModified($building_update) && strcmp($the_table, "akron") != 0 && strcmp($the_table, "wayne") != 0)
+		{
+			if ($first_addition) // It's not the first addition
+			{
+				$query = $query . " AND building = \"" . $building_update . "\"";
+			}
+			else // It is the first addition
+			{
+				$query = $query . "building = \"" . $building_update . "\"";
+			}
+		}
+		else if (isModified($building_update) && (strcmp($the_table, "akron") == 0 || strcmp($the_table, "wayne") == 0)) // If the issue was that the table doesn't contain the column searched for, the query is tanked
+		{
+			$query = $query . " FAKE ";
+		}
+		
+		return $query;
 	}
 	
 	function constructSpecificInsertQuery($table)
@@ -721,7 +1086,7 @@ This is the TLC page for Devin Hopkins and Tristan Hess' database management ter
 		return ($query_part_one . $query_part_two);
 	}
 	
-	function constructSpecificViewOrDeleteQuery($the_table, $query)
+	function constructSpecificViewOrDeleteOrUpdateQuery($the_table, $query)
 	{
 		// Using all of these global variables
 		global $extension, $type, $cor, $tn, $coverpath, $name, $cos, $port, $room, $jack, $cable, $floor, $building;
@@ -1190,21 +1555,26 @@ This is the TLC page for Devin Hopkins and Tristan Hess' database management ter
 		
 		<!-- Getting all of the necessary input to perform the operation. -->
 		<p>
-			Please enter all of the appropriate information to perform the operation.
+			Please enter all of the appropriate information to perform the operation.<br><br>
+			NOTE: Use the right side only for values that will be updated!<br>
+			Ex: If you wish to change the name of every station-user type, use<br>
+			the right side to enter the new name and use the left side to enter the<br>
+			station-user type you are searching for. 
 		</p>
-		Extension: <input type="text" name="extension"><br>
-		Type: <input type="text" name="type"><br>
-		Cor: <input type="text" name="cor"><br>
-		Tn: <input type="text" name="tn"><br>
-		Coverpath: <input type="text" name="coverpath"><br>
-		Name: <input type="text" name="name"><br>
-		Cos: <input type="text" name="cos"><br>
-		Port: <input type="text" name="port"><br>
-		Room: <input type="text" name="room"><br>
-		Jack: <input type="text" name="jack"><br>
-		Cable: <input type="text" name="cable"><br>
-		Floor: <input type="text" name="floor"><br>
-		Building: <input type="text" name="building"><br>
+		
+		Extension: <input type="text" name="extension"> - <input type="text" name="extension_update"><br>
+		Type: <input type="text" name="type"> - <input type="text" name="type_update"><br>
+		Cor: <input type="text" name="cor"> - <input type="text" name="cor_update"><br>
+		Tn: <input type="text" name="tn"> - <input type="text" name="tn_update"><br>
+		Coverpath: <input type="text" name="coverpath"> - <input type="text" name="coverpath_update"><br>
+		Name: <input type="text" name="name"> - <input type="text" name="name_update"><br>
+		Cos: <input type="text" name="cos"> - <input type="text" name="cos_update"><br>
+		Port: <input type="text" name="port"> - <input type="text" name="port_update"><br>
+		Room: <input type="text" name="room"> - <input type="text" name="room_update"><br>
+		Jack: <input type="text" name="jack"> - <input type="text" name="jack_update"><br>
+		Cable: <input type="text" name="cable"> - <input type="text" name="cable_update"><br>
+		Floor: <input type="text" name="floor"> - <input type="text" name="floor_update"><br>
+		Building: <input type="text" name="building"> - <input type="text" name="building_update"><br>
 	
 		<br><input type="submit">
 	</form>
