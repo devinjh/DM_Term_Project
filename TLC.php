@@ -739,7 +739,7 @@ This is the TLC page for Devin Hopkins and Tristan Hess' database management ter
 	function isModified($variable)
 	{
 		// If the string is equal to either of these, it hasn't been modified
-		if (strcmp($variable, "DNE") == 0 && strcmp($variable, "") == 0)
+		if (strcmp($variable, "DNE") == 0 || strcmp($variable, "") == 0)
 		{
 			return false;
 		}
