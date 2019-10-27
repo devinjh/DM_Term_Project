@@ -294,7 +294,7 @@ This is the TLC page for Devin Hopkins and Tristan Hess' database management ter
 			}
 			else if (strcmp($operation, "delete") == 0)
 			{
-				print "<p>Delete</p>";
+				// This function works
 				performDeleteOperation();
 			}
 		}
@@ -338,7 +338,7 @@ This is the TLC page for Devin Hopkins and Tristan Hess' database management ter
 				$query = $query . $table_names[$x];
 				
 				// Construct the specific query needed
-				$query = constructSpecificViewQuery($table_names[$x], $query);
+				$query = constructSpecificViewOrDeleteQuery($table_names[$x], $query);
 				
 				// Getting the results of the query
 				displayOrModifyTable($table, $query);
@@ -353,7 +353,7 @@ This is the TLC page for Devin Hopkins and Tristan Hess' database management ter
 			$query = $query . $table;
 			
 			// Construct the specific query needed
-			$query = constructSpecificViewQuery($table, $query);
+			$query = constructSpecificViewOrDeleteQuery($table, $query);
 			
 			// Getting the results of the query
 			displayOrModifyTable($table, $query);
@@ -362,7 +362,43 @@ This is the TLC page for Devin Hopkins and Tristan Hess' database management ter
 	
 	function performDeleteOperation()
 	{
-		//
+		// Using the global variable table
+		global $table;
+		
+		$query = "DELETE FROM ";
+		
+		if (strcmp($table, "all") == 0) // They are deleting something from every table
+		{
+			// Getting all of the table names
+			$table_names = getTableNames();
+			
+			// Searching and displaying the results of each table, one at a time
+			for ($x = 0; $x < count($table_names); $x++)
+			{
+				// Honing the query in on a specific table
+				$query = $query . $table_names[$x];
+				
+				// Construct the specific query needed
+				$query = constructSpecificViewOrDeleteQuery($table_names[$x], $query);
+				
+				// Getting the results of the query
+				displayOrModifyTable($table, $query);
+				
+				// Resetting $query
+				$query = "DELETE FROM ";
+			}
+		}
+		else // They are deleting from one table
+		{
+			// Honing the query in on the correct table
+			$query = $query . $table;
+			
+			// Construct the specific query needed
+			$query = constructSpecificViewOrDeleteQuery($table, $query);
+			
+			// Getting the results of the query
+			displayOrModifyTable($table, $query);
+		}
 	}
 	
 	function performUpdateOperation()
@@ -375,7 +411,10 @@ This is the TLC page for Devin Hopkins and Tristan Hess' database management ter
 		// Using the global variable $table in this function
 		global $table;
 		
-		if (strcmp($table, "DNE") != 0)
+		$query = "SELECT * FROM ";
+		
+		// Making sure the $table variable has been modified
+		if (isModified($table))
 		{
 			$table_names = getTableNames();
 			
@@ -384,7 +423,17 @@ This is the TLC page for Devin Hopkins and Tristan Hess' database management ter
 				// Displaying each table, one at a time
 				for ($x = 0; $x < count($table_names); $x++)
 				{
-					displayOrModifyTable($table_names[$x]);
+					// Honing the query in on a specific table
+					$query = $query . $table_names[$x];
+					
+					// Construct the specific query needed
+					$query = constructSpecificViewOrDeleteQuery($table_names[$x], $query);
+					
+					// Getting the results of the query
+					displayOrModifyTable($table, $query);
+					
+					// Resetting $query
+					$query = "SELECT * FROM ";
 				}
 			}
 			else // The user wants to see one specific table
@@ -395,7 +444,14 @@ This is the TLC page for Devin Hopkins and Tristan Hess' database management ter
 					// If it's the table the user wants, display it. Otherwise, keep going
 					if (strcmp($table, $table_names[$x]) == 0)
 					{
-						displayOrModifyTable($table_names[$x]);
+						// Honing the query in on a specific table
+						$query = $query . $table_names[$x];
+						
+						// Construct the specific query needed
+						$query = constructSpecificViewOrDeleteQuery($table_names[$x], $query);
+						
+						// Getting the results of the query
+						displayOrModifyTable($table, $query);
 					}
 				}
 			}
@@ -408,19 +464,228 @@ This is the TLC page for Devin Hopkins and Tristan Hess' database management ter
 		global $extension, $type, $cor, $tn, $coverpath, $name, $cos, $port, $room, $jack, $cable, $floor, $building;
 		
 		// Creating the beginning of the query
-		$query = "INSERT INTO " . $table . " VALUES (";
+		$query_part_one = "INSERT INTO " . $table . "(";
+		$query_part_two = " VALUES (";
+		
+		// Keeping track of things that are modified
+		$adding_something = false;
+		$missing_required = false;
 		
 		if (strcmp($table, "akron") == 0) // Inserting into the akron table
 		{
-			$query = $query . $extension . ", \"" . $type . "\", " . $cor . ", " . $tn . ", \"" . $coverpath . "\", \"" . $name . "\", " . $cos . ");";
+			//$query = $query . $extension . ", \"" . $type . "\", " . $cor . ", " . $tn . ", \"" . $coverpath . "\", \"" . $name . "\", " . $cos . ");";
+			// extension
+			if (isModified($extension))
+			{
+				$adding_something = true;
+				$query_part_one = $query_part_one . "extension,";
+				$query_part_two = $query_part_two . $extension . ",";
+			}
+			else // They didn't insert a necessary piece of information
+			{
+				$missing_required = true;
+			}
+			
+			// type
+			if (isModified($type))
+			{
+				$adding_something = true;
+				$query_part_one = $query_part_one . "type,";
+				$query_part_two = $query_part_two . "\"" . $type . "\",";
+			}else // They didn't insert a necessary piece of information
+			{
+				$missing_required = true;
+			}
+			
+			// cor
+			if (isModified($cor))
+			{
+				$adding_something = true;
+				$query_part_one = $query_part_one . "cor,";
+				$query_part_two = $query_part_two . $cor . ",";
+			}
+			
+			// tn
+			if (isModified($tn))
+			{
+				$adding_something = true;
+				$query_part_one = $query_part_one . "tn,";
+				$query_part_two = $query_part_two . $tn . ",";
+			}
+			
+			// coverpath
+			if (isModified($coverpath))
+			{
+				$adding_something = true;
+				$query_part_one = $query_part_one . "coverpath,";
+				$query_part_two = $query_part_two . "\"" . $coverpath . "\",";
+			}
+			
+			// name
+			if (isModified($name))
+			{
+				$adding_something = true;
+				$query_part_one = $query_part_one . "name,";
+				$query_part_two = $query_part_two . "\"" . $name . "\",";
+			}
+			
+			// cos
+			if (isModified($cos))
+			{
+				$adding_something = true;
+				$query_part_one = $query_part_one . "cos,";
+				$query_part_two = $query_part_two . $cos . ",";
+			}
 		}
 		else if (strcmp($table, "wayne") == 0) // Inserting into the wayne table
 		{
-			$query = $query . $extension . ", \"" . $type . "\", \"" . $name . "\", " . $cor . ", " . $tn . ", \"" . $coverpath . "\", " . $cos . ");";
+			//$query = $query . $extension . ", \"" . $type . "\", \"" . $name . "\", " . $cor . ", " . $tn . ", \"" . $coverpath . "\", " . $cos . ");";
+			// extension
+			if (isModified($extension))
+			{
+				$adding_something = true;
+				$query_part_one = $query_part_one . "extension,";
+				$query_part_two = $query_part_two . $extension . ",";
+			}
+			else // They didn't insert a necessary piece of information
+			{
+				$missing_required = true;
+			}
+			
+			// type
+			if (isModified($type))
+			{
+				$adding_something = true;
+				$query_part_one = $query_part_one . "type,";
+				$query_part_two = $query_part_two . "\"" . $type . "\",";
+			}
+			else // They didn't insert a necessary piece of information
+			{
+				$missing_required = true;
+			}
+			
+			// name
+			if (isModified($name))
+			{
+				$adding_something = true;
+				$query_part_one = $query_part_one . "name,";
+				$query_part_two = $query_part_two . "\"" . $name . "\",";
+			}
+			
+			// cor
+			if (isModified($cor))
+			{
+				$adding_something = true;
+				$query_part_one = $query_part_one . "cor,";
+				$query_part_two = $query_part_two . $cor . ",";
+			}
+			
+			// tn
+			if (isModified($tn))
+			{
+				$adding_something = true;
+				$query_part_one = $query_part_one . "tn,";
+				$query_part_two = $query_part_two . $tn . ",";
+			}
+			
+			// coverpath
+			if (isModified($coverpath))
+			{
+				$adding_something = true;
+				$query_part_one = $query_part_one . "coverpath,";
+				$query_part_two = $query_part_two . "\"" . $coverpath . "\",";
+			}
+			
+			// cos
+			if (isModified($cos))
+			{
+				$adding_something = true;
+				$query_part_one = $query_part_one . "cos,";
+				$query_part_two = $query_part_two . $cos . ",";
+			}
 		}
 		else if (strcmp($table, "export") == 0) // Inserting into the export table
 		{
-			$query = $query . $extension . ", \"" . $type . "\", \"" . $port . "\", \"" . $name . "\", \"" . $room . "\", \"" . $jack . "\", \"" . $cable . "\", \"" . $floor . "\", \"" . $building . "\");";
+			//$query = $query . $extension . ", \"" . $type . "\", \"" . $port . "\", \"" . $name . "\", \"" . $room . "\", \"" . $jack . "\", \"" . $cable . "\", \"" . $floor . "\", \"" . $building . "\");";
+			// extension
+			if (isModified($extension))
+			{
+				$adding_something = true;
+				$query_part_one = $query_part_one . "extension,";
+				$query_part_two = $query_part_two . $extension . ",";
+			}
+			else // They didn't insert a necessary piece of information
+			{
+				$missing_required = true;
+			}
+			
+			// type
+			if (isModified($type))
+			{
+				$adding_something = true;
+				$query_part_one = $query_part_one . "type,";
+				$query_part_two = $query_part_two . "\"" . $type . "\",";
+			}
+			else // They didn't insert a necessary piece of information
+			{
+				$missing_required = true;
+			}
+			
+			// port
+			if (isModified($port))
+			{
+				$adding_something = true;
+				$query_part_one = $query_part_one . "port,";
+				$query_part_two = $query_part_two . "\"" . $port . "\",";
+			}
+			
+			// name
+			if (isModified($name))
+			{
+				$adding_something = true;
+				$query_part_one = $query_part_one . "name,";
+				$query_part_two = $query_part_two . "\"" . $name . "\",";
+			}
+			
+			// room
+			if (isModified($room))
+			{
+				$adding_something = true;
+				$query_part_one = $query_part_one . "room,";
+				$query_part_two = $query_part_two . "\"" . $room . "\",";
+			}
+			
+			// jack
+			if (isModified($jack))
+			{
+				$adding_something = true;
+				$query_part_one = $query_part_one . "jack,";
+				$query_part_two = $query_part_two . "\"" . $jack . "\",";
+			}
+			
+			// cable
+			if (isModified($cable))
+			{
+				$adding_something = true;
+				$query_part_one = $query_part_one . "cable,";
+				$query_part_two = $query_part_two . "\"" . $cable . "\",";
+			}
+			
+			// floor
+			if (isModified($floor))
+			{
+				$adding_something = true;
+				$query_part_one = $query_part_one . "floor,";
+				$query_part_two = $query_part_two . "\"" . $floor . "\",";
+			}
+			
+			// building
+			if (isModified($building))
+			{
+				$adding_something = true;
+				$query_part_one = $query_part_one . "building,";
+				$query_part_two = $query_part_two . "\"" . $building . "\",";
+			}
 		}
 		else
 		{
@@ -428,10 +693,35 @@ This is the TLC page for Devin Hopkins and Tristan Hess' database management ter
 			$query = "SELECT * FROM akron";
 		}
 		
-		return $query;
+		// Finishing off the two query parts
+		$query_part_one = substr($query_part_one, 0, strlen($query_part_one) - 1) . ")";
+		$query_part_two = substr($query_part_two, 0, strlen($query_part_two) - 1) . ");";
+		
+		// Making sure everything is as it should be
+		if (!$adding_something) // Nothing was actually added, the insert function was just called
+		{
+			// To prevent an error message
+			$query_part_one = "SELECT * FROM";
+			$query_part_two = " akron";
+			
+			// Letting the user know they didn't acutally give anything to insert
+			print "<p> Nothing was filled out in the text boxes. Therefore, nothing was inserted. </p>";
+		}
+		else if ($missing_required) // They didn't insert a necessary piece of information
+		{
+			// To prevent an error message
+			$query_part_one = "SELECT * FROM";
+			$query_part_two = " akron";
+			
+			// Letting the user know they didn't acutally give anything to insert
+			print "<p> Please make sure that both type and extension are given a value. </p>";
+		}
+		
+		// Returning both parts put together
+		return ($query_part_one . $query_part_two);
 	}
 	
-	function constructSpecificViewQuery($the_table, $query)
+	function constructSpecificViewOrDeleteQuery($the_table, $query)
 	{
 		// Using all of these global variables
 		global $extension, $type, $cor, $tn, $coverpath, $name, $cos, $port, $room, $jack, $cable, $floor, $building;
@@ -732,6 +1022,9 @@ This is the TLC page for Devin Hopkins and Tristan Hess' database management ter
 				$query = $query . " WHERE extension = -1";
 			}
 		}
+		
+		// Adding the final ";" to the query
+		$query = $query . ";";
 		
 		return $query;
 	}
