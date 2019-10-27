@@ -178,7 +178,7 @@ This is the TLC page for Devin Hopkins and Tristan Hess' database management ter
 	}
 	
 	// This function displays the entire table given a table name
-	function displayTable($table_name, $specified_query = "DNE")
+	function displayOrModifyTable($table_name, $specified_query = "DNE")
 	{		
 		// Getting the query
 		$query = "";
@@ -195,11 +195,15 @@ This is the TLC page for Devin Hopkins and Tristan Hess' database management ter
 		$result = performQuery($query);
 		// The query is already checked for an error in performQuery(), so we don't need to check it again (I think)
 		
-		// This gets the array of the first row of data in the table
-		$row = mysqli_fetch_array($result);
-		
-		// This gets the number of fields in the table
-		$num_fields = mysqli_num_fields($result);
+		// This section only matters if the query selected something. Otherwise, warning is thrown
+		if (strcmp(substr($query, 0, 6), "SELECT") == 0)
+		{
+			// This gets the array of the first row of data in the table
+			$row = mysqli_fetch_array($result);
+			
+			// This gets the number of fields in the table
+			$num_fields = mysqli_num_fields($result);
+		}
 		
 		// If the result of the query was nothing, then nothing needs to be displayed
 		if (!empty($row))
@@ -275,7 +279,7 @@ This is the TLC page for Devin Hopkins and Tristan Hess' database management ter
 			}
 			else if (strcmp($operation, "insert") == 0)
 			{
-				print "<p>Insert</p>";
+				// This function works
 				performInsertOperation();
 			}
 			else if (strcmp($operation, "search") == 0)
@@ -298,7 +302,21 @@ This is the TLC page for Devin Hopkins and Tristan Hess' database management ter
 	
 	function performInsertOperation()
 	{
-		//
+		// Using all of these global variables
+		global $table;
+		
+		if (strcmp($table, "all") == 0)
+		{
+			print "<p> Could not perform insert operation. You must select a specific table to insert to.</p>";
+		}
+		else
+		{
+			// Get the query
+			$query = constructSpecificInsertQuery($table);
+		
+			// Perform the query
+			displayOrModifyTable($table, $query);
+		}
 	}
 	
 	function performSearchOperation()
@@ -320,12 +338,10 @@ This is the TLC page for Devin Hopkins and Tristan Hess' database management ter
 				$query = $query . $table_names[$x];
 				
 				// Construct the specific query needed
-				$query = constructSpecificQuery($table_names[$x], $query);
-				
-				print "<p>" . $query . "</p>";
+				$query = constructSpecificViewQuery($table_names[$x], $query);
 				
 				// Getting the results of the query
-				displayTable($table, $query);
+				displayOrModifyTable($table, $query);
 				
 				// Resetting $query
 				$query = "SELECT * FROM ";
@@ -337,12 +353,10 @@ This is the TLC page for Devin Hopkins and Tristan Hess' database management ter
 			$query = $query . $table;
 			
 			// Construct the specific query needed
-			$query = constructSpecificQuery($table, $query);
-			
-			print "<p>" . $query . "</p>";
+			$query = constructSpecificViewQuery($table, $query);
 			
 			// Getting the results of the query
-			displayTable($table, $query);
+			displayOrModifyTable($table, $query);
 		}
 	}
 	
@@ -370,7 +384,7 @@ This is the TLC page for Devin Hopkins and Tristan Hess' database management ter
 				// Displaying each table, one at a time
 				for ($x = 0; $x < count($table_names); $x++)
 				{
-					displayTable($table_names[$x]);
+					displayOrModifyTable($table_names[$x]);
 				}
 			}
 			else // The user wants to see one specific table
@@ -381,14 +395,43 @@ This is the TLC page for Devin Hopkins and Tristan Hess' database management ter
 					// If it's the table the user wants, display it. Otherwise, keep going
 					if (strcmp($table, $table_names[$x]) == 0)
 					{
-						displayTable($table_names[$x]);
+						displayOrModifyTable($table_names[$x]);
 					}
 				}
 			}
 		}
 	}
 	
-	function constructSpecificQuery($the_table, $query)
+	function constructSpecificInsertQuery($table)
+	{
+		// Using all of these global variables
+		global $extension, $type, $cor, $tn, $coverpath, $name, $cos, $port, $room, $jack, $cable, $floor, $building;
+		
+		// Creating the beginning of the query
+		$query = "INSERT INTO " . $table . " VALUES (";
+		
+		if (strcmp($table, "akron") == 0) // Inserting into the akron table
+		{
+			$query = $query . $extension . ", \"" . $type . "\", " . $cor . ", " . $tn . ", \"" . $coverpath . "\", \"" . $name . "\", " . $cos . ");";
+		}
+		else if (strcmp($table, "wayne") == 0) // Inserting into the wayne table
+		{
+			$query = $query . $extension . ", \"" . $type . "\", \"" . $name . "\", " . $cor . ", " . $tn . ", \"" . $coverpath . "\", " . $cos . ");";
+		}
+		else if (strcmp($table, "export") == 0) // Inserting into the export table
+		{
+			$query = $query . $extension . ", \"" . $type . "\", \"" . $port . "\", \"" . $name . "\", \"" . $room . "\", \"" . $jack . "\", \"" . $cable . "\", \"" . $floor . "\", \"" . $building . "\");";
+		}
+		else
+		{
+			print "<p>A table that doesn't exist was provided for the \"Insert Query\" method.</p>";
+			$query = "SELECT * FROM akron";
+		}
+		
+		return $query;
+	}
+	
+	function constructSpecificViewQuery($the_table, $query)
 	{
 		// Using all of these global variables
 		global $extension, $type, $cor, $tn, $coverpath, $name, $cos, $port, $room, $jack, $cable, $floor, $building;
@@ -397,14 +440,14 @@ This is the TLC page for Devin Hopkins and Tristan Hess' database management ter
 		$first_addition = false;
 		
 		// extension
-		if (strcmp($extension, "DNE") != 0 && strcmp($extension, "") != 0)
+		if (isModified($extension))
 		{
 			$first_addition = true;
 			$query = $query . " WHERE extension = " . $extension;
 		}
 		
 		// type
-		if(strcmp($type, "DNE") != 0 && strcmp($type, "") != 0)
+		if(isModified($type))
 		{
 			if ($first_addition) // It's not the first addition
 			{
@@ -418,7 +461,7 @@ This is the TLC page for Devin Hopkins and Tristan Hess' database management ter
 		}
 		
 		// cor
-		if(strcmp($cor, "DNE") != 0 && strcmp($cor, "") != 0 && strcmp($the_table, "export") != 0)
+		if(isModified($cor) && strcmp($the_table, "export") != 0)
 		{
 			if ($first_addition) // It's not the first addition
 			{
@@ -430,7 +473,7 @@ This is the TLC page for Devin Hopkins and Tristan Hess' database management ter
 				$query = $query . " WHERE cor = " . $cor;
 			}
 		}
-		else if (strcmp($cor, "DNE") != 0 && strcmp($cor, "") != 0 && strcmp($the_table, "export") == 0) // If the issue was that the table doesn't contain the column searched for, the query is tanked
+		else if (isModified($cor) && strcmp($the_table, "export") == 0) // If the issue was that the table doesn't contain the column searched for, the query is tanked
 		{
 			if ($first_addition) // It's not the first addition
 			{
@@ -444,7 +487,7 @@ This is the TLC page for Devin Hopkins and Tristan Hess' database management ter
 		}
 		
 		// tn
-		if(strcmp($tn, "DNE") != 0 && strcmp($tn, "") != 0 && strcmp($the_table, "export") != 0)
+		if(isModified($tn) && strcmp($the_table, "export") != 0)
 		{
 			if ($first_addition) // It's not the first addition
 			{
@@ -456,7 +499,7 @@ This is the TLC page for Devin Hopkins and Tristan Hess' database management ter
 				$query = $query . " WHERE tn = " . $tn;
 			}
 		}
-		else if (strcmp($tn, "DNE") != 0 && strcmp($tn, "") != 0 && strcmp($the_table, "export") == 0) // If the issue was that the table doesn't contain the column searched for, the query is tanked
+		else if (isModified($tn) && strcmp($the_table, "export") == 0) // If the issue was that the table doesn't contain the column searched for, the query is tanked
 		{
 			if ($first_addition) // It's not the first addition
 			{
@@ -470,7 +513,7 @@ This is the TLC page for Devin Hopkins and Tristan Hess' database management ter
 		}
 		
 		// coverpath
-		if(strcmp($coverpath, "DNE") != 0 && strcmp($coverpath, "") != 0 && strcmp($the_table, "export") != 0)
+		if(isModified($coverpath) && strcmp($the_table, "export") != 0)
 		{
 			if ($first_addition) // It's not the first addition
 			{
@@ -482,7 +525,7 @@ This is the TLC page for Devin Hopkins and Tristan Hess' database management ter
 				$query = $query . " WHERE coverpath = \"" . $coverpath . "\"";
 			}
 		}
-		else if (strcmp($coverpath, "DNE") != 0 && strcmp($coverpath, "") != 0 && strcmp($the_table, "export") == 0) // If the issue was that the table doesn't contain the column searched for, the query is tanked
+		else if (isModified($coverpath) && strcmp($the_table, "export") == 0) // If the issue was that the table doesn't contain the column searched for, the query is tanked
 		{
 			if ($first_addition) // It's not the first addition
 			{
@@ -496,7 +539,7 @@ This is the TLC page for Devin Hopkins and Tristan Hess' database management ter
 		}
 		
 		// name
-		if(strcmp($name, "DNE") != 0 && strcmp($name, "") != 0)
+		if(isModified($name))
 		{
 			if ($first_addition) // It's not the first addition
 			{
@@ -510,7 +553,7 @@ This is the TLC page for Devin Hopkins and Tristan Hess' database management ter
 		}
 		
 		// cos
-		if(strcmp($cos, "DNE") != 0 && strcmp($cos, "") != 0 && strcmp($the_table, "export") != 0)
+		if(isModified($cos) && strcmp($the_table, "export") != 0)
 		{
 			if ($first_addition) // It's not the first addition
 			{
@@ -522,7 +565,7 @@ This is the TLC page for Devin Hopkins and Tristan Hess' database management ter
 				$query = $query . " WHERE cos = " . $cos;
 			}
 		}
-		else if (strcmp($cos, "DNE") != 0 && strcmp($cos, "") != 0 && strcmp($the_table, "export") == 0) // If the issue was that the table doesn't contain the column searched for, the query is tanked
+		else if (isModified($cos) && strcmp($the_table, "export") == 0) // If the issue was that the table doesn't contain the column searched for, the query is tanked
 		{
 			if ($first_addition) // It's not the first addition
 			{
@@ -536,7 +579,7 @@ This is the TLC page for Devin Hopkins and Tristan Hess' database management ter
 		}
 		
 		// port
-		if(strcmp($port, "DNE") != 0 && strcmp($port, "") != 0 && strcmp($the_table, "akron") != 0 && strcmp($the_table, "wayne") != 0)
+		if(isModified($port) && strcmp($the_table, "akron") != 0 && strcmp($the_table, "wayne") != 0)
 		{
 			if ($first_addition) // It's not the first addition
 			{
@@ -548,7 +591,7 @@ This is the TLC page for Devin Hopkins and Tristan Hess' database management ter
 				$query = $query . " WHERE port = \"" . $port . "\"";
 			}
 		}
-		else if (strcmp($port, "DNE") != 0 && strcmp($port, "") != 0 && (strcmp($the_table, "akron") == 0 || strcmp($the_table, "wayne") == 0)) // If the issue was that the table doesn't contain the column searched for, the query is tanked
+		else if (isModified($port) && (strcmp($the_table, "akron") == 0 || strcmp($the_table, "wayne") == 0)) // If the issue was that the table doesn't contain the column searched for, the query is tanked
 		{
 			if ($first_addition) // It's not the first addition
 			{
@@ -562,7 +605,7 @@ This is the TLC page for Devin Hopkins and Tristan Hess' database management ter
 		}
 		
 		// room
-		if(strcmp($room, "DNE") != 0 && strcmp($room, "") != 0 && strcmp($the_table, "akron") != 0 && strcmp($the_table, "wayne") != 0)
+		if(isModified($room) && strcmp($the_table, "akron") != 0 && strcmp($the_table, "wayne") != 0)
 		{
 			if ($first_addition) // It's not the first addition
 			{
@@ -574,7 +617,7 @@ This is the TLC page for Devin Hopkins and Tristan Hess' database management ter
 				$query = $query . " WHERE room = \"" . $room . "\"";
 			}
 		}
-		else if (strcmp($room, "DNE") != 0 && strcmp($room, "") != 0 && (strcmp($the_table, "akron") == 0 || strcmp($the_table, "wayne") == 0)) // If the issue was that the table doesn't contain the column searched for, the query is tanked
+		else if (isModified($room) && (strcmp($the_table, "akron") == 0 || strcmp($the_table, "wayne") == 0)) // If the issue was that the table doesn't contain the column searched for, the query is tanked
 		{
 			if ($first_addition) // It's not the first addition
 			{
@@ -588,7 +631,7 @@ This is the TLC page for Devin Hopkins and Tristan Hess' database management ter
 		}
 		
 		// jack
-		if(strcmp($jack, "DNE") != 0 && strcmp($jack, "") != 0 && strcmp($the_table, "akron") != 0 && strcmp($the_table, "wayne") != 0)
+		if(isModified($jack) && strcmp($the_table, "akron") != 0 && strcmp($the_table, "wayne") != 0)
 		{
 			if ($first_addition) // It's not the first addition
 			{
@@ -600,7 +643,7 @@ This is the TLC page for Devin Hopkins and Tristan Hess' database management ter
 				$query = $query . " WHERE jack = \"" . $jack . "\"";
 			}
 		}
-		else if (strcmp($jack, "DNE") != 0 && strcmp($jack, "") != 0 && (strcmp($the_table, "akron") == 0 || strcmp($the_table, "wayne") == 0)) // If the issue was that the table doesn't contain the column searched for, the query is tanked
+		else if (isModified($jack) && (strcmp($the_table, "akron") == 0 || strcmp($the_table, "wayne") == 0)) // If the issue was that the table doesn't contain the column searched for, the query is tanked
 		{
 			if ($first_addition) // It's not the first addition
 			{
@@ -614,7 +657,7 @@ This is the TLC page for Devin Hopkins and Tristan Hess' database management ter
 		}
 		
 		// cable
-		if(strcmp($cable, "DNE") != 0 && strcmp($cable, "") != 0 && strcmp($the_table, "akron") != 0 && strcmp($the_table, "wayne") != 0)
+		if(isModified($cable) && strcmp($the_table, "akron") != 0 && strcmp($the_table, "wayne") != 0)
 		{
 			if ($first_addition) // It's not the first addition
 			{
@@ -626,7 +669,7 @@ This is the TLC page for Devin Hopkins and Tristan Hess' database management ter
 				$query = $query . " WHERE cable = \"" . $cable . "\"";
 			}
 		}
-		else if (strcmp($cable, "DNE") != 0 && strcmp($cable, "") != 0 && (strcmp($the_table, "akron") == 0 || strcmp($the_table, "wayne") == 0)) // If the issue was that the table doesn't contain the column searched for, the query is tanked
+		else if (isModified($cable) && (strcmp($the_table, "akron") == 0 || strcmp($the_table, "wayne") == 0)) // If the issue was that the table doesn't contain the column searched for, the query is tanked
 		{
 			if ($first_addition) // It's not the first addition
 			{
@@ -640,7 +683,7 @@ This is the TLC page for Devin Hopkins and Tristan Hess' database management ter
 		}
 		
 		// floor
-		if(strcmp($floor, "DNE") != 0 && strcmp($floor, "") != 0 && strcmp($the_table, "akron") != 0 && strcmp($the_table, "wayne") != 0)
+		if(isModified($floor) && strcmp($the_table, "akron") != 0 && strcmp($the_table, "wayne") != 0)
 		{
 			if ($first_addition) // It's not the first addition
 			{
@@ -652,7 +695,7 @@ This is the TLC page for Devin Hopkins and Tristan Hess' database management ter
 				$query = $query . " WHERE floor = \"" . $floor . "\"";
 			}
 		}
-		else if (strcmp($floor, "DNE") != 0 && strcmp($floor, "") != 0 && (strcmp($the_table, "akron") == 0 || strcmp($the_table, "wayne") == 0)) // If the issue was that the table doesn't contain the column searched for, the query is tanked
+		else if (isModified($floor) && (strcmp($the_table, "akron") == 0 || strcmp($the_table, "wayne") == 0)) // If the issue was that the table doesn't contain the column searched for, the query is tanked
 		{
 			if ($first_addition) // It's not the first addition
 			{
@@ -666,7 +709,7 @@ This is the TLC page for Devin Hopkins and Tristan Hess' database management ter
 		}
 		
 		// building
-		if(strcmp($building, "DNE") != 0 && strcmp($building, "") != 0 && strcmp($the_table, "akron") != 0 && strcmp($the_table, "wayne") != 0)
+		if(isModified($building) && strcmp($the_table, "akron") != 0 && strcmp($the_table, "wayne") != 0)
 		{
 			if ($first_addition) // It's not the first addition
 			{
@@ -677,7 +720,7 @@ This is the TLC page for Devin Hopkins and Tristan Hess' database management ter
 				$query = $query . " WHERE building = \"" . $building . "\"";
 			}
 		}
-		else if (strcmp($building, "DNE") != 0 && strcmp($building, "") != 0 && (strcmp($the_table, "akron") == 0 || strcmp($the_table, "wayne") == 0)) // If the issue was that the table doesn't contain the column searched for, the query is tanked
+		else if (isModified($building) && (strcmp($the_table, "akron") == 0 || strcmp($the_table, "wayne") == 0)) // If the issue was that the table doesn't contain the column searched for, the query is tanked
 		{
 			if ($first_addition) // It's not the first addition
 			{
@@ -691,6 +734,18 @@ This is the TLC page for Devin Hopkins and Tristan Hess' database management ter
 		}
 		
 		return $query;
+	}
+	
+	function isModified($variable)
+	{
+		// If the string is equal to either of these, it hasn't been modified
+		if (strcmp($building, "DNE") == 0 && strcmp($building, "") == 0)
+		{
+			return false;
+		}
+		
+		// Otherwise, it's been modified
+		return true;
 	}
 	
 	function performQuery($query)
