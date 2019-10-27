@@ -178,10 +178,18 @@ This is the TLC page for Devin Hopkins and Tristan Hess' database management ter
 	}
 	
 	// This function displays the entire table given a table name
-	function displayTable($table_name)
+	function displayTable($table_name, $specified_query = "DNE")
 	{		
-		// Getting all the information from the Person table and verifying that we do
-		$query = "SELECT * FROM " . $table_name;
+		// Getting the query
+		$query = "";
+		if (strcmp($specified_query, "DNE") == 0) // If there's no specified query, just get everything from the table
+		{
+			$query = "SELECT * FROM " . $table_name;
+		}
+		else // If there's a specified query, match it to do what the user wants
+		{
+			$query = $specified_query;
+		}
 		
 		// Getting the result of the query
 		$result = performQuery($query);
@@ -193,54 +201,62 @@ This is the TLC page for Devin Hopkins and Tristan Hess' database management ter
 		// This gets the number of fields in the table
 		$num_fields = mysqli_num_fields($result);
 		
-		// This gets all of the keys, but not the data, from the row
-		$keys = array_keys($row);
-		
-		// The start of our table
-		print "<table align ='center'>";
-		
-		// Starting the first row of the table
-		print "<tr align = 'center'>";
-		
-		// Looping through and displaying all of the column keys
-		for ($index = 0; $index < $num_fields; $index++)
+		// If the result of the query was nothing, then nothing needs to be displayed
+		if (!empty($row))
 		{
-			// Displaying all of the keys for the columns
-			// Using 2 * $index is required because every other value is an integer with the corresponding column number, and we don't care about that
-			// Using the + 1 is required because the first index is the integer, and the index following it is the column key
-			print "<th>" . $keys[2 * $index + 1] . "</th>";
-		}
+			// This gets all of the keys, but not the data, from the row
+			$keys = array_keys($row);
 		
-		// Ending the row of column headers
-		print "</tr>";
-		
-		// Getting the number of rows from our table
-		$num_rows = mysqli_num_rows($result);
-		// Going through each row and displaying all of the data
-		for ($row_num = 0; $row_num < $num_rows; $row_num++)
-		{
-			// Aligning the rows to have the data in the center
+			// The start of our table
+			print "<table align ='center'>";
+			
+			// Starting the first row of the table
 			print "<tr align = 'center'>";
-			// Getting the values, but not the keys, from the row
-			$values = array_values($row);
-			// Looping through the data to display all of the values
+			
+			// Looping through and displaying all of the column keys
 			for ($index = 0; $index < $num_fields; $index++)
 			{
-				// Displaying all of the values in the rows
+				// Displaying all of the keys for the columns
 				// Using 2 * $index is required because every other value is an integer with the corresponding column number, and we don't care about that
-				// Using the + 1 is required because the first index is the integer, and the index following it is the value
-				$value = htmlspecialchars($values[2 * $index + 1]);
-				print "<th>" . $value . "</th> ";
+				// Using the + 1 is required because the first index is the integer, and the index following it is the column key
+				print "<th>" . $keys[2 * $index + 1] . "</th>";
 			}
-			// This marks the end of the table row
+			
+			// Ending the row of column headers
 			print "</tr>";
 			
-			// Getting the next row
-			$row = mysqli_fetch_array($result);
+			// Getting the number of rows from our table
+			$num_rows = mysqli_num_rows($result);
+			// Going through each row and displaying all of the data
+			for ($row_num = 0; $row_num < $num_rows; $row_num++)
+			{
+				// Aligning the rows to have the data in the center
+				print "<tr align = 'center'>";
+				// Getting the values, but not the keys, from the row
+				$values = array_values($row);
+				// Looping through the data to display all of the values
+				for ($index = 0; $index < $num_fields; $index++)
+				{
+					// Displaying all of the values in the rows
+					// Using 2 * $index is required because every other value is an integer with the corresponding column number, and we don't care about that
+					// Using the + 1 is required because the first index is the integer, and the index following it is the value
+					$value = htmlspecialchars($values[2 * $index + 1]);
+					print "<th>" . $value . "</th> ";
+				}
+				// This marks the end of the table row
+				print "</tr>";
+				
+				// Getting the next row
+				$row = mysqli_fetch_array($result);
+			}
+			
+			// Ending the table
+			print "</table>";
 		}
 		
-		// Ending the table
-		print "</table>";
+		// Make sure the next thing displayed isn't directly underneath the table
+		print "<br>";
+		
 	}
 	
 	// Determines the operation being performed and performs it
@@ -254,26 +270,90 @@ This is the TLC page for Devin Hopkins and Tristan Hess' database management ter
 		{
 			if (strcmp($operation, "view") == 0)
 			{
-				print "<p>View</p>";
+				// This function works
 				performViewOperation();
 			}
 			else if (strcmp($operation, "insert") == 0)
 			{
 				print "<p>Insert</p>";
+				performInsertOperation();
 			}
 			else if (strcmp($operation, "search") == 0)
 			{
-				print "<p>Search</p>";
+				// This function works
+				performSearchOperation();
 			}
 			else if (strcmp($operation, "update") == 0)
 			{
 				print "<p>Update</p>";
+				performUpdateOperation();
 			}
 			else if (strcmp($operation, "delete") == 0)
 			{
 				print "<p>Delete</p>";
+				performDeleteOperation();
 			}
 		}
+	}
+	
+	function performInsertOperation()
+	{
+		//
+	}
+	
+	function performSearchOperation()
+	{
+		// Using the global variable table
+		global $table;
+		
+		$query = "SELECT * FROM ";
+		
+		if (strcmp($table, "all") == 0) // They are searching every table
+		{
+			// Getting all of the table names
+			$table_names = getTableNames();
+			
+			// Searching and displaying the results of each table, one at a time
+			for ($x = 0; $x < count($table_names); $x++)
+			{
+				// Honing the query in on a specific table
+				$query = $query . $table_names[$x];
+				
+				// Construct the specific query needed
+				$query = constructSpecificQuery($table_names[$x], $query);
+				
+				print "<p>" . $query . "</p>";
+				
+				// Getting the results of the query
+				displayTable($table, $query);
+				
+				// Resetting $query
+				$query = "SELECT * FROM ";
+			}
+		}
+		else // They are searching one table
+		{
+			// Honing the query in on the correct table
+			$query = $query . $table;
+			
+			// Construct the specific query needed
+			$query = constructSpecificQuery($table, $query);
+			
+			print "<p>" . $query . "</p>";
+			
+			// Getting the results of the query
+			displayTable($table, $query);
+		}
+	}
+	
+	function performDeleteOperation()
+	{
+		//
+	}
+	
+	function performUpdateOperation()
+	{
+		//
 	}
 	
 	function performViewOperation()
@@ -306,6 +386,311 @@ This is the TLC page for Devin Hopkins and Tristan Hess' database management ter
 				}
 			}
 		}
+	}
+	
+	function constructSpecificQuery($the_table, $query)
+	{
+		// Using all of these global variables
+		global $extension, $type, $cor, $tn, $coverpath, $name, $cos, $port, $room, $jack, $cable, $floor, $building;
+		
+		// Making sure we know when we've already done one addition to the query
+		$first_addition = false;
+		
+		// extension
+		if (strcmp($extension, "DNE") != 0 && strcmp($extension, "") != 0)
+		{
+			$first_addition = true;
+			$query = $query . " WHERE extension = " . $extension;
+		}
+		
+		// type
+		if(strcmp($type, "DNE") != 0 && strcmp($type, "") != 0)
+		{
+			if ($first_addition) // It's not the first addition
+			{
+				$query = $query . " AND type = \"" . $type . "\"";
+			}
+			else // It is the first addition
+			{
+				$first_addition = true;
+				$query = $query . " WHERE type = \"" . $type . "\"";
+			}
+		}
+		
+		// cor
+		if(strcmp($cor, "DNE") != 0 && strcmp($cor, "") != 0 && strcmp($the_table, "export") != 0)
+		{
+			if ($first_addition) // It's not the first addition
+			{
+				$query = $query . " AND cor = " . $cor;
+			}
+			else // It is the first addition
+			{
+				$first_addition = true;
+				$query = $query . " WHERE cor = " . $cor;
+			}
+		}
+		else if (strcmp($cor, "DNE") != 0 && strcmp($cor, "") != 0 && strcmp($the_table, "export") == 0) // If the issue was that the table doesn't contain the column searched for, the query is tanked
+		{
+			if ($first_addition) // It's not the first addition
+			{
+				$query = $query . " AND extension = -1";
+			}
+			else // It is the first addition
+			{
+				$first_addition = true;
+				$query = $query . " WHERE extension = -1";
+			}
+		}
+		
+		// tn
+		if(strcmp($tn, "DNE") != 0 && strcmp($tn, "") != 0 && strcmp($the_table, "export") != 0)
+		{
+			if ($first_addition) // It's not the first addition
+			{
+				$query = $query . " AND tn = " . $tn;
+			}
+			else // It is the first addition
+			{
+				$first_addition = true;
+				$query = $query . " WHERE tn = " . $tn;
+			}
+		}
+		else if (strcmp($tn, "DNE") != 0 && strcmp($tn, "") != 0 && strcmp($the_table, "export") == 0) // If the issue was that the table doesn't contain the column searched for, the query is tanked
+		{
+			if ($first_addition) // It's not the first addition
+			{
+				$query = $query . " AND extension = -1";
+			}
+			else // It is the first addition
+			{
+				$first_addition = true;
+				$query = $query . " WHERE extension = -1";
+			}
+		}
+		
+		// coverpath
+		if(strcmp($coverpath, "DNE") != 0 && strcmp($coverpath, "") != 0 && strcmp($the_table, "export") != 0)
+		{
+			if ($first_addition) // It's not the first addition
+			{
+				$query = $query . " AND coverpath = \"" . $coverpath . "\"";
+			}
+			else // It is the first addition
+			{
+				$first_addition = true;
+				$query = $query . " WHERE coverpath = \"" . $coverpath . "\"";
+			}
+		}
+		else if (strcmp($coverpath, "DNE") != 0 && strcmp($coverpath, "") != 0 && strcmp($the_table, "export") == 0) // If the issue was that the table doesn't contain the column searched for, the query is tanked
+		{
+			if ($first_addition) // It's not the first addition
+			{
+				$query = $query . " AND extension = -1";
+			}
+			else // It is the first addition
+			{
+				$first_addition = true;
+				$query = $query . " WHERE extension = -1";
+			}
+		}
+		
+		// name
+		if(strcmp($name, "DNE") != 0 && strcmp($name, "") != 0)
+		{
+			if ($first_addition) // It's not the first addition
+			{
+				$query = $query . " AND name = \"" . $name . "\"";
+			}
+			else // It is the first addition
+			{
+				$first_addition = true;
+				$query = $query . " WHERE name = \"" . $name . "\"";
+			}
+		}
+		
+		// cos
+		if(strcmp($cos, "DNE") != 0 && strcmp($cos, "") != 0 && strcmp($the_table, "export") != 0)
+		{
+			if ($first_addition) // It's not the first addition
+			{
+				$query = $query . " AND cos = " . $cos;
+			}
+			else // It is the first addition
+			{
+				$first_addition = true;
+				$query = $query . " WHERE cos = " . $cos;
+			}
+		}
+		else if (strcmp($cos, "DNE") != 0 && strcmp($cos, "") != 0 && strcmp($the_table, "export") == 0) // If the issue was that the table doesn't contain the column searched for, the query is tanked
+		{
+			if ($first_addition) // It's not the first addition
+			{
+				$query = $query . " AND extension = -1";
+			}
+			else // It is the first addition
+			{
+				$first_addition = true;
+				$query = $query . " WHERE extension = -1";
+			}
+		}
+		
+		// port
+		if(strcmp($port, "DNE") != 0 && strcmp($port, "") != 0 && strcmp($the_table, "akron") != 0 && strcmp($the_table, "wayne") != 0)
+		{
+			if ($first_addition) // It's not the first addition
+			{
+				$query = $query . " AND port = \"" . $port . "\"";
+			}
+			else // It is the first addition
+			{
+				$first_addition = true;
+				$query = $query . " WHERE port = \"" . $port . "\"";
+			}
+		}
+		else if (strcmp($port, "DNE") != 0 && strcmp($port, "") != 0 && (strcmp($the_table, "akron") == 0 || strcmp($the_table, "wayne") == 0)) // If the issue was that the table doesn't contain the column searched for, the query is tanked
+		{
+			if ($first_addition) // It's not the first addition
+			{
+				$query = $query . " AND extension = -1";
+			}
+			else // It is the first addition
+			{
+				$first_addition = true;
+				$query = $query . " WHERE extension = -1";
+			}
+		}
+		
+		// room
+		if(strcmp($room, "DNE") != 0 && strcmp($room, "") != 0 && strcmp($the_table, "akron") != 0 && strcmp($the_table, "wayne") != 0)
+		{
+			if ($first_addition) // It's not the first addition
+			{
+				$query = $query . " AND room = \"" . $room . "\"";
+			}
+			else // It is the first addition
+			{
+				$first_addition = true;
+				$query = $query . " WHERE room = \"" . $room . "\"";
+			}
+		}
+		else if (strcmp($room, "DNE") != 0 && strcmp($room, "") != 0 && (strcmp($the_table, "akron") == 0 || strcmp($the_table, "wayne") == 0)) // If the issue was that the table doesn't contain the column searched for, the query is tanked
+		{
+			if ($first_addition) // It's not the first addition
+			{
+				$query = $query . " AND extension = -1";
+			}
+			else // It is the first addition
+			{
+				$first_addition = true;
+				$query = $query . " WHERE extension = -1";
+			}
+		}
+		
+		// jack
+		if(strcmp($jack, "DNE") != 0 && strcmp($jack, "") != 0 && strcmp($the_table, "akron") != 0 && strcmp($the_table, "wayne") != 0)
+		{
+			if ($first_addition) // It's not the first addition
+			{
+				$query = $query . " AND jack = \"" . $jack . "\"";
+			}
+			else // It is the first addition
+			{
+				$first_addition = true;
+				$query = $query . " WHERE jack = \"" . $jack . "\"";
+			}
+		}
+		else if (strcmp($jack, "DNE") != 0 && strcmp($jack, "") != 0 && (strcmp($the_table, "akron") == 0 || strcmp($the_table, "wayne") == 0)) // If the issue was that the table doesn't contain the column searched for, the query is tanked
+		{
+			if ($first_addition) // It's not the first addition
+			{
+				$query = $query . " AND extension = -1";
+			}
+			else // It is the first addition
+			{
+				$first_addition = true;
+				$query = $query . " WHERE extension = -1";
+			}
+		}
+		
+		// cable
+		if(strcmp($cable, "DNE") != 0 && strcmp($cable, "") != 0 && strcmp($the_table, "akron") != 0 && strcmp($the_table, "wayne") != 0)
+		{
+			if ($first_addition) // It's not the first addition
+			{
+				$query = $query . " AND cable = \"" . $cable . "\"";
+			}
+			else // It is the first addition
+			{
+				$first_addition = true;
+				$query = $query . " WHERE cable = \"" . $cable . "\"";
+			}
+		}
+		else if (strcmp($cable, "DNE") != 0 && strcmp($cable, "") != 0 && (strcmp($the_table, "akron") == 0 || strcmp($the_table, "wayne") == 0)) // If the issue was that the table doesn't contain the column searched for, the query is tanked
+		{
+			if ($first_addition) // It's not the first addition
+			{
+				$query = $query . " AND extension = -1";
+			}
+			else // It is the first addition
+			{
+				$first_addition = true;
+				$query = $query . " WHERE extension = -1";
+			}
+		}
+		
+		// floor
+		if(strcmp($floor, "DNE") != 0 && strcmp($floor, "") != 0 && strcmp($the_table, "akron") != 0 && strcmp($the_table, "wayne") != 0)
+		{
+			if ($first_addition) // It's not the first addition
+			{
+				$query = $query . " AND floor = \"" . $floor . "\"";
+			}
+			else // It is the first addition
+			{
+				$first_addition = true;
+				$query = $query . " WHERE floor = \"" . $floor . "\"";
+			}
+		}
+		else if (strcmp($floor, "DNE") != 0 && strcmp($floor, "") != 0 && (strcmp($the_table, "akron") == 0 || strcmp($the_table, "wayne") == 0)) // If the issue was that the table doesn't contain the column searched for, the query is tanked
+		{
+			if ($first_addition) // It's not the first addition
+			{
+				$query = $query . " AND extension = -1";
+			}
+			else // It is the first addition
+			{
+				$first_addition = true;
+				$query = $query . " WHERE extension = -1";
+			}
+		}
+		
+		// building
+		if(strcmp($building, "DNE") != 0 && strcmp($building, "") != 0 && strcmp($the_table, "akron") != 0 && strcmp($the_table, "wayne") != 0)
+		{
+			if ($first_addition) // It's not the first addition
+			{
+				$query = $query . " AND building = \"" . $building . "\"";
+			}
+			else // It is the first addition
+			{
+				$query = $query . " WHERE building = \"" . $building . "\"";
+			}
+		}
+		else if (strcmp($building, "DNE") != 0 && strcmp($building, "") != 0 && (strcmp($the_table, "akron") == 0 || strcmp($the_table, "wayne") == 0)) // If the issue was that the table doesn't contain the column searched for, the query is tanked
+		{
+			if ($first_addition) // It's not the first addition
+			{
+				$query = $query . " AND extension = -1";
+			}
+			else // It is the first addition
+			{
+				$first_addition = true;
+				$query = $query . " WHERE extension = -1";
+			}
+		}
+		
+		return $query;
 	}
 	
 	function performQuery($query)
@@ -416,7 +801,7 @@ This is the TLC page for Devin Hopkins and Tristan Hess' database management ter
 <center>
 
 	<h1>
-		TLC Information (TLC)
+		TLC Information
 	</h1>
 	
 	<!-- Displaying the changes/information the user wanted. -->
@@ -473,7 +858,7 @@ This is the TLC page for Devin Hopkins and Tristan Hess' database management ter
 		Floor: <input type="text" name="floor"><br>
 		Building: <input type="text" name="building"><br>
 	
-		<input type="submit">
+		<br><input type="submit">
 	</form>
 	
 </center>
