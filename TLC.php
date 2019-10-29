@@ -158,7 +158,7 @@ This is the TLC page for Devin Hopkins and Tristan Hess' database management ter
 	print "<p> floor:" . $floor . ":</p>";
 	print "<p> building:" . $building . ":</p>";*/
 	
-	// Setting all of the variables in case they aren't defined
+	// Setting all of the update variables in case they aren't defined
 	$extension_update = "DNE";
 	$type_update = "DNE";
 	$cor_update = "DNE";
@@ -1447,6 +1447,8 @@ This is the TLC page for Devin Hopkins and Tristan Hess' database management ter
 		if (!$db)
 		{
 			print "<p>Error - could not connect to MySQL.</p>";
+			//$error = mysqli_error($db);
+			//print "<p>" . $error . "</p>";
 			exit;
 		}
 		
@@ -1557,9 +1559,16 @@ This is the TLC page for Devin Hopkins and Tristan Hess' database management ter
 		<p>
 			Please enter all of the appropriate information to perform the operation.<br><br>
 			NOTE: Use the right side only for values that will be updated!<br>
+			Ex: If you want to update the name of every type "station-user"<br>
+			to "worker station", you type in "station-user" in the left side<br>
+			of the textboxes (in the "type" textbox) and type "worker station"<br>
+			in the right side of the textboxes (int the "name" textbox).
+
+			
+			<!-- This is the old explanation. I feel as though the new one (the one above) is way better.
 			Ex: If you wish to change the name of every station-user type, use<br>
 			the right side to enter the new name and use the left side to enter the<br>
-			station-user type you are searching for. 
+			station-user type you are searching for.-->
 		</p>
 		
 		Extension: <input type="text" name="extension"> - <input type="text" name="extension_update"><br>
