@@ -10,6 +10,7 @@ This is the TLC page for Devin Hopkins and Tristan Hess' database management ter
 		<title> TLC Page </title>
 		<style type = "text/css">
 		
+			/* Our table border style */
 			td, th, table {
 				border: thin solid black;
 			}
@@ -141,23 +142,6 @@ This is the TLC page for Devin Hopkins and Tristan Hess' database management ter
 		$building = $_POST["building"];
 	}
 	
-	// TESTING
-	/*print "<p> operation:" . $operation . ":</p>";
-	print "<p> table:" . $table . ":</p>";
-	print "<p> extension:" . $extension . ":</p>";
-	print "<p> type:" . $type . ":</p>";
-	print "<p> cor:" . $cor . ":</p>";
-	print "<p> tn:" . $tn . ":</p>";
-	print "<p> coverpath:" . $coverpath . ":</p>";
-	print "<p> name:" . $name . ":</p>";
-	print "<p> cos:" . $cos . ":</p>";
-	print "<p> port:" . $port . ":</p>";
-	print "<p> room:" . $room . ":</p>";
-	print "<p> jack:" . $jack . ":</p>";
-	print "<p> cable:" . $cable . ":</p>";
-	print "<p> floor:" . $floor . ":</p>";
-	print "<p> building:" . $building . ":</p>";*/
-	
 	// Setting all of the update variables in case they aren't defined
 	$extension_update = "DNE";
 	$type_update = "DNE";
@@ -239,6 +223,39 @@ This is the TLC page for Devin Hopkins and Tristan Hess' database management ter
 	{
 		$building_update = $_POST["building_update"];
 	}
+
+	// TESTING
+	// Use if you want to see the values of all of the variables gathered before the page displayed
+	/*print "<p> operation:" . $operation . ":</p>";
+	print "<p> table:" . $table . ":</p>";
+	print "<p> extension:" . $extension . ":</p>";
+	print "<p> type:" . $type . ":</p>";
+	print "<p> cor:" . $cor . ":</p>";
+	print "<p> tn:" . $tn . ":</p>";
+	print "<p> coverpath:" . $coverpath . ":</p>";
+	print "<p> name:" . $name . ":</p>";
+	print "<p> cos:" . $cos . ":</p>";
+	print "<p> port:" . $port . ":</p>";
+	print "<p> room:" . $room . ":</p>";
+	print "<p> jack:" . $jack . ":</p>";
+	print "<p> cable:" . $cable . ":</p>";
+	print "<p> floor:" . $floor . ":</p>";
+	print "<p> building:" . $building . ":</p>";
+	print "<p> operation_update:" . $operation_update . ":</p>";
+	print "<p> table_update:" . $table_update . ":</p>";
+	print "<p> extension_update:" . $extension_update . ":</p>";
+	print "<p> type_update:" . $type_update . ":</p>";
+	print "<p> cor_update:" . $cor_update . ":</p>";
+	print "<p> tn_update:" . $tn_update . ":</p>";
+	print "<p> coverpath:" . $coverpath . ":</p>";
+	print "<p> name_update:" . $name_update . ":</p>";
+	print "<p> cos_update:" . $cos_update . ":</p>";
+	print "<p> port_update:" . $port_update . ":</p>";
+	print "<p> room_update:" . $room_update . ":</p>";
+	print "<p> jack_update:" . $jack_update . ":</p>";
+	print "<p> cable_update:" . $cable_update . ":</p>";
+	print "<p> floor_update:" . $floor_update . ":</p>";
+	print "<p> building_update:" . $building_update . ":</p>";*/
 	
 ?>
 
@@ -251,8 +268,10 @@ This is the TLC page for Devin Hopkins and Tristan Hess' database management ter
 		// Getting the absolute path of the file
 		$absolute_path = realpath($file_name);
 		
+		// This finds the position of the directory "htdocs" in the long absoulte path
 		$string_position = strpos($absolute_path, "htdocs");
 		
+		// This string is the file path from the directory from "htdocs" and onwards (not including the "htdocs")
 		$website_path = substr($absolute_path, $string_position + 6);
 		
 		// Returning the path to make it properly display on the web browser
@@ -354,32 +373,32 @@ This is the TLC page for Devin Hopkins and Tristan Hess' database management ter
 		// Using the global variable $operation in this function
 		global $operation;
 		
-		// Determining the operation
+		// Making sure they actually selected an operation
 		if (strcmp($operation, "DNE") != 0)
 		{
 			if (strcmp($operation, "view") == 0)
 			{
-				// This function works
+				// Performs the view operation
 				performViewOperation();
 			}
 			else if (strcmp($operation, "insert") == 0)
 			{
-				// This function works
+				// Performs the insert operation
 				performInsertOperation();
 			}
 			else if (strcmp($operation, "search") == 0)
 			{
-				// This function works
+				// Performs the search operation
 				performSearchOperation();
 			}
 			else if (strcmp($operation, "update") == 0)
 			{
-				print "<p>Update</p>";
+				// Performs the update operation
 				performUpdateOperation();
 			}
 			else if (strcmp($operation, "delete") == 0)
 			{
-				// This function works
+				// Performs the delete operation
 				performDeleteOperation();
 			}
 		}
@@ -390,10 +409,12 @@ This is the TLC page for Devin Hopkins and Tristan Hess' database management ter
 		// Using all of these global variables
 		global $table;
 		
+		// You can't perform an insert operation on every table (at least not currently), so we block it from happening
 		if (strcmp($table, "all") == 0)
 		{
 			print "<p> Could not perform insert operation. You must select a specific table to insert to.</p>";
 		}
+		// They picked a specific table
 		else
 		{
 			// Get the query
@@ -409,6 +430,7 @@ This is the TLC page for Devin Hopkins and Tristan Hess' database management ter
 		// Using the global variable table
 		global $table;
 		
+		// The base of the query
 		$query = "SELECT * FROM ";
 		
 		if (strcmp($table, "all") == 0) // They are searching every table
@@ -426,7 +448,7 @@ This is the TLC page for Devin Hopkins and Tristan Hess' database management ter
 				$query = constructSpecificViewOrDeleteOrUpdateQuery($table_names[$x], $query);
 				
 				// Getting the results of the query
-				displayOrModifyTable($table, $query);
+				displayOrModifyTable($table_names[$x], $query);
 				
 				// Resetting $query
 				$query = "SELECT * FROM ";
@@ -450,6 +472,7 @@ This is the TLC page for Devin Hopkins and Tristan Hess' database management ter
 		// Using the global variable table
 		global $table;
 		
+		// The base of the query
 		$query = "DELETE FROM ";
 		
 		if (strcmp($table, "all") == 0) // They are deleting something from every table
@@ -491,6 +514,7 @@ This is the TLC page for Devin Hopkins and Tristan Hess' database management ter
 		// Using the global variable table
 		global $table;
 		
+		// The base of the query
 		$query = "UPDATE ";
 		
 		if (strcmp($table, "all") == 0) // They are updating something from every table
@@ -510,13 +534,17 @@ This is the TLC page for Devin Hopkins and Tristan Hess' database management ter
 				// Construct the specific query needed
 				$query = constructSpecificViewOrDeleteOrUpdateQuery($table_names[$x], $query);
 				
+				// If the query has the word "FALSE" in it, then they tried updating an attribute that wasn't in the table they specified
 				if (strpos($query, "FALSE"))
 				{
 					print "<p> You tried to update something that wasn't in the table " . $table_names[$x] . ". Try again. </p>";
 				}
-				
-				// Getting the results of the query
-				displayOrModifyTable($table_names[$x], $query);
+				// Every attribute they tried updating was appropriate
+				else
+				{
+					// Getting the results of the query
+					displayOrModifyTable($table_names[$x], $query);
+				}
 				
 				// Reset the query
 				$query = "UPDATE ";
@@ -533,13 +561,17 @@ This is the TLC page for Devin Hopkins and Tristan Hess' database management ter
 			// Construct the specific query needed
 			$query = constructSpecificViewOrDeleteOrUpdateQuery($table, $query);
 			
+			// If the query has the word "FALSE" in it, then they tried updating an attribute that wasn't in the table they specified
 			if (strpos($query, "FALSE"))
 			{
 				print "<p> You tried to update something that wasn't in the table " . $table . ". Try again. </p>";
 			}
-			
-			// Getting the results of the query
-			displayOrModifyTable($table, $query);
+			// Every attribute they tried updating was appropriate
+			else
+			{
+				// Getting the results of the query
+				displayOrModifyTable($table, $query);
+			}
 		}
 	}
 	
@@ -548,11 +580,13 @@ This is the TLC page for Devin Hopkins and Tristan Hess' database management ter
 		// Using the global variable $table in this function
 		global $table;
 		
+		// The base of the query
 		$query = "SELECT * FROM ";
 		
 		// Making sure the $table variable has been modified
 		if (isModified($table))
 		{
+			// Getting all of the table names
 			$table_names = getTableNames();
 			
 			if (strcmp($table, "all") == 0) // The user wants to see every table
@@ -575,7 +609,7 @@ This is the TLC page for Devin Hopkins and Tristan Hess' database management ter
 			}
 			else // The user wants to see one specific table
 			{
-				// Giong through each table to find the one the user wants
+				// Going through each table to find the one the user wants
 				for ($x = 0; $x < count($table_names); $x++)
 				{
 					// If it's the table the user wants, display it. Otherwise, keep going
@@ -820,6 +854,7 @@ This is the TLC page for Devin Hopkins and Tristan Hess' database management ter
 			$query = $query . " FAKE ";
 		}
 		
+		// Return the constructed query
 		return $query;
 	}
 	
@@ -828,17 +863,20 @@ This is the TLC page for Devin Hopkins and Tristan Hess' database management ter
 		// Using all of these global variables
 		global $extension, $type, $cor, $tn, $coverpath, $name, $cos, $port, $room, $jack, $cable, $floor, $building;
 		
-		// Creating the beginning of the query
+		// Creating the beginning of the query (part 1)
 		$query_part_one = "INSERT INTO " . $table . "(";
+
+		// Creating the beginning of the second part of the query (part 2)
 		$query_part_two = " VALUES (";
 		
-		// Keeping track of things that are modified
+		// Keeping track of if anything was added
 		$adding_something = false;
+
+		// If they didn't specify something that was required, this keeps track of it
 		$missing_required = false;
 		
 		if (strcmp($table, "akron") == 0) // Inserting into the akron table
 		{
-			//$query = $query . $extension . ", \"" . $type . "\", " . $cor . ", " . $tn . ", \"" . $coverpath . "\", \"" . $name . "\", " . $cos . ");";
 			// extension
 			if (isModified($extension))
 			{
@@ -904,7 +942,6 @@ This is the TLC page for Devin Hopkins and Tristan Hess' database management ter
 		}
 		else if (strcmp($table, "wayne") == 0) // Inserting into the wayne table
 		{
-			//$query = $query . $extension . ", \"" . $type . "\", \"" . $name . "\", " . $cor . ", " . $tn . ", \"" . $coverpath . "\", " . $cos . ");";
 			// extension
 			if (isModified($extension))
 			{
@@ -971,7 +1008,6 @@ This is the TLC page for Devin Hopkins and Tristan Hess' database management ter
 		}
 		else if (strcmp($table, "export") == 0) // Inserting into the export table
 		{
-			//$query = $query . $extension . ", \"" . $type . "\", \"" . $port . "\", \"" . $name . "\", \"" . $room . "\", \"" . $jack . "\", \"" . $cable . "\", \"" . $floor . "\", \"" . $building . "\");";
 			// extension
 			if (isModified($extension))
 			{
@@ -1052,9 +1088,13 @@ This is the TLC page for Devin Hopkins and Tristan Hess' database management ter
 				$query_part_two = $query_part_two . "\"" . $building . "\",";
 			}
 		}
+		// They somehow are trying to edit a table that doesn't exist
 		else
 		{
+			// Letting the user know what they did
 			print "<p>A table that doesn't exist was provided for the \"Insert Query\" method.</p>";
+
+			// Sets the query to a default query so the page doesn't error out
 			$query = "SELECT * FROM akron";
 		}
 		
@@ -1082,7 +1122,7 @@ This is the TLC page for Devin Hopkins and Tristan Hess' database management ter
 			print "<p> Please make sure that both type and extension are given a value. </p>";
 		}
 		
-		// Returning both parts put together
+		// Returning both parts put together as one big query
 		return ($query_part_one . $query_part_two);
 	}
 	
@@ -1391,6 +1431,7 @@ This is the TLC page for Devin Hopkins and Tristan Hess' database management ter
 		// Adding the final ";" to the query
 		$query = $query . ";";
 		
+		// Returning the complete query
 		return $query;
 	}
 	
@@ -1399,16 +1440,18 @@ This is the TLC page for Devin Hopkins and Tristan Hess' database management ter
 		// If the string is equal to either of these, it hasn't been modified
 		if (strcmp($variable, "DNE") == 0 || strcmp($variable, "") == 0)
 		{
+			// So, return false
 			return false;
 		}
 		
-		// Otherwise, it's been modified
+		// Otherwise, it's been modified. So return true
 		return true;
 	}
 	
 	function performQuery($query)
 	{
 		// Connecting to the remote MySQL and verifying that we do
+		// mysqli_connect("connection:port", "username", "password");
 		$db = mysqli_connect("remotemysql.com:3306", "ITt7W4LVtm", "2RdcJaMtQp");
 		if (!$db)
 		{
@@ -1424,9 +1467,13 @@ This is the TLC page for Devin Hopkins and Tristan Hess' database management ter
 			exit;
 		}
 		
+		// Performing the query. If anything is returned, it's stored in result
 		$result = mysqli_query($db, $query);
+
+		// If result is false, something went wrong
 		if (!$result)
 		{
+			// Letting the user know and displaying the specifics of what went wrong
 			print "<p>Error - the query could not be executed.</p>";
 			$error = mysqli_error($db);
 			print "<p>" . $error . "</p>";
@@ -1443,12 +1490,11 @@ This is the TLC page for Devin Hopkins and Tristan Hess' database management ter
 	function getTableNames()
 	{
 		// Connecting to the remote MySQL and verifying that we do
+		// mysqli_connect("connection:port", "username", "password");
 		$db = mysqli_connect("remotemysql.com:3306", "ITt7W4LVtm", "2RdcJaMtQp");
 		if (!$db)
 		{
 			print "<p>Error - could not connect to MySQL.</p>";
-			//$error = mysqli_error($db);
-			//print "<p>" . $error . "</p>";
 			exit;
 		}
 		
@@ -1460,13 +1506,18 @@ This is the TLC page for Devin Hopkins and Tristan Hess' database management ter
 			exit;
 		}
 		
+		// This is the query used to get all of the table names
 		$query = "SELECT TABLE_NAME
 				FROM INFORMATION_SCHEMA.TABLES
 				WHERE TABLE_TYPE = 'BASE TABLE' AND TABLE_SCHEMA='ITt7W4LVtm'";
 		
+		// Performs the query, storing the table names in results
 		$result = mysqli_query($db, $query);
+
+		// If result is false, something went wrong
 		if (!$result)
 		{
+			// Letting the user know and displaying the specifics of what went wrong
 			print "<p>Error - could not perform the query.</p>";
 			$error = mysqli_error($db);
 			print "<p>" . $error . "</p>";
@@ -1482,7 +1533,7 @@ This is the TLC page for Devin Hopkins and Tristan Hess' database management ter
 		// Getting the number of rows from our table
 		$num_rows = mysqli_num_rows($result);
 		
-		// The array of table names
+		// The array of table names (currently empty)
 		$table_names = array();
 		
 		// Going through each row and displaying all of the data
@@ -1490,10 +1541,11 @@ This is the TLC page for Devin Hopkins and Tristan Hess' database management ter
 		{
 			// Getting the values, but not the keys, from the row
 			$values = array_values($row);
+
 			// Looping through the data to display all of the values
 			for ($index = 0; $index < $num_fields; $index++)
 			{
-				// Displaying all of the values in the rows
+				// Pushing the table names into an array
 				// Using 2 * $index is required because every other value is an integer with the corresponding column number, and we don't care about that
 				// Using the + 1 is required because the first index is the integer, and the index following it is the value
 				$value = htmlspecialchars($values[2 * $index + 1]);
@@ -1515,20 +1567,28 @@ This is the TLC page for Devin Hopkins and Tristan Hess' database management ter
 
 <center>
 
+	<!-- Header -->
 	<h1>
 		TLC Information
 	</h1>
 	
 	<!-- Displaying the changes/information the user wanted. -->
 	<?php
+
+		// Simply call this method to do the operation and display the results (if applicable)
 		determineOperation();
+
 	?>
 	
+	<!-- This form gathers all of the information necessary to perform what the user wants to do. -->
 	<form action=<?php print getLocation("TLC.php"); ?> method="post">
+
 		<!-- Figuring out what operation they would like to perform. -->
 		<p>
 			What operation would you like to do?
 		</p>
+
+		<!-- The operation radio buttons. -->
 		<input type="radio" name="operation" value="view" checked>View
 		<input type="radio" name="operation" value="insert">Insert
 		<input type="radio" name="operation" value="search">Search
@@ -1539,6 +1599,7 @@ This is the TLC page for Devin Hopkins and Tristan Hess' database management ter
 		<p>
 			What table would you like to perform that operation on?
 		</p>
+
 		<?php
 			
 			// Displaying the first radio button, making sure it's checked
@@ -1556,23 +1617,25 @@ This is the TLC page for Devin Hopkins and Tristan Hess' database management ter
 		?>
 		
 		<!-- Getting all of the necessary input to perform the operation. -->
+		<!-- This is the explanation of what to do with the textboxes that gets displayed to the user. -->
 		<p>
 			Please enter all of the appropriate information to perform the operation.<br><br>
+
 			NOTE: Use the right side only for values that will be updated!<br>
 			Ex: If you want to update the name of every type "station-user"<br>
 			to "worker station", you type in "station-user" in the left side<br>
 			of the textboxes (in the "type" textbox) and type "worker station"<br>
-			in the right side of the textboxes (int the "name" textbox).
+			in the right side of the textboxes (int the "name" textbox).<br>
+			If you use the right side for anything else, nothing will happen.<br><br>
 
-			
-			<!-- This is the old explanation. I feel as though the new one (the one above) is way better.
-			Ex: If you wish to change the name of every station-user type, use<br>
-			the right side to enter the new name and use the left side to enter the<br>
-			station-user type you are searching for.-->
+			* = Required for inserting data, cannot have a duplicate in a table you<br>
+			are inserting or updating in
 		</p>
 		
-		Extension: <input type="text" name="extension"> - <input type="text" name="extension_update"><br>
-		Type: <input type="text" name="type"> - <input type="text" name="type_update"><br>
+
+		<!-- The textboxes that gather all of the appropriate information. -->
+		Extension*: <input type="text" name="extension"> - <input type="text" name="extension_update"><br>
+		Type*: <input type="text" name="type"> - <input type="text" name="type_update"><br>
 		Cor: <input type="text" name="cor"> - <input type="text" name="cor_update"><br>
 		Tn: <input type="text" name="tn"> - <input type="text" name="tn_update"><br>
 		Coverpath: <input type="text" name="coverpath"> - <input type="text" name="coverpath_update"><br>
@@ -1585,6 +1648,7 @@ This is the TLC page for Devin Hopkins and Tristan Hess' database management ter
 		Floor: <input type="text" name="floor"> - <input type="text" name="floor_update"><br>
 		Building: <input type="text" name="building"> - <input type="text" name="building_update"><br>
 	
+		<!-- Submit button. -->
 		<br><input type="submit">
 	</form>
 	
