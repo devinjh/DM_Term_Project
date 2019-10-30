@@ -1,3 +1,7 @@
 # When I use the project on my Mac, these files are created. Not sure why but I don't like them
-._TLC.php
 ._Home.php
+._DatabaseInteraction.php
+._DatabaseOperations.php
+._FunctionsForAll.php
+._OperationsHelperFunctions.php
+._QueryBuilderFunctions.php
