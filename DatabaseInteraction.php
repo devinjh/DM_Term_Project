@@ -34,15 +34,13 @@ This is the TLC page for Devin Hopkins and Tristan Hess' database management ter
 	var helpWindow = null;
 
 	// Enum for the operations (in case we want to add more)
-	//const OperationEnum = Object.freeze({"View":1, "Insert":2, "Search":3, "Update":4, "Delete":5});
-	//const OperationEnum = Object.freeze({View:1, Insert:2, Search:3, Update:4, Delete:5});
-	/*const OperationEnum = Object.freeze({
+	const OperationEnum = Object.freeze({
 		View: 0,
 		Insert: 1,
 		Search: 2,
 		Update: 3,
 		Delete: 4
-	});*/
+	});
 	
 	function openHelpPage()
 	{
@@ -63,41 +61,11 @@ This is the TLC page for Devin Hopkins and Tristan Hess' database management ter
 	}
 
 	// This displays the information only needed for the update function
-	function updateInformation()
+	function updateInformation(e)
 	{
-		// Variables to keep track of which operation is going on
-		var e = -1;
-
-		// Getting the whichever operation is checked
-		// View
-		if (document.getElementById("view_operation").checked)
-		{
-			e = 0;
-		}
-		// Insert
-		else if (document.getElementById("insert_operation").checked)
-		{
-			e = 1;
-		}
-		// Search
-		else if (document.getElementById("search_operation").checked)
-		{
-			e = 2;
-		}
-		// Update
-		else if (document.getElementById("update_operation").checked)
-		{
-			e = 3;
-		}
-		// Delete
-		else
-		{
-			e = 4;
-		}
-
 		// This first part is making sure all of the correct information is displayed (or hidden) to the user
 		// If the function is the update function
-		if (e == 3)
+		if (e == OperationEnum.Update)
 		{
 			// Showing the information paragraph above the textboxes
 			document.getElementById("information_paragraph").hidden = false;
@@ -141,19 +109,19 @@ This is the TLC page for Devin Hopkins and Tristan Hess' database management ter
 
 		// This second part makes sure the asterick is properly labeled
 		// If the operation is insert
-		if (e == 1)
+		if (e == OperationEnum.Insert)
 		{
 			document.getElementById("required_paragraph").innerHTML = "* = This text field must be filled out";
 		}
 		// If the operation is update
-		else if (e == 3)
+		else if (e == OperationEnum.Update)
 		{
 			document.getElementById("required_paragraph").innerHTML = "* = This attribute can't have a duplicate. Keep that in mind when updating";
 		}
 		// The operation is anything other than insert or operate
 		else
 		{
-			document.getElementById("required_paragraph").innerHTML = "* = Ignore the asterick for this operation";
+			document.getElementById("required_paragraph").innerHTML = "* = Ignore the asterisk for this operation";
 		}
 	}
 
@@ -531,11 +499,11 @@ This is the TLC page for Devin Hopkins and Tristan Hess' database management ter
 		</p>
 
 		<!-- The operation radio buttons. -->
-		<input type="radio" name="operation" value="view" onclick="updateInformation()" id="view_operation" checked>View
-		<input type="radio" name="operation" value="insert" onclick="updateInformation()" id="insert_operation">Insert
-		<input type="radio" name="operation" value="search" onclick="updateInformation()" id="search_operation">Search
-		<input type="radio" name="operation" value="update" onclick="updateInformation()" id="update_operation">Update
-		<input type="radio" name="operation" value="delete" onclick="updateInformation()" id="delete_operation">Delete<br><br>
+		<input type="radio" name="operation" value="view" onclick="updateInformation(OperationEnum.View)" id="view_operation" checked>View
+		<input type="radio" name="operation" value="insert" onclick="updateInformation(OperationEnum.Insert)" id="insert_operation">Insert
+		<input type="radio" name="operation" value="search" onclick="updateInformation(OperationEnum.Search)" id="search_operation">Search
+		<input type="radio" name="operation" value="update" onclick="updateInformation(OperationEnum.Update)" id="update_operation">Update
+		<input type="radio" name="operation" value="delete" onclick="updateInformation(OperationEnum.Delete)" id="delete_operation">Delete<br><br>
 	
 		<!-- Figuring out which table they would like to perform it on. -->
 		<p>
@@ -574,7 +542,7 @@ This is the TLC page for Devin Hopkins and Tristan Hess' database management ter
 		</p>
 
 		<p id="required_paragraph">
-			* = Ignore the asterick for this operation
+			* = Ignore the asterisk for this operation
 		</p>
 		
 
