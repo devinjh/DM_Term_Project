@@ -35,7 +35,14 @@ This is the home page for Devin Hopkins and Tristan Hess' database management te
 			helpPage.close();
 		}
 		
-		// To do
+		// WRITE WHAT WE WANT THE HELP WINDOW TO DISPLAY HERE, STILL NEED TO DO
+		
+		// This is opening the new window with all of the differences added
+		helpWindow = window.open("", "Help Page", "width=2000,height=500");
+		helpWindow.document.write(helpPage);
+		
+		// This resets the page variable, and thus resets the window
+		helpPage = "<h1> Help Page </h1>";
 	}
 
 </script>

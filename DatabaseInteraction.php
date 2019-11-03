@@ -51,6 +51,58 @@ This is the TLC page for Devin Hopkins and Tristan Hess' database management ter
 		helpPage = "<h1> Help Page </h1>";
 	}
 
+	// This displays the information only needed for the update function
+	function showUpdateInformation()
+	{
+		// The information paragraph above the textboxes
+		document.getElementById("information_paragraph").hidden = false;
+
+		// The textboxes
+		document.getElementById("extension_update_textbox").hidden = false;
+		document.getElementById("type_update_textbox").hidden = false;
+		document.getElementById("cor_update_textbox").hidden = false;
+		document.getElementById("tn_update_textbox").hidden = false;
+		document.getElementById("coverpath_update_textbox").hidden = false;
+		document.getElementById("name_update_textbox").hidden = false;
+		document.getElementById("cos_update_textbox").hidden = false;
+		document.getElementById("port_update_textbox").hidden = false;
+		document.getElementById("room_update_textbox").hidden = false;
+		document.getElementById("jack_update_textbox").hidden = false;
+		document.getElementById("cable_update_textbox").hidden = false;
+		document.getElementById("floor_update_textbox").hidden = false;
+		document.getElementById("building_update_textbox").hidden = false;
+
+		// The breaks
+		document.getElementById("br_1").hidden = true;
+		document.getElementById("br_2").hidden = true;
+	}
+
+	// This hides all of the information that's only needed for the update function
+	function hideUpdateInformation()
+	{
+		// The information paragraph above the textboxes
+		document.getElementById("information_paragraph").hidden = true;
+
+		// The textboxes
+		document.getElementById("extension_update_textbox").hidden = true;
+		document.getElementById("type_update_textbox").hidden = true;
+		document.getElementById("cor_update_textbox").hidden = true;
+		document.getElementById("tn_update_textbox").hidden = true;
+		document.getElementById("coverpath_update_textbox").hidden = true;
+		document.getElementById("name_update_textbox").hidden = true;
+		document.getElementById("cos_update_textbox").hidden = true;
+		document.getElementById("port_update_textbox").hidden = true;
+		document.getElementById("room_update_textbox").hidden = true;
+		document.getElementById("jack_update_textbox").hidden = true;
+		document.getElementById("cable_update_textbox").hidden = true;
+		document.getElementById("floor_update_textbox").hidden = true;
+		document.getElementById("building_update_textbox").hidden = true;
+
+		// The breaks
+		document.getElementById("br_1").hidden = false;
+		document.getElementById("br_2").hidden = false;
+	}
+
 </script>
 
 <!-- Receiving previous page's information -->
@@ -332,8 +384,10 @@ This is the TLC page for Devin Hopkins and Tristan Hess' database management ter
 			{
 				// Aligning the rows to have the data in the center
 				print "<tr align = 'center'>";
+
 				// Getting the values, but not the keys, from the row
 				$values = array_values($row);
+
 				// Looping through the data to display all of the values
 				for ($index = 0; $index < $num_fields; $index++)
 				{
@@ -343,6 +397,7 @@ This is the TLC page for Devin Hopkins and Tristan Hess' database management ter
 					$value = htmlspecialchars($values[2 * $index + 1]);
 					print "<th>" . $value . "</th> ";
 				}
+
 				// This marks the end of the table row
 				print "</tr>";
 				
@@ -422,11 +477,11 @@ This is the TLC page for Devin Hopkins and Tristan Hess' database management ter
 		</p>
 
 		<!-- The operation radio buttons. -->
-		<input type="radio" name="operation" value="view" checked>View
-		<input type="radio" name="operation" value="insert">Insert
-		<input type="radio" name="operation" value="search">Search
-		<input type="radio" name="operation" value="update">Update
-		<input type="radio" name="operation" value="delete">Delete<br><br>
+		<input type="radio" name="operation" value="view" onclick="hideUpdateInformation()" checked>View
+		<input type="radio" name="operation" value="insert" onclick="hideUpdateInformation()">Insert
+		<input type="radio" name="operation" value="search" onclick="hideUpdateInformation()">Search
+		<input type="radio" name="operation" value="update" onclick="showUpdateInformation()">Update
+		<input type="radio" name="operation" value="delete" onclick="hideUpdateInformation()">Delete<br><br>
 	
 		<!-- Figuring out which table they would like to perform it on. -->
 		<p>
@@ -451,7 +506,7 @@ This is the TLC page for Devin Hopkins and Tristan Hess' database management ter
 		
 		<!-- Getting all of the necessary input to perform the operation. -->
 		<!-- This is the explanation of what to do with the textboxes that gets displayed to the user. -->
-		<p>
+		<p id="information_paragraph" hidden>
 			Please enter all of the appropriate information to perform the operation.<br><br>
 
 			NOTE: Use the right side only for values that will be updated!<br>
@@ -467,22 +522,24 @@ This is the TLC page for Devin Hopkins and Tristan Hess' database management ter
 		
 
 		<!-- The textboxes that gather all of the appropriate information. -->
-		Extension*: <input type="text" name="extension"> - <input type="text" name="extension_update"><br>
-		Type*: <input type="text" name="type"> - <input type="text" name="type_update"><br>
-		Cor: <input type="text" name="cor"> - <input type="text" name="cor_update"><br>
-		Tn: <input type="text" name="tn"> - <input type="text" name="tn_update"><br>
-		Coverpath: <input type="text" name="coverpath"> - <input type="text" name="coverpath_update"><br>
-		Name: <input type="text" name="name"> - <input type="text" name="name_update"><br>
-		Cos: <input type="text" name="cos"> - <input type="text" name="cos_update"><br>
-		Port: <input type="text" name="port"> - <input type="text" name="port_update"><br>
-		Room: <input type="text" name="room"> - <input type="text" name="room_update"><br>
-		Jack: <input type="text" name="jack"> - <input type="text" name="jack_update"><br>
-		Cable: <input type="text" name="cable"> - <input type="text" name="cable_update"><br>
-		Floor: <input type="text" name="floor"> - <input type="text" name="floor_update"><br>
-		Building: <input type="text" name="building"> - <input type="text" name="building_update"><br>
+		<br id="br_1"><br id="br_2"
+		>Extension*: <input type="text" name="extension"> - <input type="text" name="extension_update" id="extension_update_textbox" hidden><br>
+		Type*: <input type="text" name="type"> - <input type="text" name="type_update" id="type_update_textbox" hidden><br>
+		Cor: <input type="text" name="cor"> - <input type="text" name="cor_update" id="cor_update_textbox" hidden><br>
+		Tn: <input type="text" name="tn"> - <input type="text" name="tn_update" id="tn_update_textbox" hidden><br>
+		Coverpath: <input type="text" name="coverpath"> - <input type="text" name="coverpath_update" id="coverpath_update_textbox" hidden><br>
+		Name: <input type="text" name="name"> - <input type="text" name="name_update" id="name_update_textbox" hidden><br>
+		Cos: <input type="text" name="cos"> - <input type="text" name="cos_update" id="cos_update_textbox" hidden><br>
+		Port: <input type="text" name="port"> - <input type="text" name="port_update" id="port_update_textbox" hidden><br>
+		Room: <input type="text" name="room"> - <input type="text" name="room_update" id="room_update_textbox" hidden><br>
+		Jack: <input type="text" name="jack"> - <input type="text" name="jack_update" id="jack_update_textbox" hidden><br>
+		Cable: <input type="text" name="cable"> - <input type="text" name="cable_update" id="cable_update_textbox" hidden><br>
+		Floor: <input type="text" name="floor"> - <input type="text" name="floor_update" id="floor_update_textbox" hidden><br>
+		Building: <input type="text" name="building"> - <input type="text" name="building_update" id="building_update_textbox" hidden><br>
 	
 		<!-- Submit button. -->
 		<br><input type="submit">
+
 	</form>
 	
 </center>

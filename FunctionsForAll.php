@@ -1,6 +1,6 @@
 <!--
 
-	These are functions that each of the website might use. So, to prevent code duplication, it's moved in here.
+	These are functions that each of the websites might use. So, to prevent code duplication, it's moved in here.
 
 -->
 
