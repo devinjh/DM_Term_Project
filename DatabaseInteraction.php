@@ -30,7 +30,7 @@ This is the TLC page for Devin Hopkins and Tristan Hess' database management ter
 <script>
 
 	// Global variables for the help page
-	var helpPage = "<h1> Help Page </h1>";
+	var helpPage = "<h1><center> Help Page </center></h1>";
 	var helpWindow = null;
 
 	// Enum for the operations (in case we want to add more)
@@ -45,26 +45,26 @@ This is the TLC page for Devin Hopkins and Tristan Hess' database management ter
 	function openHelpPage()
 	{
 		// Making sure the help page isn't already open, and if it is, close it
-		if (helpPage != null)
+		if (helpWindow != null)
 		{
-			helpPage.close();
+			helpWindow.close();
 		}
 		
 		// WRITE WHAT WE WANT THE HELP WINDOW TO DISPLAY HERE, STILL NEED TO DO
 		
 		// This is opening the new window with all of the differences added
-		helpWindow = window.open("", "Help Page", "width=2000,height=500");
+		helpWindow = window.open("", "Help Page", "width=1000,height=500");
 		helpWindow.document.write(helpPage);
 		
-		// This resets the page variable, and thus resets the window
-		helpPage = "<h1> Help Page </h1>";
+		// This resets the page variable, and thus resets the window for the next time
+		helpPage = "<h1><center> Help Page </center></h1>";
 	}
 
 	// This displays the information only needed for the update function
 	function updateInformation(e)
 	{
 		// This first part is making sure all of the correct information is displayed (or hidden) to the user
-		// If the function is the update function
+		// If the operation is the update operation
 		if (e == OperationEnum.Update)
 		{
 			// Showing the information paragraph above the textboxes
@@ -85,7 +85,7 @@ This is the TLC page for Devin Hopkins and Tristan Hess' database management ter
 			document.getElementById("floor_update_textbox").hidden = false;
 			document.getElementById("building_update_textbox").hidden = false;
 		}
-		// If the function is anything but the update function
+		// If the operation is anything but the update operation
 		else
 		{
 			// Hiding the information paragraph above the textboxes
@@ -569,6 +569,15 @@ This is the TLC page for Devin Hopkins and Tristan Hess' database management ter
 </center>
 
 <p></p>
+
+
+<!-- Button to bring up the help page. -->
+<div align="center" onclick="openHelpPage()">
+	<button> Help Page </button>
+</div>
+
+<!-- Just to separate the Help Page button from the Go to Home Page button. -->
+<br>
 
 <!-- Button to go the TLC page -->
 <?php
