@@ -32,6 +32,17 @@ This is the TLC page for Devin Hopkins and Tristan Hess' database management ter
 	// Global variables for the help page
 	var helpPage = "<h1> Help Page </h1>";
 	var helpWindow = null;
+
+	// Enum for the operations (in case we want to add more)
+	//const OperationEnum = Object.freeze({"View":1, "Insert":2, "Search":3, "Update":4, "Delete":5});
+	//const OperationEnum = Object.freeze({View:1, Insert:2, Search:3, Update:4, Delete:5});
+	/*const OperationEnum = Object.freeze({
+		View: 0,
+		Insert: 1,
+		Search: 2,
+		Update: 3,
+		Delete: 4
+	});*/
 	
 	function openHelpPage()
 	{
@@ -52,55 +63,98 @@ This is the TLC page for Devin Hopkins and Tristan Hess' database management ter
 	}
 
 	// This displays the information only needed for the update function
-	function showUpdateInformation()
+	function updateInformation()
 	{
-		// The information paragraph above the textboxes
-		document.getElementById("information_paragraph").hidden = false;
+		// Variables to keep track of which operation is going on
+		var e = -1;
 
-		// The textboxes
-		document.getElementById("extension_update_textbox").hidden = false;
-		document.getElementById("type_update_textbox").hidden = false;
-		document.getElementById("cor_update_textbox").hidden = false;
-		document.getElementById("tn_update_textbox").hidden = false;
-		document.getElementById("coverpath_update_textbox").hidden = false;
-		document.getElementById("name_update_textbox").hidden = false;
-		document.getElementById("cos_update_textbox").hidden = false;
-		document.getElementById("port_update_textbox").hidden = false;
-		document.getElementById("room_update_textbox").hidden = false;
-		document.getElementById("jack_update_textbox").hidden = false;
-		document.getElementById("cable_update_textbox").hidden = false;
-		document.getElementById("floor_update_textbox").hidden = false;
-		document.getElementById("building_update_textbox").hidden = false;
+		// Getting the whichever operation is checked
+		// View
+		if (document.getElementById("view_operation").checked)
+		{
+			e = 0;
+		}
+		// Insert
+		else if (document.getElementById("insert_operation").checked)
+		{
+			e = 1;
+		}
+		// Search
+		else if (document.getElementById("search_operation").checked)
+		{
+			e = 2;
+		}
+		// Update
+		else if (document.getElementById("update_operation").checked)
+		{
+			e = 3;
+		}
+		// Delete
+		else
+		{
+			e = 4;
+		}
 
-		// The breaks
-		document.getElementById("br_1").hidden = true;
-		document.getElementById("br_2").hidden = true;
-	}
+		// This first part is making sure all of the correct information is displayed (or hidden) to the user
+		// If the function is the update function
+		if (e == 3)
+		{
+			// Showing the information paragraph above the textboxes
+			document.getElementById("information_paragraph").hidden = false;
 
-	// This hides all of the information that's only needed for the update function
-	function hideUpdateInformation()
-	{
-		// The information paragraph above the textboxes
-		document.getElementById("information_paragraph").hidden = true;
+			// Showing the textboxes
+			document.getElementById("extension_update_textbox").hidden = false;
+			document.getElementById("type_update_textbox").hidden = false;
+			document.getElementById("cor_update_textbox").hidden = false;
+			document.getElementById("tn_update_textbox").hidden = false;
+			document.getElementById("coverpath_update_textbox").hidden = false;
+			document.getElementById("name_update_textbox").hidden = false;
+			document.getElementById("cos_update_textbox").hidden = false;
+			document.getElementById("port_update_textbox").hidden = false;
+			document.getElementById("room_update_textbox").hidden = false;
+			document.getElementById("jack_update_textbox").hidden = false;
+			document.getElementById("cable_update_textbox").hidden = false;
+			document.getElementById("floor_update_textbox").hidden = false;
+			document.getElementById("building_update_textbox").hidden = false;
+		}
+		// If the function is anything but the update function
+		else
+		{
+			// Hiding the information paragraph above the textboxes
+			document.getElementById("information_paragraph").hidden = true;
 
-		// The textboxes
-		document.getElementById("extension_update_textbox").hidden = true;
-		document.getElementById("type_update_textbox").hidden = true;
-		document.getElementById("cor_update_textbox").hidden = true;
-		document.getElementById("tn_update_textbox").hidden = true;
-		document.getElementById("coverpath_update_textbox").hidden = true;
-		document.getElementById("name_update_textbox").hidden = true;
-		document.getElementById("cos_update_textbox").hidden = true;
-		document.getElementById("port_update_textbox").hidden = true;
-		document.getElementById("room_update_textbox").hidden = true;
-		document.getElementById("jack_update_textbox").hidden = true;
-		document.getElementById("cable_update_textbox").hidden = true;
-		document.getElementById("floor_update_textbox").hidden = true;
-		document.getElementById("building_update_textbox").hidden = true;
+			// Hiding the textboxes
+			document.getElementById("extension_update_textbox").hidden = true;
+			document.getElementById("type_update_textbox").hidden = true;
+			document.getElementById("cor_update_textbox").hidden = true;
+			document.getElementById("tn_update_textbox").hidden = true;
+			document.getElementById("coverpath_update_textbox").hidden = true;
+			document.getElementById("name_update_textbox").hidden = true;
+			document.getElementById("cos_update_textbox").hidden = true;
+			document.getElementById("port_update_textbox").hidden = true;
+			document.getElementById("room_update_textbox").hidden = true;
+			document.getElementById("jack_update_textbox").hidden = true;
+			document.getElementById("cable_update_textbox").hidden = true;
+			document.getElementById("floor_update_textbox").hidden = true;
+			document.getElementById("building_update_textbox").hidden = true;
+		}
 
-		// The breaks
-		document.getElementById("br_1").hidden = false;
-		document.getElementById("br_2").hidden = false;
+		// This second part makes sure the asterick is properly labeled
+		// If the operation is insert
+		if (e == 1)
+		{
+			document.getElementById("required_paragraph").innerHTML = "* = This text field must be filled out";
+		}
+		// If the operation is update
+		else if (e == 3)
+		{
+			document.getElementById("required_paragraph").innerHTML = "* = This attribute can't have a duplicate. Keep that in mind when updating";
+		}
+		// The operation is anything other than insert or operate
+		else
+		{
+			document.getElementById("required_paragraph").innerHTML = "* = Ignore the asterick for this operation";
+		}
 	}
 
 </script>
@@ -477,11 +531,11 @@ This is the TLC page for Devin Hopkins and Tristan Hess' database management ter
 		</p>
 
 		<!-- The operation radio buttons. -->
-		<input type="radio" name="operation" value="view" onclick="hideUpdateInformation()" checked>View
-		<input type="radio" name="operation" value="insert" onclick="hideUpdateInformation()">Insert
-		<input type="radio" name="operation" value="search" onclick="hideUpdateInformation()">Search
-		<input type="radio" name="operation" value="update" onclick="showUpdateInformation()">Update
-		<input type="radio" name="operation" value="delete" onclick="hideUpdateInformation()">Delete<br><br>
+		<input type="radio" name="operation" value="view" onclick="updateInformation()" id="view_operation" checked>View
+		<input type="radio" name="operation" value="insert" onclick="updateInformation()" id="insert_operation">Insert
+		<input type="radio" name="operation" value="search" onclick="updateInformation()" id="search_operation">Search
+		<input type="radio" name="operation" value="update" onclick="updateInformation()" id="update_operation">Update
+		<input type="radio" name="operation" value="delete" onclick="updateInformation()" id="delete_operation">Delete<br><br>
 	
 		<!-- Figuring out which table they would like to perform it on. -->
 		<p>
@@ -503,27 +557,29 @@ This is the TLC page for Devin Hopkins and Tristan Hess' database management ter
 			}
 			
 		?>
+
+		<p>
+			Please enter all of the appropriate information to perform the operation.
+		</p>
 		
 		<!-- Getting all of the necessary input to perform the operation. -->
 		<!-- This is the explanation of what to do with the textboxes that gets displayed to the user. -->
 		<p id="information_paragraph" hidden>
-			Please enter all of the appropriate information to perform the operation.<br><br>
-
 			NOTE: Use the right side only for values that will be updated!<br>
 			Ex: If you want to update the name of every type "station-user"<br>
 			to "worker station", you type in "station-user" in the left side<br>
 			of the textboxes (in the "type" textbox) and type "worker station"<br>
 			in the right side of the textboxes (int the "name" textbox).<br>
-			If you use the right side for anything else, nothing will happen.<br><br>
+			If you use the right side for anything else, nothing will happen.
+		</p>
 
-			* = Required for inserting data, cannot have a duplicate in a table you<br>
-			are inserting or updating in
+		<p id="required_paragraph">
+			* = Ignore the asterick for this operation
 		</p>
 		
 
 		<!-- The textboxes that gather all of the appropriate information. -->
-		<br id="br_1"><br id="br_2"
-		>Extension*: <input type="text" name="extension"> - <input type="text" name="extension_update" id="extension_update_textbox" hidden><br>
+		Extension*: <input type="text" name="extension"> - <input type="text" name="extension_update" id="extension_update_textbox" hidden><br>
 		Type*: <input type="text" name="type"> - <input type="text" name="type_update" id="type_update_textbox" hidden><br>
 		Cor: <input type="text" name="cor"> - <input type="text" name="cor_update" id="cor_update_textbox" hidden><br>
 		Tn: <input type="text" name="tn"> - <input type="text" name="tn_update" id="tn_update_textbox" hidden><br>
