@@ -579,9 +579,18 @@ This is the TLC page for Devin Hopkins and Tristan Hess' database management ter
 <!-- Just to separate the Help Page button from the Go to Home Page button. -->
 <br>
 
-<!-- Button to go the TLC page -->
+<!-- Buttons -->
 <?php
+
+	// Button to go the Home page
 	print "<div id=\"button\" align=\"center\"><a href=" . getLocation("Home.php") . "><button>Go to Home Page</button></a></div>";
+
+	// Making sure there's some space
+	print "<br>";
+
+	// Button to go the Advanced Database Interaction page
+	print "<div id=\"button\" align=\"center\"><a href=" . getLocation("AdvancedDatabaseInteraction.php") . "><button>Go to Advanced Database Page</button></a></div>";
+
 ?>
 
 </body>
