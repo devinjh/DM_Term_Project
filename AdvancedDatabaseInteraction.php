@@ -1,6 +1,6 @@
 <!--
 
-This is the page containing the advanced functions for Devin Hopkins and Tristan Hess' database management term project.
+    This is the page containing the advanced functions for Devin Hopkins and Tristan Hess' database management term project.
 
 -->
 

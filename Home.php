@@ -1,6 +1,6 @@
 <!--
 
-This is the home page for Devin Hopkins and Tristan Hess' database management term project.
+	This is the home page for Devin Hopkins and Tristan Hess' database management term project.
 
 -->
 

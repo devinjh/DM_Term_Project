@@ -1,4 +1,8 @@
+<!--
 
+	This is the file that contains all of the functinos that build specific queries for different operations.
+
+-->
 
 <?php
 
@@ -23,11 +27,13 @@
 		// type_update
 		if(isModified($type_update))
 		{
-			if ($first_addition) // It's not the first addition
+			// It's not the first addition
+			if ($first_addition)
 			{
 				$query = $query . " AND type = \"" . $type_update . "\"";
 			}
-			else // It is the first addition
+			// It's the first addition
+			else
 			{
 				$first_addition = true;
 				$query = $query . "type = \"" . $type_update . "\"";
@@ -37,17 +43,20 @@
 		// cor_update
 		if(isModified($cor_update) && strcmp($the_table, "export") != 0)
 		{
-			if ($first_addition) // It's not the first addition
+			// It's not the first addition
+			if ($first_addition)
 			{
 				$query = $query . " AND cor = " . $cor_update;
 			}
-			else // It is the first addition
+			// It's the first addition
+			else
 			{
 				$first_addition = true;
 				$query = $query . "cor = " . $cor_update;
 			}
 		}
-		else if (isModified($cor_update) && strcmp($the_table, "export") == 0) // If the issue was that the table doesn't contain the column searched for, the query is tanked
+		// If the issue was that the table doesn't contain the column searched for, the query is tanked
+		else if (isModified($cor_update) && strcmp($the_table, "export") == 0)
 		{
 			$query = $query . " FAKE ";
 		}
@@ -55,17 +64,20 @@
 		// tn_update
 		if(isModified($tn_update) && strcmp($the_table, "export") != 0)
 		{
-			if ($first_addition) // It's not the first addition
+			// It's not the first addition
+			if ($first_addition)
 			{
 				$query = $query . " AND tn = " . $tn_update;
 			}
-			else // It is the first addition
+			// It's the first addition
+			else
 			{
 				$first_addition = true;
 				$query = $query . "tn = " . $tn_update;
 			}
 		}
-		else if (isModified($tn_update) && strcmp($the_table, "export") == 0) // If the issue was that the table doesn't contain the column searched for, the query is tanked
+		// If the issue was that the table doesn't contain the column searched for, the query is tanked
+		else if (isModified($tn_update) && strcmp($the_table, "export") == 0)
 		{
 			$query = $query . " FAKE ";
 		}
@@ -73,17 +85,20 @@
 		// coverpath_update
 		if(isModified($coverpath_update) && strcmp($the_table, "export") != 0)
 		{
-			if ($first_addition) // It's not the first addition
+			// It's not the first addition
+			if ($first_addition)
 			{
 				$query = $query . " AND coverpath = \"" . $coverpath_update . "\"";
 			}
-			else // It is the first addition
+			// It's the first addition
+			else
 			{
 				$first_addition = true;
 				$query = $query . "coverpath = \"" . $coverpath_update . "\"";
 			}
 		}
-		else if (isModified($coverpath_update) && strcmp($the_table, "export") == 0) // If the issue was that the table doesn't contain the column searched for, the query is tanked
+		// If the issue was that the table doesn't contain the column searched for, the query is tanked
+		else if (isModified($coverpath_update) && strcmp($the_table, "export") == 0)
 		{
 			$query = $query . " FAKE ";
 		}
@@ -91,11 +106,13 @@
 		// name_update
 		if(isModified($name_update))
 		{
-			if ($first_addition) // It's not the first addition
+			// It's not the first addition
+			if ($first_addition)
 			{
 				$query = $query . " AND name = \"" . $name_update . "\"";
 			}
-			else // It is the first addition
+			// It's the first addition
+			else
 			{
 				$first_addition = true;
 				$query = $query . "name = \"" . $name_update . "\"";
@@ -105,17 +122,20 @@
 		// cos_update
 		if(isModified($cos_update) && strcmp($the_table, "export") != 0)
 		{
-			if ($first_addition) // It's not the first addition
+			// It's not the first addition
+			if ($first_addition)
 			{
 				$query = $query . " AND cos = " . $cos_update;
 			}
-			else // It is the first addition
+			// It's the first addition
+			else
 			{
 				$first_addition = true;
 				$query = $query . "cos = " . $cos_update;
 			}
 		}
-		else if (isModified($cos_update) && strcmp($the_table, "export") == 0) // If the issue was that the table doesn't contain the column searched for, the query is tanked
+		// If the issue was that the table doesn't contain the column searched for, the query is tanked
+		else if (isModified($cos_update) && strcmp($the_table, "export") == 0)
 		{
 			$query = $query . " FAKE ";
 		}
@@ -123,17 +143,20 @@
 		// port_update
 		if(isModified($port_update) && strcmp($the_table, "akron") != 0 && strcmp($the_table, "wayne") != 0)
 		{
-			if ($first_addition) // It's not the first addition
+			// It's not the first addition
+			if ($first_addition)
 			{
 				$query = $query . " AND port = \"" . $port_update . "\"";
 			}
-			else // It is the first addition
+			// It's the first addition
+			else
 			{
 				$first_addition = true;
 				$query = $query . "port = \"" . $port_update . "\"";
 			}
 		}
-		else if (isModified($port_update) && (strcmp($the_table, "akron") == 0 || strcmp($the_table, "wayne") == 0)) // If the issue was that the table doesn't contain the column searched for, the query is tanked
+		// If the issue was that the table doesn't contain the column searched for, the query is tanked
+		else if (isModified($port_update) && (strcmp($the_table, "akron") == 0 || strcmp($the_table, "wayne") == 0))
 		{
 			$query = $query . " FAKE ";
 		}
@@ -141,17 +164,20 @@
 		// room_update
 		if(isModified($room_update) && strcmp($the_table, "akron") != 0 && strcmp($the_table, "wayne") != 0)
 		{
-			if ($first_addition) // It's not the first addition
+			// It's not the first addition
+			if ($first_addition)
 			{
 				$query = $query . " AND room = \"" . $room_update . "\"";
 			}
-			else // It is the first addition
+			// It's the first addition
+			else
 			{
 				$first_addition = true;
 				$query = $query . "room = \"" . $room_update . "\"";
 			}
 		}
-		else if (isModified($room_update) && (strcmp($the_table, "akron") == 0 || strcmp($the_table, "wayne") == 0)) // If the issue was that the table doesn't contain the column searched for, the query is tanked
+		// If the issue was that the table doesn't contain the column searched for, the query is tanked
+		else if (isModified($room_update) && (strcmp($the_table, "akron") == 0 || strcmp($the_table, "wayne") == 0))
 		{
 			$query = $query . " FAKE ";
 		}
@@ -159,17 +185,20 @@
 		// jack_update
 		if(isModified($jack_update) && strcmp($the_table, "akron") != 0 && strcmp($the_table, "wayne") != 0)
 		{
-			if ($first_addition) // It's not the first addition
+			// It's not the first addition
+			if ($first_addition)
 			{
 				$query = $query . " AND jack = \"" . $jack_update . "\"";
 			}
-			else // It is the first addition
+			// It's the first addition
+			else
 			{
 				$first_addition = true;
 				$query = $query . "jack = \"" . $jack_update . "\"";
 			}
 		}
-		else if (isModified($jack_update) && (strcmp($the_table, "akron") == 0 || strcmp($the_table, "wayne") == 0)) // If the issue was that the table doesn't contain the column searched for, the query is tanked
+		// If the issue was that the table doesn't contain the column searched for, the query is tanked
+		else if (isModified($jack_update) && (strcmp($the_table, "akron") == 0 || strcmp($the_table, "wayne") == 0))
 		{
 			$query = $query . " FAKE ";
 		}
@@ -177,17 +206,20 @@
 		// cable_update
 		if(isModified($cable_update) && strcmp($the_table, "akron") != 0 && strcmp($the_table, "wayne") != 0)
 		{
-			if ($first_addition) // It's not the first addition
+			// It's not the first addition
+			if ($first_addition)
 			{
 				$query = $query . " AND cable = \"" . $cable_update . "\"";
 			}
-			else // It is the first addition
+			// It's the first addition
+			else
 			{
 				$first_addition = true;
 				$query = $query . "cable = \"" . $cable_update . "\"";
 			}
 		}
-		else if (isModified($cable_update) && (strcmp($the_table, "akron") == 0 || strcmp($the_table, "wayne") == 0)) // If the issue was that the table doesn't contain the column searched for, the query is tanked
+		// If the issue was that the table doesn't contain the column searched for, the query is tanked
+		else if (isModified($cable_update) && (strcmp($the_table, "akron") == 0 || strcmp($the_table, "wayne") == 0))
 		{
 			$query = $query . " FAKE ";
 		}
@@ -195,17 +227,20 @@
 		// floor_update
 		if(isModified($floor_update) && strcmp($the_table, "akron") != 0 && strcmp($the_table, "wayne") != 0)
 		{
-			if ($first_addition) // It's not the first addition
+			// It's not the first addition
+			if ($first_addition)
 			{
 				$query = $query . " AND floor = \"" . $floor_update . "\"";
 			}
-			else // It is the first addition
+			// It's the first addition
+			else
 			{
 				$first_addition = true;
 				$query = $query . "floor = \"" . $floor_update . "\"";
 			}
 		}
-		else if (isModified($floor_update) && (strcmp($the_table, "akron") == 0 || strcmp($the_table, "wayne") == 0)) // If the issue was that the table doesn't contain the column searched for, the query is tanked
+		// If the issue was that the table doesn't contain the column searched for, the query is tanked
+		else if (isModified($floor_update) && (strcmp($the_table, "akron") == 0 || strcmp($the_table, "wayne") == 0))
 		{
 			$query = $query . " FAKE ";
 		}
@@ -213,16 +248,19 @@
 		// building_update
 		if(isModified($building_update) && strcmp($the_table, "akron") != 0 && strcmp($the_table, "wayne") != 0)
 		{
-			if ($first_addition) // It's not the first addition
+			// It's not the first addition
+			if ($first_addition)
 			{
 				$query = $query . " AND building = \"" . $building_update . "\"";
 			}
-			else // It is the first addition
+			// It's the first addition
+			else 
 			{
 				$query = $query . "building = \"" . $building_update . "\"";
 			}
 		}
-		else if (isModified($building_update) && (strcmp($the_table, "akron") == 0 || strcmp($the_table, "wayne") == 0)) // If the issue was that the table doesn't contain the column searched for, the query is tanked
+		// If the issue was that the table doesn't contain the column searched for, the query is tanked
+		else if (isModified($building_update) && (strcmp($the_table, "akron") == 0 || strcmp($the_table, "wayne") == 0)) 
 		{
 			$query = $query . " FAKE ";
 		}
@@ -248,7 +286,8 @@
 		// If they didn't specify something that was required, this keeps track of it
 		$missing_required = false;
 		
-		if (strcmp($table, "akron") == 0) // Inserting into the akron table
+		// Inserting into the akron table
+		if (strcmp($table, "akron") == 0)
 		{
 			// extension
 			if (isModified($extension))
@@ -257,7 +296,8 @@
 				$query_part_one = $query_part_one . "extension,";
 				$query_part_two = $query_part_two . $extension . ",";
 			}
-			else // They didn't insert a necessary piece of information
+			// They didn't insert a necessary piece of information
+			else
 			{
 				$missing_required = true;
 			}
@@ -268,7 +308,9 @@
 				$adding_something = true;
 				$query_part_one = $query_part_one . "type,";
 				$query_part_two = $query_part_two . "\"" . $type . "\",";
-			}else // They didn't insert a necessary piece of information
+			}
+			// They didn't insert a necessary piece of information
+			else
 			{
 				$missing_required = true;
 			}
@@ -313,7 +355,8 @@
 				$query_part_two = $query_part_two . $cos . ",";
 			}
 		}
-		else if (strcmp($table, "wayne") == 0) // Inserting into the wayne table
+		// Inserting into the wayne table
+		else if (strcmp($table, "wayne") == 0)
 		{
 			// extension
 			if (isModified($extension))
@@ -322,7 +365,8 @@
 				$query_part_one = $query_part_one . "extension,";
 				$query_part_two = $query_part_two . $extension . ",";
 			}
-			else // They didn't insert a necessary piece of information
+			// They didn't insert a necessary piece of information
+			else
 			{
 				$missing_required = true;
 			}
@@ -334,7 +378,8 @@
 				$query_part_one = $query_part_one . "type,";
 				$query_part_two = $query_part_two . "\"" . $type . "\",";
 			}
-			else // They didn't insert a necessary piece of information
+			// They didn't insert a necessary piece of information
+			else
 			{
 				$missing_required = true;
 			}
@@ -379,7 +424,8 @@
 				$query_part_two = $query_part_two . $cos . ",";
 			}
 		}
-		else if (strcmp($table, "export") == 0) // Inserting into the export table
+		// Inserting into the export table
+		else if (strcmp($table, "export") == 0)
 		{
 			// extension
 			if (isModified($extension))
@@ -388,7 +434,8 @@
 				$query_part_one = $query_part_one . "extension,";
 				$query_part_two = $query_part_two . $extension . ",";
 			}
-			else // They didn't insert a necessary piece of information
+			// They didn't insert a necessary piece of information
+			else
 			{
 				$missing_required = true;
 			}
@@ -400,7 +447,8 @@
 				$query_part_one = $query_part_one . "type,";
 				$query_part_two = $query_part_two . "\"" . $type . "\",";
 			}
-			else // They didn't insert a necessary piece of information
+			// They didn't insert a necessary piece of information
+			else
 			{
 				$missing_required = true;
 			}
@@ -476,7 +524,8 @@
 		$query_part_two = substr($query_part_two, 0, strlen($query_part_two) - 1) . ");";
 		
 		// Making sure everything is as it should be
-		if (!$adding_something) // Nothing was actually added, the insert function was just called
+		// Nothing was actually added, the insert function was just called
+		if (!$adding_something)
 		{
 			// To prevent an error message
 			$query_part_one = "SELECT * FROM";
@@ -485,7 +534,8 @@
 			// Letting the user know they didn't acutally give anything to insert
 			print "<p> Nothing was filled out in the text boxes. Therefore, nothing was inserted. </p>";
 		}
-		else if ($missing_required) // They didn't insert a necessary piece of information
+		// They didn't insert a necessary piece of information
+		else if ($missing_required)
 		{
 			// To prevent an error message
 			$query_part_one = "SELECT * FROM";
@@ -517,11 +567,13 @@
 		// type
 		if(isModified($type))
 		{
-			if ($first_addition) // It's not the first addition
+			// It's not the first addition
+			if ($first_addition)
 			{
 				$query = $query . " AND type = \"" . $type . "\"";
 			}
-			else // It is the first addition
+			// It's the first addition
+			else
 			{
 				$first_addition = true;
 				$query = $query . " WHERE type = \"" . $type . "\"";
@@ -531,23 +583,28 @@
 		// cor
 		if(isModified($cor) && strcmp($the_table, "export") != 0)
 		{
-			if ($first_addition) // It's not the first addition
+			// It's not the first addition
+			if ($first_addition)
 			{
 				$query = $query . " AND cor = " . $cor;
 			}
-			else // It is the first addition
+			// It's the first addition
+			else
 			{
 				$first_addition = true;
 				$query = $query . " WHERE cor = " . $cor;
 			}
 		}
-		else if (isModified($cor) && strcmp($the_table, "export") == 0) // If the issue was that the table doesn't contain the column searched for, the query is tanked
+		// If the issue was that the table doesn't contain the column searched for, the query is tanked
+		else if (isModified($cor) && strcmp($the_table, "export") == 0)
 		{
-			if ($first_addition) // It's not the first addition
+			// It's not the first addition
+			if ($first_addition)
 			{
 				$query = $query . " AND extension = -1";
 			}
-			else // It is the first addition
+			// It's the first addition
+			else
 			{
 				$first_addition = true;
 				$query = $query . " WHERE extension = -1";
@@ -557,23 +614,28 @@
 		// tn
 		if(isModified($tn) && strcmp($the_table, "export") != 0)
 		{
-			if ($first_addition) // It's not the first addition
+			// It's not the first addition
+			if ($first_addition)
 			{
 				$query = $query . " AND tn = " . $tn;
 			}
-			else // It is the first addition
+			// It's the first addition
+			else
 			{
 				$first_addition = true;
 				$query = $query . " WHERE tn = " . $tn;
 			}
 		}
-		else if (isModified($tn) && strcmp($the_table, "export") == 0) // If the issue was that the table doesn't contain the column searched for, the query is tanked
+		// If the issue was that the table doesn't contain the column searched for, the query is tanked
+		else if (isModified($tn) && strcmp($the_table, "export") == 0)
 		{
-			if ($first_addition) // It's not the first addition
+			// It's not the first addition
+			if ($first_addition)
 			{
 				$query = $query . " AND extension = -1";
 			}
-			else // It is the first addition
+			// It's the first addition
+			else
 			{
 				$first_addition = true;
 				$query = $query . " WHERE extension = -1";
@@ -583,23 +645,28 @@
 		// coverpath
 		if(isModified($coverpath) && strcmp($the_table, "export") != 0)
 		{
-			if ($first_addition) // It's not the first addition
+			// It's not the first addition
+			if ($first_addition)
 			{
 				$query = $query . " AND coverpath = \"" . $coverpath . "\"";
 			}
-			else // It is the first addition
+			// It's the first addition
+			else
 			{
 				$first_addition = true;
 				$query = $query . " WHERE coverpath = \"" . $coverpath . "\"";
 			}
 		}
-		else if (isModified($coverpath) && strcmp($the_table, "export") == 0) // If the issue was that the table doesn't contain the column searched for, the query is tanked
+		// If the issue was that the table doesn't contain the column searched for, the query is tanked
+		else if (isModified($coverpath) && strcmp($the_table, "export") == 0)
 		{
-			if ($first_addition) // It's not the first addition
+			// It's not the first addition
+			if ($first_addition)
 			{
 				$query = $query . " AND extension = -1";
 			}
-			else // It is the first addition
+			// It's the first addition
+			else
 			{
 				$first_addition = true;
 				$query = $query . " WHERE extension = -1";
@@ -609,11 +676,13 @@
 		// name
 		if(isModified($name))
 		{
-			if ($first_addition) // It's not the first addition
+			// It's not the first addition
+			if ($first_addition)
 			{
 				$query = $query . " AND name = \"" . $name . "\"";
 			}
-			else // It is the first addition
+			// It's the first addition
+			else
 			{
 				$first_addition = true;
 				$query = $query . " WHERE name = \"" . $name . "\"";
@@ -623,23 +692,28 @@
 		// cos
 		if(isModified($cos) && strcmp($the_table, "export") != 0)
 		{
-			if ($first_addition) // It's not the first addition
+			// It's not the first addition
+			if ($first_addition)
 			{
 				$query = $query . " AND cos = " . $cos;
 			}
-			else // It is the first addition
+			// It's the first addition
+			else
 			{
 				$first_addition = true;
 				$query = $query . " WHERE cos = " . $cos;
 			}
 		}
-		else if (isModified($cos) && strcmp($the_table, "export") == 0) // If the issue was that the table doesn't contain the column searched for, the query is tanked
+		// If the issue was that the table doesn't contain the column searched for, the query is tanked
+		else if (isModified($cos) && strcmp($the_table, "export") == 0)
 		{
-			if ($first_addition) // It's not the first addition
+			// It's not the first addition
+			if ($first_addition)
 			{
 				$query = $query . " AND extension = -1";
 			}
-			else // It is the first addition
+			// It's the first addition
+			else
 			{
 				$first_addition = true;
 				$query = $query . " WHERE extension = -1";
@@ -649,23 +723,28 @@
 		// port
 		if(isModified($port) && strcmp($the_table, "akron") != 0 && strcmp($the_table, "wayne") != 0)
 		{
-			if ($first_addition) // It's not the first addition
+			// It's not the first addition
+			if ($first_addition)
 			{
 				$query = $query . " AND port = \"" . $port . "\"";
 			}
-			else // It is the first addition
+			// It's the first addition
+			else
 			{
 				$first_addition = true;
 				$query = $query . " WHERE port = \"" . $port . "\"";
 			}
 		}
-		else if (isModified($port) && (strcmp($the_table, "akron") == 0 || strcmp($the_table, "wayne") == 0)) // If the issue was that the table doesn't contain the column searched for, the query is tanked
+		// If the issue was that the table doesn't contain the column searched for, the query is tanked
+		else if (isModified($port) && (strcmp($the_table, "akron") == 0 || strcmp($the_table, "wayne") == 0))
 		{
-			if ($first_addition) // It's not the first addition
+			// It's not the first addition
+			if ($first_addition)
 			{
 				$query = $query . " AND extension = -1";
 			}
-			else // It is the first addition
+			// It's the first addition
+			else
 			{
 				$first_addition = true;
 				$query = $query . " WHERE extension = -1";
@@ -675,23 +754,28 @@
 		// room
 		if(isModified($room) && strcmp($the_table, "akron") != 0 && strcmp($the_table, "wayne") != 0)
 		{
-			if ($first_addition) // It's not the first addition
+			// It's not the first addition
+			if ($first_addition)
 			{
 				$query = $query . " AND room = \"" . $room . "\"";
 			}
-			else // It is the first addition
+			// It's the first addition
+			else
 			{
 				$first_addition = true;
 				$query = $query . " WHERE room = \"" . $room . "\"";
 			}
 		}
-		else if (isModified($room) && (strcmp($the_table, "akron") == 0 || strcmp($the_table, "wayne") == 0)) // If the issue was that the table doesn't contain the column searched for, the query is tanked
+		// If the issue was that the table doesn't contain the column searched for, the query is tanked
+		else if (isModified($room) && (strcmp($the_table, "akron") == 0 || strcmp($the_table, "wayne") == 0))
 		{
-			if ($first_addition) // It's not the first addition
+			// It's not the first addition
+			if ($first_addition)
 			{
 				$query = $query . " AND extension = -1";
 			}
-			else // It is the first addition
+			// It's the first addition
+			else
 			{
 				$first_addition = true;
 				$query = $query . " WHERE extension = -1";
@@ -701,23 +785,28 @@
 		// jack
 		if(isModified($jack) && strcmp($the_table, "akron") != 0 && strcmp($the_table, "wayne") != 0)
 		{
-			if ($first_addition) // It's not the first addition
+			// It's not the first addition
+			if ($first_addition)
 			{
 				$query = $query . " AND jack = \"" . $jack . "\"";
 			}
-			else // It is the first addition
+			// It's the first addition
+			else
 			{
 				$first_addition = true;
 				$query = $query . " WHERE jack = \"" . $jack . "\"";
 			}
 		}
-		else if (isModified($jack) && (strcmp($the_table, "akron") == 0 || strcmp($the_table, "wayne") == 0)) // If the issue was that the table doesn't contain the column searched for, the query is tanked
+		// If the issue was that the table doesn't contain the column searched for, the query is tanked
+		else if (isModified($jack) && (strcmp($the_table, "akron") == 0 || strcmp($the_table, "wayne") == 0))
 		{
-			if ($first_addition) // It's not the first addition
+			// It's not the first addition
+			if ($first_addition)
 			{
 				$query = $query . " AND extension = -1";
 			}
-			else // It is the first addition
+			// It's the first addition
+			else
 			{
 				$first_addition = true;
 				$query = $query . " WHERE extension = -1";
@@ -727,23 +816,28 @@
 		// cable
 		if(isModified($cable) && strcmp($the_table, "akron") != 0 && strcmp($the_table, "wayne") != 0)
 		{
-			if ($first_addition) // It's not the first addition
+			// It's not the first addition
+			if ($first_addition)
 			{
 				$query = $query . " AND cable = \"" . $cable . "\"";
 			}
-			else // It is the first addition
+			// It's the first addition
+			else
 			{
 				$first_addition = true;
 				$query = $query . " WHERE cable = \"" . $cable . "\"";
 			}
 		}
-		else if (isModified($cable) && (strcmp($the_table, "akron") == 0 || strcmp($the_table, "wayne") == 0)) // If the issue was that the table doesn't contain the column searched for, the query is tanked
+		// If the issue was that the table doesn't contain the column searched for, the query is tanked
+		else if (isModified($cable) && (strcmp($the_table, "akron") == 0 || strcmp($the_table, "wayne") == 0))
 		{
-			if ($first_addition) // It's not the first addition
+			// It's not the first addition
+			if ($first_addition)
 			{
 				$query = $query . " AND extension = -1";
 			}
-			else // It is the first addition
+			// It's the first addition
+			else
 			{
 				$first_addition = true;
 				$query = $query . " WHERE extension = -1";
@@ -753,23 +847,28 @@
 		// floor
 		if(isModified($floor) && strcmp($the_table, "akron") != 0 && strcmp($the_table, "wayne") != 0)
 		{
-			if ($first_addition) // It's not the first addition
+			// It's not the first addition
+			if ($first_addition)
 			{
 				$query = $query . " AND floor = \"" . $floor . "\"";
 			}
-			else // It is the first addition
+			// It's the first addition
+			else
 			{
 				$first_addition = true;
 				$query = $query . " WHERE floor = \"" . $floor . "\"";
 			}
 		}
-		else if (isModified($floor) && (strcmp($the_table, "akron") == 0 || strcmp($the_table, "wayne") == 0)) // If the issue was that the table doesn't contain the column searched for, the query is tanked
+		// If the issue was that the table doesn't contain the column searched for, the query is tanked
+		else if (isModified($floor) && (strcmp($the_table, "akron") == 0 || strcmp($the_table, "wayne") == 0))
 		{
-			if ($first_addition) // It's not the first addition
+			// It's not the first addition
+			if ($first_addition)
 			{
 				$query = $query . " AND extension = -1";
 			}
-			else // It is the first addition
+			// It's the first addition
+			else
 			{
 				$first_addition = true;
 				$query = $query . " WHERE extension = -1";
@@ -779,22 +878,27 @@
 		// building
 		if(isModified($building) && strcmp($the_table, "akron") != 0 && strcmp($the_table, "wayne") != 0)
 		{
-			if ($first_addition) // It's not the first addition
+			// It's not the first addition
+			if ($first_addition)
 			{
 				$query = $query . " AND building = \"" . $building . "\"";
 			}
-			else // It is the first addition
+			// It's the first addition
+			else
 			{
 				$query = $query . " WHERE building = \"" . $building . "\"";
 			}
 		}
-		else if (isModified($building) && (strcmp($the_table, "akron") == 0 || strcmp($the_table, "wayne") == 0)) // If the issue was that the table doesn't contain the column searched for, the query is tanked
+		// If the issue was that the table doesn't contain the column searched for, the query is tanked
+		else if (isModified($building) && (strcmp($the_table, "akron") == 0 || strcmp($the_table, "wayne") == 0))
 		{
-			if ($first_addition) // It's not the first addition
+			// It's not the first addition
+			if ($first_addition)
 			{
 				$query = $query . " AND extension = -1";
 			}
-			else // It is the first addition
+			// It's the first addition
+			else
 			{
 				$first_addition = true;
 				$query = $query . " WHERE extension = -1";

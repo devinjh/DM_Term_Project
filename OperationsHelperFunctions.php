@@ -69,7 +69,7 @@
 	function getTableNames()
 	{
 		// Connecting to the remote MySQL and verifying that we do
-		// mysqli_connect("connection:port", "username", "password");
+		// Format: mysqli_connect("connection:port", "username", "password");
 		$db = mysqli_connect("remotemysql.com:3306", "ITt7W4LVtm", "2RdcJaMtQp");
 		if (!$db)
 		{
