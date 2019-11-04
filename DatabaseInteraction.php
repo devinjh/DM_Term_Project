@@ -123,6 +123,20 @@
 		{
 			document.getElementById("required_paragraph").innerHTML = "* = Ignore the asterisk for this operation";
 		}
+
+		// This third part makes sure the search checkboxes are correctly displayed or hidden
+		// The search operation is selected
+		if (e == OperationEnum.Search)
+		{
+			// They are switched to visible
+			document.getElementById("search_checkboxes").hidden = false;
+		}
+		// The search operation is not selected
+		else
+		{
+			// They are switched to hidden
+			document.getElementById("search_checkboxes").hidden = true;
+		}
 	}
 
 </script>
@@ -418,6 +432,29 @@
 
 		<p id="required_paragraph">
 			* = Ignore the asterisk for this operation
+		</p>
+
+		<!-- The checkboxes that gather information on if they're searching for a specific column. Only shows up when the user has the"search" operation selected. -->
+		<p id="search_checkboxes" hidden>
+			
+			<!-- Little information explaining to the user what the checkboxes are for. -->
+			If you would like to search for (a) specific column(s), please indicate which one(s). If not, leave them all blank.<br>
+
+			<!-- The checkboxes. -->
+			<input type="checkbox" name="search_checkbox" value="extension" id="extension_checkbox"> Extension
+			<input type="checkbox" name="search_checkbox" value="type" id="type_checkbox">Type
+			<input type="checkbox" name="search_checkbox" value="cor" id="cor_checkbox">Cor
+			<input type="checkbox" name="search_checkbox" value="tn" id="tn_checkbox">Tn
+			<input type="checkbox" name="search_checkbox" value="coverpath" id="coverpath_checkbox">Coverpath
+			<input type="checkbox" name="search_checkbox" value="name" id="name_checkbox">Name
+			<input type="checkbox" name="search_checkbox" value="cos" id="cos_checkbox">Cos
+			<input type="checkbox" name="search_checkbox" value="port" id="port_checkbox">Port
+			<input type="checkbox" name="search_checkbox" value="room" id="room_checkbox">Room
+			<input type="checkbox" name="search_checkbox" value="jack" id="jack_checkbox">Jack
+			<input type="checkbox" name="search_checkbox" value="cable" id="cable_checkbox">Cable
+			<input type="checkbox" name="search_checkbox" value="floor" id="floor_checkbox">Floor
+			<input type="checkbox" name="search_checkbox" value="building" id="building_checkbox">Building
+
 		</p>
 		
 
