@@ -557,6 +557,7 @@
 
 		</p>
 
+		<!-- This simply tells the user what the asterisk is for. -->
 		<p id="required_paragraph">
 			* = Ignore the asterisk for this operation
 		</p>		
