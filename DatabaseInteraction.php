@@ -319,6 +319,106 @@
 	{
 		$building_update = $_POST["building_update"];
 	}
+
+	// The array that holds all of the checkboxes
+	//$search_checkbox_array = $_POST["search_checkbox"];
+
+	// Setting all of the update variables in case they aren't defined
+	$extension_search_checkbox = "DNE";
+	$type_search_checkbox = "DNE";
+	$cor_search_checkbox = "DNE";
+	$tn_search_checkbox = "DNE";
+	$coverpath_search_checkbox = "DNE";
+	$name_search_checkbox = "DNE";
+	$cos_search_checkbox = "DNE";
+	$port_search_checkbox = "DNE";
+	$room_search_checkbox = "DNE";
+	$jack_search_checkbox = "DNE";
+	$cable_search_checkbox = "DNE";
+	$floor_search_checkbox = "DNE";
+	$building_search_checkbox = "DNE";
+
+	// This section goes through and grabs all of the variables that are defined (only the update ones)
+	// extension_update
+	if (isset($_POST["extension_search_checkbox"]))
+	{
+		$extension_search_checkbox = $_POST["extension_search_checkbox"];
+	}
+	// type_update
+	if (isset($_POST["type_search_checkbox"]))
+	{
+		$type_search_checkbox = $_POST["type_search_checkbox"];
+	}
+	// cor_update
+	if (isset($_POST["cor_search_checkbox"]))
+	{
+		$cor_search_checkbox = $_POST["cor_search_checkbox"];
+	}
+	// tn_update
+	if (isset($_POST["tn_search_checkbox"]))
+	{
+		$tn_search_checkbox = $_POST["tn_search_checkbox"];
+	}
+	// coverpath_update
+	if (isset($_POST["coverpath_search_checkbox"]))
+	{
+		$coverpath_search_checkbox = $_POST["coverpath_search_checkbox"];
+	}
+	// name_update
+	if (isset($_POST["name_search_checkbox"]))
+	{
+		$name_search_checkbox = $_POST["name_search_checkbox"];
+	}
+	// cos_update
+	if (isset($_POST["cos_search_checkbox"]))
+	{
+		$cos_search_checkbox = $_POST["cos_search_checkbox"];
+	}
+	// port_update
+	if (isset($_POST["port_search_checkbox"]))
+	{
+		$port_search_checkbox = $_POST["port_search_checkbox"];
+	}
+	// room_update
+	if (isset($_POST["room_search_checkbox"]))
+	{
+		$room_search_checkbox = $_POST["room_search_checkbox"];
+	}
+	// jack_update
+	if (isset($_POST["jack_search_checkbox"]))
+	{
+		$jack_search_checkbox = $_POST["jack_search_checkbox"];
+	}
+	// cable_update
+	if (isset($_POST["cable_search_checkbox"]))
+	{
+		$cable_search_checkbox = $_POST["cable_search_checkbox"];
+	}
+	// floor_update
+	if (isset($_POST["floor_search_checkbox"]))
+	{
+		$floor_search_checkbox = $_POST["floor_search_checkbox"];
+	}
+	// building_update
+	if (isset($_POST["building_search_checkbox"]))
+	{
+		$building_search_checkbox = $_POST["building_search_checkbox"];
+	}
+
+	// TESTING ONLY
+	/*print "<p>" . $extension_search_checkbox . "</p>";
+	print "<p>" . $type_search_checkbox . "</p>";
+	print "<p>" . $cor_search_checkbox . "</p>";
+	print "<p>" . $tn_search_checkbox . "</p>";
+	print "<p>" . $coverpath_search_checkbox . "</p>";
+	print "<p>" . $name_search_checkbox . "</p>";
+	print "<p>" . $cos_search_checkbox . "</p>";
+	print "<p>" . $port_search_checkbox . "</p>";
+	print "<p>" . $room_search_checkbox . "</p>";
+	print "<p>" . $jack_search_checkbox . "</p>";
+	print "<p>" . $cable_search_checkbox . "</p>";
+	print "<p>" . $floor_search_checkbox . "</p>";
+	print "<p>" . $building_search_checkbox . "</p>";*/
 	
 ?>
 
@@ -328,8 +428,8 @@
 	// Determines the operation being performed and performs it
 	function determineOperation()
 	{
-		// Using the global variable $operation in this function
-		global $operation;
+		// Using the global variable operation and the array of search checkboxes in this function
+		global $operation, $search_checkbox_array;
 		
 		// Making sure they actually selected an operation
 		if (strcmp($operation, "DNE") != 0)
@@ -441,19 +541,19 @@
 			If you would like to search for (a) specific column(s), please indicate which one(s). If not, leave them all blank.<br>
 
 			<!-- The checkboxes. -->
-			<input type="checkbox" name="search_checkbox" value="extension" id="extension_checkbox"> Extension
-			<input type="checkbox" name="search_checkbox" value="type" id="type_checkbox">Type
-			<input type="checkbox" name="search_checkbox" value="cor" id="cor_checkbox">Cor
-			<input type="checkbox" name="search_checkbox" value="tn" id="tn_checkbox">Tn
-			<input type="checkbox" name="search_checkbox" value="coverpath" id="coverpath_checkbox">Coverpath
-			<input type="checkbox" name="search_checkbox" value="name" id="name_checkbox">Name
-			<input type="checkbox" name="search_checkbox" value="cos" id="cos_checkbox">Cos
-			<input type="checkbox" name="search_checkbox" value="port" id="port_checkbox">Port
-			<input type="checkbox" name="search_checkbox" value="room" id="room_checkbox">Room
-			<input type="checkbox" name="search_checkbox" value="jack" id="jack_checkbox">Jack
-			<input type="checkbox" name="search_checkbox" value="cable" id="cable_checkbox">Cable
-			<input type="checkbox" name="search_checkbox" value="floor" id="floor_checkbox">Floor
-			<input type="checkbox" name="search_checkbox" value="building" id="building_checkbox">Building
+			<input type="checkbox" name="extension_search_checkbox" value="extension" id="extension_checkbox"> Extension
+			<input type="checkbox" name="type_search_checkbox" value="type" id="type_checkbox">Type
+			<input type="checkbox" name="cor_search_checkbox" value="cor" id="cor_checkbox">Cor
+			<input type="checkbox" name="tn_search_checkbox" value="tn" id="tn_checkbox">Tn
+			<input type="checkbox" name="coverpath_search_checkbox" value="coverpath" id="coverpath_checkbox">Coverpath
+			<input type="checkbox" name="name_search_checkbox" value="name" id="name_checkbox">Name
+			<input type="checkbox" name="cos_search_checkbox" value="cos" id="cos_checkbox">Cos
+			<input type="checkbox" name="port_search_checkbox" value="port" id="port_checkbox">Port
+			<input type="checkbox" name="room_search_checkbox" value="room" id="room_checkbox">Room
+			<input type="checkbox" name="jack_search_checkbox" value="jack" id="jack_checkbox">Jack
+			<input type="checkbox" name="cable_search_checkbox" value="cable" id="cable_checkbox">Cable
+			<input type="checkbox" name="floor_search_checkbox" value="floor" id="floor_checkbox">Floor
+			<input type="checkbox" name="building_search_checkbox" value="building" id="building_checkbox">Building
 
 		</p>
 		

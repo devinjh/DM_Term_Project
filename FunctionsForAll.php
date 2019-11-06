@@ -23,4 +23,135 @@
 		return $website_path;
 	}
 
+	function isApplicable($table, $column_header)
+	{
+		// The table is akron or wayne
+		if (strcmp($table, "akron") == 0 || strcmp($table, "wayne") == 0)
+		{
+			/*switch ($column_header){
+				case "extension" : return true;
+				case "type" : return true;
+				case "cor" : return true;
+				case "tn" : return true;
+				case "coverpath" : return true;
+				case "name" : return true;
+				case "cos" : return true;
+				default: return false;
+			}*/
+
+			if (strcmp($column_header, "extension") == 0)
+			{
+				return true;
+			}
+			else if (strcmp($column_header, "type") == 0)
+			{
+				return true;
+			}
+			else if (strcmp($column_header, "cor") == 0)
+			{
+				return true;
+			}
+			else if (strcmp($column_header, "tn") == 0)
+			{
+				return true;
+			}
+			else if (strcmp($column_header, "coverpath") == 0)
+			{
+				return true;
+			}
+			else if (strcmp($column_header, "name") == 0)
+			{
+				return true;
+			}
+			else if (strcmp($column_header, "cos") == 0)
+			{
+				return true;
+			}
+			else
+			{
+				return false;
+			}
+		}
+		// The table is export
+		else if (strcmp($table, "export") == 0)
+		{
+			/*switch ($column_header){
+				case "extension" : return true;
+				case "type" : return true;
+				case "port" : return true;
+				case "name" : return true;
+				case "room" : return true;
+				case "jack" : return true;
+				case "cable" : return true;
+				case "floor" : return true;
+				case "building" : return true;
+				default: return false;
+			}*/
+
+			if (strcmp($column_header, "extension") == 0)
+			{
+				return true;
+			}
+			else if (strcmp($column_header, "type") == 0)
+			{
+				return true;
+			}
+			else if (strcmp($column_header, "port") == 0)
+			{
+				return true;
+			}
+			else if (strcmp($column_header, "name") == 0)
+			{
+				return true;
+			}
+			else if (strcmp($column_header, "room") == 0)
+			{
+				return true;
+			}
+			else if (strcmp($column_header, "jack") == 0)
+			{
+				return true;
+			}
+			else if (strcmp($column_header, "cable") == 0)
+			{
+				return true;
+			}
+			else if (strcmp($column_header, "floor") == 0)
+			{
+				return true;
+			}
+			else if (strcmp($column_header, "building") == 0)
+			{
+				return true;
+			}
+			else
+			{
+				return false;
+			}
+		}
+		// If they're trying to access every table
+		else if (strcmp($table, "all") == 0)
+		{
+			if (strcmp($column_header, "extension") == 0)
+			{
+				return true;
+			}
+			else if (strcmp($column_header, "type") == 0)
+			{
+				return true;
+			}
+			else if (strcmp($column_header, "name") == 0)
+			{
+				return true;
+			}
+			else
+			{
+				return false;
+			}
+		}
+
+		// This means some random table has made it in
+		return false;
+	}
+
 ?>

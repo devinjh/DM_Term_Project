@@ -130,11 +130,69 @@
 	
 	function performSearchOperation()
 	{
-		// Using the global variable table
-		global $table;
+		// Using the global variable table and the search checkboxes variables
+		global $table, $extension_search_checkbox, $type_search_checkbox, $cor_search_checkbox, $tn_search_checkbox, $coverpath_search_checkbox, $name_search_checkbox, $cos_search_checkbox, $port_search_checkbox, $room_search_checkbox, $jack_search_checkbox, $cable_search_checkbox, $floor_search_checkbox, $building_search_checkbox;
+
+		// Declaring the original query
+		$originalQuery = "SELECT ";
+
+		// Creating an array with all of the values of the checkboxe stored in it
+		$array_of_checkboxes = array($extension_search_checkbox, $type_search_checkbox, $cor_search_checkbox, $tn_search_checkbox, $coverpath_search_checkbox, $name_search_checkbox, $cos_search_checkbox, $port_search_checkbox, $room_search_checkbox, $jack_search_checkbox, $cable_search_checkbox, $floor_search_checkbox, $building_search_checkbox);
+
+		// Bollean value to flip after the first value is added
+		$first_value_has_been_added = false;
+
+		// This variable is to make sure they didn't enter anything they were'nt supposed to
+		$go_on = true;
+
+		// Going through and adding any to the selection query that were checked
+		for ($i = 0; $i < count($array_of_checkboxes); $i = $i + 1)
+		{
+			// This means the value was changed
+			if (strcmp($array_of_checkboxes[$i], "DNE") != 0 && isApplicable($table, $array_of_checkboxes[$i]))
+			{
+				// Seeing if it's the first value to go into the select statement
+				if (!$first_value_has_been_added)
+				{
+					// Adding the value to the query
+					$originalQuery = $originalQuery . $array_of_checkboxes[$i];
+
+					// Setting the variable to say that the first value has already been added
+					$first_value_has_been_added = true;
+				}
+				// This means that there is already a value in the query
+				else
+				{
+					$originalQuery = $originalQuery . ", " . $array_of_checkboxes[$i];
+				}
+			}
+			// If the code goes in here, they checked something they weren't supposed to
+			else if (strcmp($array_of_checkboxes[$i], "DNE") == 0 && !isApplicable($table, $array_of_checkboxes[$i]))
+			{
+				$go_on = false;
+			}
+		}
+
+		// If they're not meant to go on
+		if (!$go_on)
+		{
+			print "<p> Error. You checked a box you weren't supposed to. </p>";
+			return;
+		}
+
+		// If none of the checkboxes were selected
+		if (!$first_value_has_been_added)
+		{
+			$originalQuery = "SELECT * FROM ";
+		}
+		// At least one box was checked
+		else
+		{
+			$originalQuery = $originalQuery . " FROM ";
+		}
 		
 		// The base of the query
-		$query = "SELECT * FROM ";
+		$query = $originalQuery;
 		
 		// They are searching every table
 		if (strcmp($table, "all") == 0)
@@ -155,7 +213,7 @@
 				displayOrModifyTable($table_names[$x], $query);
 				
 				// Resetting $query
-				$query = "SELECT * FROM ";
+				$query = $originalQuery;
 			}
 		}
 		// They are searching one table
@@ -341,3 +399,12 @@
 	}
 
 ?>
+
+
+
+
+
+
+
+
+
