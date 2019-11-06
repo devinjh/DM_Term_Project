@@ -530,33 +530,36 @@
 			If you use the right side for anything else, nothing will happen.
 		</p>
 
-		<p id="required_paragraph">
-			* = Ignore the asterisk for this operation
-		</p>
-
 		<!-- The checkboxes that gather information on if they're searching for a specific column. Only shows up when the user has the"search" operation selected. -->
 		<p id="search_checkboxes" hidden>
 			
 			<!-- Little information explaining to the user what the checkboxes are for. -->
-			If you would like to search for (a) specific column(s), please indicate which one(s). If not, leave them all blank.<br>
+			If you would like to search for (a) specific column(s), please indicate which one(s). If not, leave them all blank.<br><br>
+
+			** = Available for table selection of "all", "akron", "export", and "wayne"<br>
+			^ = Available for table selection of "akron" and "wayne"<br>
+			^^ = Available for table selection of "export"<br><br>
 
 			<!-- The checkboxes. -->
-			<input type="checkbox" name="extension_search_checkbox" value="extension" id="extension_checkbox"> Extension
-			<input type="checkbox" name="type_search_checkbox" value="type" id="type_checkbox">Type
-			<input type="checkbox" name="cor_search_checkbox" value="cor" id="cor_checkbox">Cor
-			<input type="checkbox" name="tn_search_checkbox" value="tn" id="tn_checkbox">Tn
-			<input type="checkbox" name="coverpath_search_checkbox" value="coverpath" id="coverpath_checkbox">Coverpath
-			<input type="checkbox" name="name_search_checkbox" value="name" id="name_checkbox">Name
-			<input type="checkbox" name="cos_search_checkbox" value="cos" id="cos_checkbox">Cos
-			<input type="checkbox" name="port_search_checkbox" value="port" id="port_checkbox">Port
-			<input type="checkbox" name="room_search_checkbox" value="room" id="room_checkbox">Room
-			<input type="checkbox" name="jack_search_checkbox" value="jack" id="jack_checkbox">Jack
-			<input type="checkbox" name="cable_search_checkbox" value="cable" id="cable_checkbox">Cable
-			<input type="checkbox" name="floor_search_checkbox" value="floor" id="floor_checkbox">Floor
-			<input type="checkbox" name="building_search_checkbox" value="building" id="building_checkbox">Building
+			<input type="checkbox" name="extension_search_checkbox" value="extension" id="extension_checkbox"> Extension**
+			<input type="checkbox" name="type_search_checkbox" value="type" id="type_checkbox">Type**
+			<input type="checkbox" name="cor_search_checkbox" value="cor" id="cor_checkbox">Cor^
+			<input type="checkbox" name="tn_search_checkbox" value="tn" id="tn_checkbox">Tn^
+			<input type="checkbox" name="coverpath_search_checkbox" value="coverpath" id="coverpath_checkbox">Coverpath^
+			<input type="checkbox" name="name_search_checkbox" value="name" id="name_checkbox">Name**
+			<input type="checkbox" name="cos_search_checkbox" value="cos" id="cos_checkbox">Cos^
+			<input type="checkbox" name="port_search_checkbox" value="port" id="port_checkbox">Port^^
+			<input type="checkbox" name="room_search_checkbox" value="room" id="room_checkbox">Room^^
+			<input type="checkbox" name="jack_search_checkbox" value="jack" id="jack_checkbox">Jack^^
+			<input type="checkbox" name="cable_search_checkbox" value="cable" id="cable_checkbox">Cable^^
+			<input type="checkbox" name="floor_search_checkbox" value="floor" id="floor_checkbox">Floor^^
+			<input type="checkbox" name="building_search_checkbox" value="building" id="building_checkbox">Building^^
 
 		</p>
-		
+
+		<p id="required_paragraph">
+			* = Ignore the asterisk for this operation
+		</p>		
 
 		<!-- The textboxes that gather all of the appropriate information. -->
 		Extension*: <input type="text" name="extension"> - <input type="text" name="extension_update" id="extension_update_textbox" hidden><br>
