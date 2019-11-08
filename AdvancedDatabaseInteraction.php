@@ -65,6 +65,7 @@
             document.getElementById("information_textbox").hidden = false;
 						
 						document.getElementById("upload_information").hidden = true;
+						document.getElementById("output").hidden = true;
         }
         // If the selected function is upload information
         else
@@ -77,8 +78,15 @@
 
             // ADD ANYTHING ELSE THAT NEEDS TO HAPPEN
 						document.getElementById("upload_information").hidden = false;
+						document.getElementById("output").hidden = false;
+						
         }
     }
+		
+		// function to upload file data
+		function uploadData() {
+			document.getElementById("output").innerHTML = document.getElementById("myFile").files[0].name;
+		}
 
 </script>
 
@@ -218,6 +226,7 @@
 		
 		<p id="upload_information" hidden="true">
 				<input type="file" id="myFile">
+				<button type="button" onclick="uploadData()"> Upload! </button>
 		</p>
 
 		<p id="output"> </p>
