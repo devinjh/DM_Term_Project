@@ -63,6 +63,8 @@
 
             // Make the information textbox visible so the user can enter in information
             document.getElementById("information_textbox").hidden = false;
+						
+						document.getElementById("upload_information").hidden = true;
         }
         // If the selected function is upload information
         else
@@ -74,6 +76,7 @@
             document.getElementById("information_textbox").hidden = true;
 
             // ADD ANYTHING ELSE THAT NEEDS TO HAPPEN
+						document.getElementById("upload_information").hidden = false;
         }
     }
 
@@ -212,6 +215,12 @@
     <p id="information_textbox">
         Extension: <input type="text" name="extension">
     </p>
+		
+		<p id="upload_information" hidden="true">
+				<input type="file" id="myFile">
+		</p>
+
+		<p id="output"> </p>
 
     <!-- Submit button. -->
     <br><input type="submit">
