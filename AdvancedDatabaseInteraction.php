@@ -17,7 +17,7 @@
 		<meta charset = "utf-8">
 		<title> Home Page </title>
 		<style type = "text/css">
-		td, th, table {border: thin solid black; }
+			td, th, table {border: thin solid black; }
 		</style>
 	</head>
 <body>
@@ -62,10 +62,23 @@
             document.getElementById("br_1").hidden = true;
 
             // Make the information textbox visible so the user can enter in information
-            document.getElementById("information_textbox").hidden = false;
+			document.getElementById("information_textbox").hidden = false;
+			
+			// The operation is to find a close extension
+			if (e == OperationEnum.FindClose)
+			{
+				// The range is necessary since they want a close extension
+				document.getElementById("extension_range_textbox").hidden = false;
+			}
+			// The operation is to find a pattern matching the extension given
+			else
+			{
+				// Since there's nothing needed about the range, make that hidden too
+				document.getElementById("extension_range_textbox").hidden = true;
+			}
 						
-						document.getElementById("upload_information").hidden = true;
-						document.getElementById("output").hidden = true;
+			document.getElementById("upload_information").hidden = true;
+			document.getElementById("output").hidden = true;
         }
         // If the selected function is upload information
         else
@@ -74,118 +87,178 @@
             document.getElementById("br_1").hidden = false;
 
             // Make the information textbox hidden since it doesn't have anything to do with uploading information
-            document.getElementById("information_textbox").hidden = true;
+			document.getElementById("information_textbox").hidden = true;
+			
+			// Since there's nothing needed about the range, make that hidden too
+			document.getElementById("extension_range_textbox").hidden = true;
 
             // ADD ANYTHING ELSE THAT NEEDS TO HAPPEN
-						document.getElementById("upload_information").hidden = false;
-						document.getElementById("output").hidden = false;
+			document.getElementById("upload_information").hidden = false;
+			document.getElementById("output").hidden = false;
 						
         }
-    }
+	}
 		
-		// function to upload file data
-		function uploadData() {
-			document.getElementById("output").innerHTML = document.getElementById("myFile").files[0].name;
-		}
+	// function to upload file data
+	function uploadData() {
+		document.getElementById("output").innerHTML = document.getElementById("myFile").files[0].name;
+	}
 
 </script>
 
+<!-- Variables. -->
 <?php
 
-    // This is currently an example for when we're ready to implement
-    /*// Setting all of the variables in case they aren't defined
-	$operation = "DNE";
-	$table = "DNE";
-	$extension = "DNE";
-	$type = "DNE";
-	$cor = "DNE";
-	$tn = "DNE";
-	$coverpath = "DNE";
-	$name = "DNE";
-	$cos = "DNE";
-	$port = "DNE";
-	$room = "DNE";
-	$jack = "DNE";
-	$cable = "DNE";
-	$floor = "DNE";
-	$building = "DNE";
+    // Setting all of the variables in case they aren't defined
+	$extension_number = "DNE";
+	$extension_range = "DNE";
 	
 	// This section goes through and grabs all of the variables that are defined (not including the updated ones)
+	// extension_number
+	if (isset($_POST["extension_number"]))
+	{
+		$extension_number = $_POST["extension_number"];
+	}
+	// extension_range
+	if (isset($_POST["extension_range"]))
+	{
+		$extension_range = $_POST["extension_range"];
+	}
+
+	// Setting the variables in case they aren't defined
+	$operation = "DNE";
+
 	// operation
 	if (isset($_POST["operation"]))
 	{
 		$operation = $_POST["operation"];
 	}
-	// table
-	if (isset($_POST["table"]))
+
+?>
+
+<!-- Functions. -->
+<?php
+
+	// Determines the operation being performed and performs it
+	function determineOperation()
 	{
-		$table = $_POST["table"];
+		// Using the global variable operation and the array of search checkboxes in this function
+		global $operation;
+		
+		// Making sure they actually selected an operation
+		if (strcmp($operation, "DNE") != 0)
+		{
+			if (strcmp($operation, "find_close") == 0)
+			{
+				// Performs the find close operation
+				findCloseExtension();
+			}
+			else if (strcmp($operation, "find_pattern") == 0)
+			{
+				// Performs the find pattern operation
+				findPattern();
+			}
+			else if (strcmp($operation, "upload_information") == 0)
+			{
+				// Performs the upload information function
+				// TO DO
+			}
+		}
 	}
-	// extension
-	if (isset($_POST["extension"]))
+
+	// Function that returns available extensions that are close to the given extension
+	function findCloseExtension()
 	{
-		$extension = $_POST["extension"];
+		// TESTING
+		print "<p> findCloseExtension </p>";
+
+		// Getting all of the table names
+		$table_names = getTableNames();
+
+		// Searching and displaying the results of each table, one at a time
+		for ($x = 0; $x < count($table_names); $x++)
+		{			
+			// Construct the specific query needed
+			$result = performQuery("SELECT extension FROM " . $table_names[$x]);
+			
+			// This gets the array of the first row of data in the table
+			$row = mysqli_fetch_array($result);
+
+			// This gets the number of fields in the table
+			$num_fields = mysqli_num_fields($result);
+
+			// If the result of the query was nothing, then nothing needs to be displayed
+			if (!empty($row))
+			{
+				// Display the table name
+				print "<center><p>" . $table_names[$x] . "</p></center>";
+
+				// This gets all of the keys, but not the data, from the row
+				$keys = array_keys($row);
+			
+				// The start of our table
+				print "<table align ='center'>";
+
+				// Starting the first row of the table
+				print "<tr align = 'center'>";
+
+				// Looping through and displaying all of the column keys
+				for ($index = 0; $index < $num_fields; $index++)
+				{
+					// Displaying all of the keys for the columns
+					// Using 2 * $index is required because every other value is an integer with the corresponding column number, and we don't care about that
+					// Using the + 1 is required because the first index is the integer, and the index following it is the column key
+					print "<th>" . $keys[2 * $index + 1] . "</th>";
+				}
+
+				// Ending the row of column headers
+				print "</tr>";
+
+				// Getting the number of rows from our table
+				$num_rows = mysqli_num_rows($result);
+
+				// Going through each row and displaying all of the data
+				for ($row_num = 0; $row_num < $num_rows; $row_num++)
+				{
+					// Aligning the rows to have the data in the center
+					print "<tr align = 'center'>";
+
+					// Getting the values, but not the keys, from the row
+					$values = array_values($row);
+
+					// Looping through the data to display all of the values
+					for ($index = 0; $index < $num_fields; $index++)
+					{
+						// Displaying all of the values in the rows
+						// Using 2 * $index is required because every other value is an integer with the corresponding column number, and we don't care about that
+						// Using the + 1 is required because the first index is the integer, and the index following it is the value
+						$value = htmlspecialchars($values[2 * $index + 1]);
+						print "<th>" . $value . "</th> ";
+					}
+
+					// This marks the end of the table row
+					print "</tr>";
+
+					// Getting the next row
+					$row = mysqli_fetch_array($result);
+				}
+
+				// Ending the table
+				print "</table>";
+			}
+		// END TESTING
+		}
+
+		// Construct the specific query needed
+		$query = "SELECT extension FROM ";
 	}
-	// type
-	if (isset($_POST["type"]))
+
+	// Function that finds extensions with similar patterns of the given extension
+	function findPattern()
 	{
-		$type = $_POST["type"];
+		// TESTING
+		print "<p> findPattern </p>";
 	}
-	// cor
-	if (isset($_POST["cor"]))
-	{
-		$cor = $_POST["cor"];
-	}
-	// tn
-	if (isset($_POST["tn"]))
-	{
-		$tn = $_POST["tn"];
-	}
-	// coverpath
-	if (isset($_POST["coverpath"]))
-	{
-		$coverpath = $_POST["coverpath"];
-	}
-	// name
-	if (isset($_POST["name"]))
-	{
-		$name = $_POST["name"];
-	}
-	// cos
-	if (isset($_POST["cos"]))
-	{
-		$cos = $_POST["cos"];
-	}
-	// port
-	if (isset($_POST["port"]))
-	{
-		$port = $_POST["port"];
-	}
-	// room
-	if (isset($_POST["room"]))
-	{
-		$room = $_POST["room"];
-	}
-	// jack
-	if (isset($_POST["jack"]))
-	{
-		$jack = $_POST["jack"];
-	}
-	// cable
-	if (isset($_POST["cable"]))
-	{
-		$cable = $_POST["cable"];
-	}
-	// floor
-	if (isset($_POST["floor"]))
-	{
-		$floor = $_POST["floor"];
-	}
-	// building
-	if (isset($_POST["building"]))
-	{
-		$building = $_POST["building"];
-	}*/
 
 ?>
 
@@ -199,31 +272,35 @@
 	<?php
 
         // Simply call this method to do the operation and display the results (if applicable)
-        //determineOperation();
+        determineOperation();
 
         // This is the form headers that gathers all the information and relaunches the page
         print "<form action=" . getLocation("AdvancedDatabaseInteraction.php") . " method='post'>";
 
     ?>
 
-    <!-- Figuring out what operation they would like to perform. -->
-    <p>
-        What operation would you like to do?
-    </p>
+    	<!-- Figuring out what operation they would like to perform. -->
+    	<p>
+    	    What operation would you like to do?
+    	</p>
 
-    <!-- The operation radio buttons. -->
-    <input type="radio" name="operation" value="find_close" onclick="updateInformation(OperationEnum.FindClose)" checked>Find a Close Extension
-    <input type="radio" name="operation" value="find_pattern" onclick="updateInformation(OperationEnum.FindPattern)">Find an Extension Matching a Pattern
-    <input type="radio" name="operation" value="upload_information" onclick="updateInformation(OperationEnum.UploadInformation)">Upload Information
+    	<!-- The operation radio buttons. -->
+    	<input type="radio" name="operation" value="find_close" onclick="updateInformation(OperationEnum.FindClose)" checked>Find a Close Extension
+    	<input type="radio" name="operation" value="find_pattern" onclick="updateInformation(OperationEnum.FindPattern)">Find an Extension Matching a Pattern
+    	<input type="radio" name="operation" value="upload_information" onclick="updateInformation(OperationEnum.UploadInformation)">Upload Information
 
-    <!-- Making sure the next attribute isn't too close to the radio buttons. -->
-    <br id="br_1" hidden>
+    	<!-- Making sure the next attribute isn't too close to the radio buttons. -->
+    	<br id="br_1" hidden>
 
-    <!-- The textboxes that gather all of the appropriate information. -->
-    <p id="information_textbox">
-        Extension: <input type="text" name="extension">
-    </p>
-		
+    	<!-- The textboxes that gather all of the appropriate information. -->
+    	<p id="information_textbox">
+    	    Extension: <input type="text" name="extension_number">
+    	</p>
+
+		<p id="extension_range_textbox">
+			Range: <input type="text" name="extension_range">
+		</p>
+
 		<p id="upload_information" hidden="true">
 				<input type="file" id="myFile">
 				<button type="button" onclick="uploadData()"> Upload! </button>
@@ -231,8 +308,8 @@
 
 		<p id="output"> </p>
 
-    <!-- Submit button. -->
-    <br><input type="submit">
+    	<!-- Submit button. -->
+    	<br><input type="submit">
 
     </form>
 
