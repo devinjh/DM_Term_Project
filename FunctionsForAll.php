@@ -153,5 +153,38 @@
 		// This means some random table has made it in
 		return false;
 	}
+  
+	// Binary search
+	function binarySearch($arr, $l, $r, $x) 
+	{
+		// If the right is greater than or equal to the left
+		if ($r >= $l) 
+		{
+			// Finding the middle element
+        	$mid = ceil($l + ($r - $l) / 2); 
+  
+        	// If the element is present at the middle itself
+        	if ($arr[$mid] == $x)
+        	{
+        		return floor($mid);
+        	}
+  
+        	// If element is smaller than mid, then it can only be present in left subarray
+        	if ($arr[$mid] > $x)
+        	{
+        		return binarySearch($arr, $l, $mid - 1, $x);
+        	}
+  
+        	// Else the element can only be present in right subarray
+        	return binarySearch($arr, $mid + 1, $r, $x);
+		} 
+  
+		// The element is not in the array
+		return -1; 
+	}
 
 ?>
+
+
+
+

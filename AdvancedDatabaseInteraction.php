@@ -177,11 +177,14 @@
 	// Function that returns available extensions that are close to the given extension
 	function findCloseExtension()
 	{
-		// TESTING
-		print "<p> findCloseExtension </p>";
+		// Using the global variable $extension_number and extension_range
+		global $extension_number, $extension_range;
 
 		// Getting all of the table names
 		$table_names = getTableNames();
+
+		// Making the array that will hold all of the extnension numbers
+		$extension_array = array();
 
 		// Searching and displaying the results of each table, one at a time
 		for ($x = 0; $x < count($table_names); $x++)
@@ -198,29 +201,8 @@
 			// If the result of the query was nothing, then nothing needs to be displayed
 			if (!empty($row))
 			{
-				// Display the table name
-				print "<center><p>" . $table_names[$x] . "</p></center>";
-
 				// This gets all of the keys, but not the data, from the row
 				$keys = array_keys($row);
-			
-				// The start of our table
-				print "<table align ='center'>";
-
-				// Starting the first row of the table
-				print "<tr align = 'center'>";
-
-				// Looping through and displaying all of the column keys
-				for ($index = 0; $index < $num_fields; $index++)
-				{
-					// Displaying all of the keys for the columns
-					// Using 2 * $index is required because every other value is an integer with the corresponding column number, and we don't care about that
-					// Using the + 1 is required because the first index is the integer, and the index following it is the column key
-					print "<th>" . $keys[2 * $index + 1] . "</th>";
-				}
-
-				// Ending the row of column headers
-				print "</tr>";
 
 				// Getting the number of rows from our table
 				$num_rows = mysqli_num_rows($result);
@@ -228,8 +210,6 @@
 				// Going through each row and displaying all of the data
 				for ($row_num = 0; $row_num < $num_rows; $row_num++)
 				{
-					// Aligning the rows to have the data in the center
-					print "<tr align = 'center'>";
 
 					// Getting the values, but not the keys, from the row
 					$values = array_values($row);
@@ -239,26 +219,53 @@
 					{
 						// Displaying all of the values in the rows
 						// Using 2 * $index is required because every other value is an integer with the corresponding column number, and we don't care about that
-						// Using the + 1 is required because the first index is the integer, and the index following it is the value
-						$value = htmlspecialchars($values[2 * $index + 1]);
-						print "<th>" . $value . "</th> ";
+						// Using the + 1 is required because the first index is the integer, and the index following it is the value and then adding it to the array
+						array_push($extension_array, htmlspecialchars($values[2 * $index + 1]));
 					}
-
-					// This marks the end of the table row
-					print "</tr>";
 
 					// Getting the next row
 					$row = mysqli_fetch_array($result);
 				}
-
-				// Ending the table
-				print "</table>";
 			}
-		// END TESTING
 		}
 
-		// Construct the specific query needed
-		$query = "SELECT extension FROM ";
+		// Sorting the array
+		sort($extension_array);
+
+		// TESTING
+		// Prints out the contents of the array
+		/*for ($i = 0; $i < sizeof($extension_array); $i++)
+		{
+			print "<p>" . $extension_array[$i] . "</p>";
+		}
+		print "<p></p>";*/
+		// END TESTING
+
+		$extension_range_down = $extension_range;
+
+		if ($extension_number - $extension_range < 0)
+		{
+			$extension_range_down = $extension_number;
+		}
+
+		print "<p>Available Extensions:</p><p>";
+
+		// Printing out all of the extensions and showing them in their proper spot
+		for ($extension = $extension_number - $extension_range_down; $extension < $extension_number + $extension_range; $extension++)
+		{
+			// The extension isn't being used
+			if (binarySearch($extension_array, 0, sizeof($extension_array), $extension) == -1)
+			{
+				print $extension . ", ";
+			}
+			// The extension is being used
+			else
+			{
+				// Empty
+			}
+		}
+
+		print "</p>";
 	}
 
 	// Function that finds extensions with similar patterns of the given extension
