@@ -185,15 +185,9 @@
 		// Using the global variable $extension_number and extension_range
 		global $extension_number, $extension_range;
 
-		// Getting all of the table names
-		$table_names = getTableNames();
-
 		// Making the array that will hold all of the extnension numbers and filling it with all the used extensions
 		$extension_array = array();
 		$extension_array = getExtensions();
-
-		// Sorting the array
-		sort($extension_array);
 
 		// This is how far the extension can go down
 		$extension_range_down = $extension_range;
@@ -228,8 +222,22 @@
 	// Function that finds extensions with similar patterns of the given extension
 	function findPattern()
 	{
+		// Using the global variable $extension_number
+		global $extension_number;
+
 		// TESTING
 		print "<p> findPattern </p>";
+
+		// Getting all of the table names
+		$table_names = getTableNames();
+
+		// Making the array that will hold all of the extnension numbers and filling it with all the used extensions
+		$extension_array = array();
+		$extension_array = getExtensions();
+
+		print "<p>Available Extensions with a Pattern:</p><p>";
+
+		print "</p>";
 	}
 
 ?>

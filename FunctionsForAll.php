@@ -236,6 +236,10 @@
 			}
 		}
 
+		// Sorting the array
+		sort($extension_array);
+
+		// Returning the extension array
 		return $extension_array;
 	}
 
