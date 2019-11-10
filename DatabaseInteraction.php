@@ -15,7 +15,7 @@
 <html>
 	<head>
 		<meta charset = "utf-8">
-		<title> TLC Page </title>
+		<title> Database </title>
 		<style type = "text/css">
 		
 			/* Our table border style */
@@ -404,21 +404,6 @@
 	{
 		$building_search_checkbox = $_POST["building_search_checkbox"];
 	}
-
-	// TESTING ONLY
-	/*print "<p>" . $extension_search_checkbox . "</p>";
-	print "<p>" . $type_search_checkbox . "</p>";
-	print "<p>" . $cor_search_checkbox . "</p>";
-	print "<p>" . $tn_search_checkbox . "</p>";
-	print "<p>" . $coverpath_search_checkbox . "</p>";
-	print "<p>" . $name_search_checkbox . "</p>";
-	print "<p>" . $cos_search_checkbox . "</p>";
-	print "<p>" . $port_search_checkbox . "</p>";
-	print "<p>" . $room_search_checkbox . "</p>";
-	print "<p>" . $jack_search_checkbox . "</p>";
-	print "<p>" . $cable_search_checkbox . "</p>";
-	print "<p>" . $floor_search_checkbox . "</p>";
-	print "<p>" . $building_search_checkbox . "</p>";*/
 	
 ?>
 

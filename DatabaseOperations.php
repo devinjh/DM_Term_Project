@@ -20,7 +20,9 @@
 	{		
 		// Getting the query
 		$query = "";
-		if (strcmp($specified_query, "DNE") == 0) // If there's no specified query, just get everything from the table
+
+		// If there's no specified query, just get everything from the table
+		if (strcmp($specified_query, "DNE") == 0)
 		{
 			$query = "SELECT * FROM " . $table_name;
 		}

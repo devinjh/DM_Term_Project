@@ -15,9 +15,11 @@
 <html>
 	<head>
 		<meta charset = "utf-8">
-		<title> Home Page </title>
+		<title> Advanced Database </title>
 		<style type = "text/css">
-			td, th, table {border: thin solid black; }
+			td, th, table {
+				border: thin solid black;
+			}
 		</style>
 	</head>
 <body>
@@ -100,16 +102,19 @@
 	}
 		
 	// function to upload file data
-	function uploadData() {
-	var filename = "rawdata/" + document.getElementById("myFile").files[0].name;
-  var xhttp = new XMLHttpRequest();
-  xhttp.onreadystatechange = function() {
-    if (this.readyState == 4 && this.status == 200) {
-      document.getElementById("output").innerHTML = this.responseText;
-    }
-  };
-  xhttp.open("GET", filename, true);
-  xhttp.send();
+	function uploadData()
+	{
+		var filename = "rawdata/" + document.getElementById("myFile").files[0].name;
+		var xhttp = new XMLHttpRequest();
+		xhttp.onreadystatechange = function()
+		{
+			if (this.readyState == 4 && this.status == 200)
+			{
+				document.getElementById("output").innerHTML = this.responseText;
+			}
+		};
+		xhttp.open("GET", filename, true);
+		xhttp.send();
 }
 
 </script>
@@ -183,68 +188,20 @@
 		// Getting all of the table names
 		$table_names = getTableNames();
 
-		// Making the array that will hold all of the extnension numbers
+		// Making the array that will hold all of the extnension numbers and filling it with all the used extensions
 		$extension_array = array();
-
-		// Searching and displaying the results of each table, one at a time
-		for ($x = 0; $x < count($table_names); $x++)
-		{			
-			// Construct the specific query needed
-			$result = performQuery("SELECT extension FROM " . $table_names[$x]);
-			
-			// This gets the array of the first row of data in the table
-			$row = mysqli_fetch_array($result);
-
-			// This gets the number of fields in the table
-			$num_fields = mysqli_num_fields($result);
-
-			// If the result of the query was nothing, then nothing needs to be displayed
-			if (!empty($row))
-			{
-				// This gets all of the keys, but not the data, from the row
-				$keys = array_keys($row);
-
-				// Getting the number of rows from our table
-				$num_rows = mysqli_num_rows($result);
-
-				// Going through each row and displaying all of the data
-				for ($row_num = 0; $row_num < $num_rows; $row_num++)
-				{
-
-					// Getting the values, but not the keys, from the row
-					$values = array_values($row);
-
-					// Looping through the data to display all of the values
-					for ($index = 0; $index < $num_fields; $index++)
-					{
-						// Displaying all of the values in the rows
-						// Using 2 * $index is required because every other value is an integer with the corresponding column number, and we don't care about that
-						// Using the + 1 is required because the first index is the integer, and the index following it is the value and then adding it to the array
-						array_push($extension_array, htmlspecialchars($values[2 * $index + 1]));
-					}
-
-					// Getting the next row
-					$row = mysqli_fetch_array($result);
-				}
-			}
-		}
+		$extension_array = getExtensions();
 
 		// Sorting the array
 		sort($extension_array);
 
-		// TESTING
-		// Prints out the contents of the array
-		/*for ($i = 0; $i < sizeof($extension_array); $i++)
-		{
-			print "<p>" . $extension_array[$i] . "</p>";
-		}
-		print "<p></p>";*/
-		// END TESTING
-
+		// This is how far the extension can go down
 		$extension_range_down = $extension_range;
 
+		// Making sure that the range the user offered doesn't take it below zero (since that's impossible)
 		if ($extension_number - $extension_range < 0)
 		{
+			// If it does, then the max amount it can decrease is by the extension numbr itself
 			$extension_range_down = $extension_number;
 		}
 
@@ -261,7 +218,7 @@
 			// The extension is being used
 			else
 			{
-				// Empty
+				// Nothing happens
 			}
 		}
 

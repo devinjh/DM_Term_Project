@@ -14,9 +14,11 @@
 <html>
 	<head>
 		<meta charset = "utf-8">
-		<title> Home Page </title>
+		<title> Home </title>
 		<style type = "text/css">
-		td, th, table {border: thin solid black; }
+			td, th, table {
+				border: thin solid black;
+			}
 		</style>
 	</head>
 <body>

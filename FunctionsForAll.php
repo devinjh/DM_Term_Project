@@ -23,50 +23,48 @@
 		return $website_path;
 	}
 
+	// Tells if the column header is part of the given tables
 	function isApplicable($table, $column_header)
 	{
 		// The table is akron or wayne
 		if (strcmp($table, "akron") == 0 || strcmp($table, "wayne") == 0)
 		{
-			/*switch ($column_header){
-				case "extension" : return true;
-				case "type" : return true;
-				case "cor" : return true;
-				case "tn" : return true;
-				case "coverpath" : return true;
-				case "name" : return true;
-				case "cos" : return true;
-				default: return false;
-			}*/
-
+			// extension
 			if (strcmp($column_header, "extension") == 0)
 			{
 				return true;
 			}
+			// type
 			else if (strcmp($column_header, "type") == 0)
 			{
 				return true;
 			}
+			// cor
 			else if (strcmp($column_header, "cor") == 0)
 			{
 				return true;
 			}
+			// tn
 			else if (strcmp($column_header, "tn") == 0)
 			{
 				return true;
 			}
+			// coverpath
 			else if (strcmp($column_header, "coverpath") == 0)
 			{
 				return true;
 			}
+			// name
 			else if (strcmp($column_header, "name") == 0)
 			{
 				return true;
 			}
+			// cos
 			else if (strcmp($column_header, "cos") == 0)
 			{
 				return true;
 			}
+			// If it's none of the above, then the column header isn't a part of the table
 			else
 			{
 				return false;
@@ -75,55 +73,52 @@
 		// The table is export
 		else if (strcmp($table, "export") == 0)
 		{
-			/*switch ($column_header){
-				case "extension" : return true;
-				case "type" : return true;
-				case "port" : return true;
-				case "name" : return true;
-				case "room" : return true;
-				case "jack" : return true;
-				case "cable" : return true;
-				case "floor" : return true;
-				case "building" : return true;
-				default: return false;
-			}*/
-
+			// extension
 			if (strcmp($column_header, "extension") == 0)
 			{
 				return true;
 			}
+			// type
 			else if (strcmp($column_header, "type") == 0)
 			{
 				return true;
 			}
+			// port
 			else if (strcmp($column_header, "port") == 0)
 			{
 				return true;
 			}
+			// name
 			else if (strcmp($column_header, "name") == 0)
 			{
 				return true;
 			}
+			// room
 			else if (strcmp($column_header, "room") == 0)
 			{
 				return true;
 			}
+			// jack
 			else if (strcmp($column_header, "jack") == 0)
 			{
 				return true;
 			}
+			// cable
 			else if (strcmp($column_header, "cable") == 0)
 			{
 				return true;
 			}
+			// floor
 			else if (strcmp($column_header, "floor") == 0)
 			{
 				return true;
 			}
+			// building
 			else if (strcmp($column_header, "building") == 0)
 			{
 				return true;
 			}
+			// If it's none of the above, then the column header isn't a part of the table
 			else
 			{
 				return false;
@@ -132,18 +127,22 @@
 		// If they're trying to access every table
 		else if (strcmp($table, "all") == 0)
 		{
+			// extension
 			if (strcmp($column_header, "extension") == 0)
 			{
 				return true;
 			}
+			// type
 			else if (strcmp($column_header, "type") == 0)
 			{
 				return true;
 			}
+			// name
 			else if (strcmp($column_header, "name") == 0)
 			{
 				return true;
 			}
+			// If it's none of the above, then the column header isn't a part of the table
 			else
 			{
 				return false;
@@ -166,12 +165,14 @@
         	// If the element is present at the middle itself
         	if ($arr[$mid] == $x)
         	{
+        		// Return that element
         		return floor($mid);
         	}
   
         	// If element is smaller than mid, then it can only be present in left subarray
         	if ($arr[$mid] > $x)
         	{
+        		// Call the binary search again, but search only the left subarray
         		return binarySearch($arr, $l, $mid - 1, $x);
         	}
   
@@ -181,6 +182,61 @@
   
 		// The element is not in the array
 		return -1; 
+	}
+
+	// Returns an array with all of the used extensions
+	function getExtensions()
+	{
+		// Making the array that will hold all of the extnension numbers
+		$extension_array = array();
+
+		// Getting all of the table names
+		$table_names = getTableNames();
+
+		// Searching and displaying the results of each table, one at a time
+		for ($x = 0; $x < count($table_names); $x++)
+		{			
+			// Construct the specific query needed
+			$result = performQuery("SELECT extension FROM " . $table_names[$x]);
+			
+			// This gets the array of the first row of data in the table
+			$row = mysqli_fetch_array($result);
+
+			// This gets the number of fields in the table
+			$num_fields = mysqli_num_fields($result);
+
+			// If the result of the query was nothing, then nothing needs to be displayed
+			if (!empty($row))
+			{
+				// This gets all of the keys, but not the data, from the row
+				$keys = array_keys($row);
+
+				// Getting the number of rows from our table
+				$num_rows = mysqli_num_rows($result);
+
+				// Going through each row and displaying all of the data
+				for ($row_num = 0; $row_num < $num_rows; $row_num++)
+				{
+
+					// Getting the values, but not the keys, from the row
+					$values = array_values($row);
+
+					// Looping through the data to display all of the values
+					for ($index = 0; $index < $num_fields; $index++)
+					{
+						// Displaying all of the values in the rows
+						// Using 2 * $index is required because every other value is an integer with the corresponding column number, and we don't care about that
+						// Using the + 1 is required because the first index is the integer, and the index following it is the value and then adding it to the array
+						array_push($extension_array, htmlspecialchars($values[2 * $index + 1]));
+					}
+
+					// Getting the next row
+					$row = mysqli_fetch_array($result);
+				}
+			}
+		}
+
+		return $extension_array;
 	}
 
 ?>
