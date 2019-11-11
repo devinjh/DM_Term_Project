@@ -186,8 +186,8 @@
 		global $extension_number, $extension_range;
 
 		// Making the array that will hold all of the extnension numbers and filling it with all the used extensions
-		$extension_array = array();
-		$extension_array = getExtensions();
+		$used_extension_array = array();
+		$used_extension_array = getUsedExtensions();
 
 		// This is how far the extension can go down
 		$extension_range_down = $extension_range;
@@ -205,7 +205,7 @@
 		for ($extension = $extension_number - $extension_range_down; $extension < $extension_number + $extension_range; $extension++)
 		{
 			// The extension isn't being used
-			if (binarySearch($extension_array, 0, sizeof($extension_array), $extension) == -1)
+			if (binarySearch($used_extension_array, 0, sizeof($used_extension_array), $extension) == -1)
 			{
 				print $extension . ", ";
 			}
@@ -225,17 +225,65 @@
 		// Using the global variable $extension_number
 		global $extension_number;
 
-		// TESTING
-		print "<p> findPattern </p>";
-
 		// Getting all of the table names
 		$table_names = getTableNames();
 
 		// Making the array that will hold all of the extnension numbers and filling it with all the used extensions
-		$extension_array = array();
-		$extension_array = getExtensions();
+		$used_extension_array = array();
+		$used_extension_array = getUsedExtensions();
+
+		// Creating the array of available extensions and filling it with every possible extension
+		$available_extension_array = array();
+		for ($i = 0; $i <= 99999; $i++)
+		{
+			array_push($available_extension_array, $i);
+		}
+
+		// Removing all of the extensions that have been taken
+		for ($i = 0; $i < count($used_extension_array); $i++)
+		{
+			// If the extension is in the used extensions array and in the available extension array, it's removed from the available extensions array
+			if (($key = array_search($used_extension_array[$i], $available_extension_array)) !== false)
+			{
+				unset($available_extension_array[$key]);
+			}
+		}
+		// Now making sure all of the elements are indexed properly
+		$available_extension_array = array_values($available_extension_array);
 
 		print "<p>Available Extensions with a Pattern:</p><p>";
+
+		// Next, we make a number of patterns that we're looking for. We loop through each pattern and try it
+		$num_of_patterns = 4;
+
+		// Going through each of the available extensions
+		for ($i = 0; $i < $num_of_patterns; $i++)
+		{
+			// Gets a pattern (a regex) based on the length of the extension and the pattern integer we're looking for
+			$pattern = getPattern($extension_number, $i);
+			print $pattern . "<br><br>";
+
+			// Making sure the pattern is a valid pattern and not the default "DNE"
+			if (strcmp($pattern, "DNE") != 0)
+			{
+				// Going through the entire array of avialable extensions
+				for ($x = 0; $x < count($available_extension_array); $x++)
+				{
+					// If the extension matches the pattern, it's displayed
+					if (preg_match_all($pattern, ((string)$available_extension_array[$x]), $the_match))
+					{
+						print "available_extension_array[x]: " . $available_extension_array[$x] . "<br>";
+						//print "We have a match! The match:" . print_r($the_match[0][0]) . ":<br>";
+					}
+				}
+			}
+		}
+
+		// TESTING
+		for ($i = 0; $i < count($available_extension_array); $i++)
+		{
+			//print $available_extension_array[$i] . ", ";
+		}
 
 		print "</p>";
 	}

@@ -185,7 +185,7 @@
 	}
 
 	// Returns an array with all of the used extensions
-	function getExtensions()
+	function getUsedExtensions()
 	{
 		// Making the array that will hold all of the extnension numbers
 		$extension_array = array();
@@ -241,6 +241,81 @@
 
 		// Returning the extension array
 		return $extension_array;
+	}
+
+	// This function returns a regex (pattern) based on an extension given and an integer indicating which pattern
+	function getPattern($extension, $pattern_num)
+	{
+		// The pattern
+		$pattern = "DNE";
+
+		// The pattern number can only be 0 - 3
+		// Too low, make it 0
+		if ($pattern_num < 0)
+		{
+			$pattern_num = 0;
+		}
+		// Too high, make it 3
+		else if ($pattern_num > 3)
+		{
+			$pattern_num = 3;
+		}
+		
+		// We want to find an extension number that matches certain patterns of the given extension. First, we get the number of digits in the extension
+		$num_of_digits = strlen((string)$extension);
+
+		// Extension is a single digit
+		if ($num_of_digits == 1)
+		{
+			// to do
+		}
+		// Extension is two digits
+		else if ($num_of_digits == 2)
+		{
+			// to do
+		}
+		// Extension is three digits
+		else if ($num_of_digits == 3)
+		{
+			// to do
+		}
+		// Extension is four digits
+		else if ($num_of_digits == 4)
+		{
+			// Figuring out which pattern is wanted and creating a regex for it
+			switch ($pattern_num) {
+				// This matches the first two digits
+				case 0:
+					// Getting the first two digits of the number
+					$first_digit = substr((string)$extension, 0, 1);
+					$second_digit = substr((string)$extension, 1, 1);
+					
+					// Creating the regex expression that gets all extensions that start with the same first two digits that aren't longer than 4 digits themselves
+					$pattern = "/(?=(^[" . $first_digit . "][" . $second_digit . "][0-9]{2}))" . /* This makes sure the first two digits are the same. */
+								"(?!([0-9]{5,}))/"; /* This makes sure the extension isn't longer than 4 digits. */
+				break;
+				case 1:
+					$pattern = "DNE";
+				break;
+				case 2:
+					$pattern = "DNE";
+				break;
+				case 3:
+					$pattern = "DNE";
+				break;
+			}
+		}
+		// Extension is five digits
+		else if ($num_of_digits == 5)
+		{
+			// to do
+		}
+		else
+		{
+			// The extension is too long, return the default "DNE" pattern
+		}
+
+		return $pattern;
 	}
 
 ?>
