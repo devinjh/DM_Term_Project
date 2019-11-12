@@ -267,17 +267,98 @@
 		// Extension is a single digit
 		if ($num_of_digits == 1)
 		{
-			// to do
+			// Figuring out which pattern is wanted and creating a regex for it
+			switch ($pattern_num) {
+				// Gets all single digit extensions available
+				case 0:
+					$pattern = "/(?=(^[0-9]{1}))" . /* Gets all the single digits. */
+								"(?!([0-9]{2,}))/"; /* Makes sure that only single digit extensions are retreived. */
+				break;
+				// No second pattern
+				case 1:
+					$pattern = "DNE";
+				break;
+				// No third pattern
+				case 2:
+					$pattern = "DNE";
+				break;
+				// No fourth pattern
+				case 3:
+					$pattern = "DNE";
+				break;
+			}
 		}
 		// Extension is two digits
 		else if ($num_of_digits == 2)
 		{
-			// to do
+			// Figuring out which pattern is wanted and creating a regex for it
+			switch ($pattern_num) {
+				// Matches the first number
+				case 0:
+					// Getting the first digit of the number
+					$first_digit = substr((string)$extension, 0, 1);
+
+					$pattern = "/(?=(^[" . $first_digit . "][0-9]{1}))" . /* Matches the first number and allows for any second number. */
+								"(?!([0-9]{3,}))/"; /* Makes sure that two digit extensions are retreived. */
+				break;
+				// Matches the second number
+				case 1:
+					// Getting the second digit of the number
+					$second_digit = substr((string)$extension, 1, 1);
+
+					$pattern = "/(?=(^[0-9]{1}[" . $second_digit . "]))" . /* Matches the first number and allows for any second number. */
+								"(?!([0-9]{3,}))/"; /* Makes sure that two digit extensions are retreived. */
+				break;
+				// No third pattern
+				case 2:
+					$pattern = "DNE";
+				break;
+				// No fourth pattern
+				case 3:
+					$pattern = "DNE";
+				break;
+			}
 		}
 		// Extension is three digits
 		else if ($num_of_digits == 3)
 		{
-			// to do
+			// Figuring out which pattern is wanted and creating a regex for it
+			switch ($pattern_num) {
+				// Matches the first number
+				case 0:
+					// Getting the first digit of the number
+					$first_digit = substr((string)$extension, 0, 1);
+
+					$pattern = "/(?=(^[" . $first_digit . "][0-9]{2}))" . /* Matches the first number and allows for any last two numbers. */
+								"(?!([0-9]{4,}))/"; /* Makes sure that three digit extensions are retreived. */
+				break;
+				// Matches the first and third number
+				case 1:
+					// Getting the first and third digit of the number
+					$first_digit = substr((string)$extension, 0, 1);
+					$third_digit = substr((string)$extension, 2, 1);
+
+					$pattern = "/(?=(^[" . $first_digit . "][0-9]{1}[" . $third_digit . "]))" . /* Matches the first and third number and allows for any middle number. */
+								"(?!([0-9]{4,}))/"; /* Makes sure that three digit extensions are retreived. */
+				break;
+				// Matches the second and third number
+				case 2:
+					// Getting the second and third digit of the number
+					$second_digit = substr((string)$extension, 1, 1);
+					$third_digit = substr((string)$extension, 2, 1);
+
+					$pattern = "/(?=(^[0-9]{1}[" . $second_digit . "][" . $third_digit . "]))" . /* Matches the second and third number and allows for any first number. */
+								"(?!([0-9]{4,}))/"; /* Makes sure that three digit extensions are retreived. */
+				break;
+				// Matches the third number
+				case 3:
+					// Getting the third digit of the number
+					$third_digit = substr((string)$extension, 2, 1);
+
+					$pattern = "/(?=(^[0-9]{2}[" . $third_digit . "]))" . /* Matches the third number and allows for any first two numbers. */
+								"(?!([0-9]{4,}))/"; /* Makes sure that three digit extensions are retreived. */
+				break;
+			}
 		}
 		// Extension is four digits
 		else if ($num_of_digits == 4)
@@ -296,7 +377,7 @@
 				break;
 				// Matches the last two digits
 				case 1:
-					// Getting the first two digits of the number
+					// Getting the last two digits of the number
 					$third_digit = substr((string)$extension, 2, 1);
 					$fourth_digit = substr((string)$extension, 3, 1);
 					
@@ -316,7 +397,7 @@
 				break;
 				// Matches the second and fourth digits of the number
 				case 3:
-					// Getting the first and third digits of the number
+					// Getting the second and fourth digits of the number
 					$second_digit = substr((string)$extension, 1, 1);
 					$fourth_digit = substr((string)$extension, 3, 1);
 					
@@ -329,11 +410,56 @@
 		// Extension is five digits
 		else if ($num_of_digits == 5)
 		{
-			// to do
+			// Figuring out which pattern is wanted and creating a regex for it
+			switch ($pattern_num) {
+				// This matches the first three digits
+				case 0:
+					// Getting the first three digits of the number
+					$first_digit = substr((string)$extension, 0, 1);
+					$second_digit = substr((string)$extension, 1, 1);
+					$third_digit = substr((string)$extension, 2, 1);
+					
+					// Creating the regex expression that gets all extensions that start with the same first three digits that aren't longer than 5 digits themselves
+					$pattern = "/(?=(^[" . $first_digit . "][" . $second_digit . "][" . $third_digit . "][0-9]{2}))/"; /* This makes sure the first three digits are the same. */
+																					/* No digit limit is necessary since the max number of digits in an extension is five. */
+				break;
+				// Matches the last two digits
+				case 1:
+					// Getting the last three digits of the number
+					$third_digit = substr((string)$extension, 2, 1);
+					$fourth_digit = substr((string)$extension, 3, 1);
+					$fifth_digit = substr((string)$extension, 4, 1);
+					
+					// Creating the regex expression that gets all extensions that start with the last three digits that aren't longer than 5 digits themselves
+					$pattern = "/(?=(^[0-9]{2}[" . $third_digit . "][" . $fourth_digit . "][" . $fifth_digit . "]))/"; /* This makes sure the last three digits are the same. */
+																					/* No digit limit is necessary since the max number of digits in an extension is five. */
+				break;
+				// Matches the first, third, and fifth digit
+				case 2:
+					// Getting the first, third, and fifth digits of the number
+					$first_digit = substr((string)$extension, 0, 1);
+					$third_digit = substr((string)$extension, 2, 1);
+					$fifth_digit = substr((string)$extension, 4, 1);
+					
+					// Creating the regex expression that gets all extensions that end with the same first, third, and fifth digits that aren't longer than 5 digits themselves
+					$pattern = "/(?=(^[" . $first_digit . "][0-9][" . $third_digit . "][0-9][" . $fifth_digit . "]))/"; /* This makes sure the first, third,a dn fifth digits are the same. */
+																					/* No digit limit is necessary since the max number of digits in an extension is five. */
+				break;
+				// Matches the second and fourth digits of the number
+				case 3:
+					// Getting the second and fourth digits of the number
+					$second_digit = substr((string)$extension, 1, 1);
+					$fourth_digit = substr((string)$extension, 3, 1);
+					
+					// Creating the regex expression that gets all extensions that end with the same second and fourth digits that aren't longer than 5 digits themselves
+					$pattern = "/(?=(^[0-9][" . $second_digit . "][0-9][" . $fourth_digit . "][0-9]))/"; /* This makes sure the second and fourth digits are the same. */
+																					/* No digit limit is necessary since the max number of digits in an extension is five. */
+				break;
+			}
 		}
 		else
 		{
-			// The extension is too long, return the default "DNE" pattern
+			// The extension is too long or non-existant, so return the default "DNE" pattern
 		}
 
 		return $pattern;

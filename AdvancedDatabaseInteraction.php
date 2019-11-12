@@ -273,7 +273,6 @@
 					if (preg_match_all($pattern, ((string)$available_extension_array[$x]), $the_match))
 					{
 						print "available_extension_array[x]: " . $available_extension_array[$x] . "<br>";
-						//print "We have a match! The match:" . print_r($the_match[0][0]) . ":<br>";
 					}
 				}
 			}
