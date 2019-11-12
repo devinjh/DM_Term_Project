@@ -261,7 +261,7 @@
 		{
 			// Gets a pattern (a regex) based on the length of the extension and the pattern integer we're looking for
 			$pattern = getPattern($extension_number, $i);
-			print $pattern . "<br><br>";
+			print "<br><br>" . $pattern . "<br><br>";
 
 			// Making sure the pattern is a valid pattern and not the default "DNE"
 			if (strcmp($pattern, "DNE") != 0)

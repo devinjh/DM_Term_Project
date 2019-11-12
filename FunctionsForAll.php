@@ -294,14 +294,35 @@
 					$pattern = "/(?=(^[" . $first_digit . "][" . $second_digit . "][0-9]{2}))" . /* This makes sure the first two digits are the same. */
 								"(?!([0-9]{5,}))/"; /* This makes sure the extension isn't longer than 4 digits. */
 				break;
+				// Matches the last two digits
 				case 1:
-					$pattern = "DNE";
+					// Getting the first two digits of the number
+					$third_digit = substr((string)$extension, 2, 1);
+					$fourth_digit = substr((string)$extension, 3, 1);
+					
+					// Creating the regex expression that gets all extensions that end with the same two digits that aren't longer than 4 digits themselves
+					$pattern = "/(?=(^[0-9]{2}[" . $third_digit . "][" . $fourth_digit . "]))" . /* This makes sure the last two digits are the same. */
+								"(?!([0-9]{5,}))/"; /* This makes sure the extension isn't longer than 4 digits. */
 				break;
+				// Matches the first and third digit
 				case 2:
-					$pattern = "DNE";
+					// Getting the first and third digits of the number
+					$first_digit = substr((string)$extension, 0, 1);
+					$third_digit = substr((string)$extension, 2, 1);
+					
+					// Creating the regex expression that gets all extensions that end with the same two digits that aren't longer than 4 digits themselves
+					$pattern = "/(?=(^[" . $first_digit . "][0-9][" . $third_digit . "][0-9]))" . /* This makes sure the first and third digits are the same. */
+								"(?!([0-9]{5,}))/"; /* This makes sure the extension isn't longer than 4 digits. */
 				break;
+				// Matches the second and fourth digits of the number
 				case 3:
-					$pattern = "DNE";
+					// Getting the first and third digits of the number
+					$second_digit = substr((string)$extension, 1, 1);
+					$fourth_digit = substr((string)$extension, 3, 1);
+					
+					// Creating the regex expression that gets all extensions that end with the same two digits that aren't longer than 4 digits themselves
+					$pattern = "/(?=(^[0-9][" . $second_digit . "][0-9][" . $fourth_digit . "]))" . /* This makes sure the second and fourth digits are the same. */
+								"(?!([0-9]{5,}))/"; /* This makes sure the extension isn't longer than 4 digits. */
 				break;
 			}
 		}
