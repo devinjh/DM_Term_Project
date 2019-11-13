@@ -12,6 +12,9 @@
 
 ?>
 
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.0.0-alpha1/jquery.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-csv/0.71/jquery.csv-0.71.min.js"></script>
+
 <html>
 	<head>
 		<meta charset = "utf-8">
@@ -106,16 +109,33 @@
 	{
 		var filename = "rawdata/" + document.getElementById("myFile").files[0].name;
 		var xhttp = new XMLHttpRequest();
+		var i = 0, j = 0; // loop vars
 		xhttp.onreadystatechange = function()
 		{
 			if (this.readyState == 4 && this.status == 200)
 			{
-				document.getElementById("output").innerHTML = this.responseText;
+				// This will write the entire contents of the selected file to the "output" element on the page
+				// CURRENTLY ONLY WORKS ON THE "export_station" DATA FILE
+				
+				var test = this.responseText;
+				test = test.replace(/\n/g, ",") // replaces \n with , so it can be stored in an array properly
+				
+				var text = $.csv.toArray(test);
+				var lines = text.length / 9 - 1; // last line the future loop reads is all undefined so -1
+				var htmlOut = "";
+			
+				for (j = 0; j < lines; j++) {
+					for (i = 0; i < 9; i++) {
+						htmlOut += text[9*j+i] + " ";
+					}
+					htmlOut += "<br>";
+				}
+				document.getElementById("output").innerHTML = htmlOut;
 			}
 		};
 		xhttp.open("GET", filename, true);
 		xhttp.send();
-}
+  }
 
 </script>
 
