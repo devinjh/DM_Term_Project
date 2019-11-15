@@ -283,10 +283,25 @@
 		// Now making sure all of the elements are indexed properly
 		$available_extension_array = array_values($available_extension_array);
 
-		print "<p>Available Extensions with a Pattern:<br>(an 'x' denotes any digit)</p><p>";
+		print "<p>Available Extensions with a Pattern<br><br>" .
+			"Your Extension Number: " . $extension_number . "<br><br>" .
+			"(an 'x' denotes any digit)</p><p>";
 
 		// Next, we make a number of patterns that we're looking for. We loop through each pattern and try it
 		$num_of_patterns = 4;
+
+		// Creating an array of arrays to store all of the available functions
+		$sorted_extension_data = array();
+		for ($i = 0; $i < $num_of_patterns; $i++)
+		{
+			array_push($sorted_extension_data, array());
+		}
+
+		// Creating an array to store all of the pattern names
+		$pattern_names = array();
+
+		// Creating an array to stoer the size of the other array
+		$size_array = array();
 
 		// Going through each of the available extensions
 		for ($i = 0; $i < $num_of_patterns; $i++)
@@ -294,8 +309,9 @@
 			// Gets a pattern (a regex) based on the length of the extension and the pattern integer we're looking for
 			$pattern = getPattern($extension_number, $i);
 
-			// Getting and displaying the pattern name so the user knows what they're looking at
-			print "<p>" . getPatternName($extension_number, $i) . "</p>";
+			// Getting and pushing the pattern name onto the array of pattern names
+			//print "<p>" . getPatternName($extension_number, $i) . "</p>";
+			array_push($pattern_names, getPatternName($extension_number, $i));
 
 			// Making sure the pattern is a valid pattern and not the default "DNE"
 			if (strcmp($pattern, "DNE") != 0)
@@ -303,22 +319,75 @@
 				// Going through the entire array of avialable extensions
 				for ($x = 0; $x < count($available_extension_array); $x++)
 				{
-					// If the extension matches the pattern, it's displayed
+					// If the extension matches the pattern, it's pushed into the proper array
 					if (preg_match_all($pattern, ((string)$available_extension_array[$x]), $the_match))
 					{
-						print $available_extension_array[$x] . ", ";
+						//print $available_extension_array[$x] . ", ";
+						array_push($sorted_extension_data[$i], $available_extension_array[$x]);
 					}
 				}
-
-				print "<br>";
 			}
 		}
 
-		// TESTING
-		for ($i = 0; $i < count($available_extension_array); $i++)
+		// Displaying all of the available extensions in an orderly, clean fashion
+		print "<table width=80%>";
+
+		// Displaying the table headers
+		print "<tr>";
+		$max = -1;
+		for ($i = 0; $i < $num_of_patterns; $i++)
 		{
-			//print $available_extension_array[$i] . ", ";
+			print "<th>";
+			if (strcmp("DNE", $pattern_names[$i]) != 0)
+			{
+				print $pattern_names[$i];
+			}
+			else
+			{
+				print "No Pattern";
+			}
+			print "</th>";
+
+			// We also get the size of each array from the sorted extension data (for use later)
+			array_push($size_array, sizeof($sorted_extension_data[$i]));
+
+			// We also want to see if it's the larget one we have
+			if ($size_array[$i] > $max)
+			{
+				$max = $size_array[$i];
+			}
 		}
+		print "</tr>";
+
+		// TESTING
+		for ($i = 0; $i < $num_of_patterns; $i++)
+		{
+			//print "<p>" . $size_array[$i] . "</p>";
+		}
+
+		// Displaying all of the data
+		$i = 0;
+		while ($i < $max)
+		{
+			print "<tr>";
+			for ($x = 0; $x < $num_of_patterns; $x++)
+			{
+				print "<td align='center'>";
+				if ($i < $size_array[$x])
+				{
+					print $sorted_extension_data[$x][$i];
+				}
+				else
+				{
+					print "";
+				}
+				print "</td>";
+			}
+			print "</tr>";
+			$i++;
+		}
+
+		print "</table>";
 
 		print "</p>";
 	}
