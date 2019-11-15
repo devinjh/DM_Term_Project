@@ -116,20 +116,32 @@
 			{
 				// This will write the entire contents of the selected file to the "output" element on the page
 				// CURRENTLY ONLY WORKS ON THE "export_station" DATA FILE
-				
+
 				var test = this.responseText;
 				test = test.replace(/\n/g, ",") // replaces \n with , so it can be stored in an array properly
 				
 				var text = $.csv.toArray(test);
 				var lines = text.length / 9 - 1; // last line the future loop reads is all undefined so -1
-				var htmlOut = "";
-			
-				for (j = 0; j < lines; j++) {
-					for (i = 0; i < 9; i++) {
-						htmlOut += text[9*j+i] + " ";
+				var htmlOut = "INSERT INTO `export`(`extension`, `type`, `port`, `name`, `room`, `jack`, `cable`, `floor`, `building`) VALUES ";
+				
+				//
+				// VALUES ([value-1],[value-2],[value-3],[value-4],[value-5],[value-6],[value-7],[value-8],[value-9]),
+				//        ([value-10],[value-11],[value-12],[value-13],[value-14],[value-15],[value-16],[value-17],[value-18]);
+				
+				for (j = 1; j < lines-1; j++) { // skip line 0 because this file has the headers as line 0 // j < lines
+				  htmlOut += "(";
+					for (i = 0; i < 8; i++) { // i < 8 for all but last column
+						htmlOut += "'" + text[9*j+i].replace('\'','').replace('\\','') + "',";
 					}
+					htmlOut += "'" + text[9*j+8].replace('\'','') + "'),";
 					htmlOut += "<br>";
 				}
+				// need to add last line separately to add on the delimeter ";"
+				htmlOut += "(";
+				for (i = -1; i < 7; i++) { // i < 8 for all but last column
+					htmlOut += "'" + text[9*lines+i].replace('\'','') + "',";
+				}
+				htmlOut += "'" + text[9*lines+7].replace('\'','') + "');";
 				document.getElementById("output").innerHTML = htmlOut;
 			}
 		};
