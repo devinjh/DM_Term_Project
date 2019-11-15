@@ -493,7 +493,7 @@
 			switch ($pattern_num) {
 				// Gets all single digit extensions available
 				case 0:
-					$pattern_name = "Other Single Digit Extensions";
+					$pattern_name = "x";
 				break;
 				// No second pattern
 				case 1:

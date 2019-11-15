@@ -310,7 +310,6 @@
 			$pattern = getPattern($extension_number, $i);
 
 			// Getting and pushing the pattern name onto the array of pattern names
-			//print "<p>" . getPatternName($extension_number, $i) . "</p>";
 			array_push($pattern_names, getPatternName($extension_number, $i));
 
 			// Making sure the pattern is a valid pattern and not the default "DNE"
@@ -322,7 +321,6 @@
 					// If the extension matches the pattern, it's pushed into the proper array
 					if (preg_match_all($pattern, ((string)$available_extension_array[$x]), $the_match))
 					{
-						//print $available_extension_array[$x] . ", ";
 						array_push($sorted_extension_data[$i], $available_extension_array[$x]);
 					}
 				}
@@ -337,6 +335,7 @@
 		$max = -1;
 		for ($i = 0; $i < $num_of_patterns; $i++)
 		{
+			// Displaying the pattern. If there isn't a pattern, displaying so
 			print "<th>";
 			if (strcmp("DNE", $pattern_names[$i]) != 0)
 			{
@@ -351,19 +350,13 @@
 			// We also get the size of each array from the sorted extension data (for use later)
 			array_push($size_array, sizeof($sorted_extension_data[$i]));
 
-			// We also want to see if it's the larget one we have
+			// We also want to see if it's the larget one we have. If so, store it
 			if ($size_array[$i] > $max)
 			{
 				$max = $size_array[$i];
 			}
 		}
 		print "</tr>";
-
-		// TESTING
-		for ($i = 0; $i < $num_of_patterns; $i++)
-		{
-			//print "<p>" . $size_array[$i] . "</p>";
-		}
 
 		// Displaying all of the data
 		$i = 0;
@@ -373,10 +366,12 @@
 			for ($x = 0; $x < $num_of_patterns; $x++)
 			{
 				print "<td align='center'>";
+				// If there's still an extension to be displayed, this will be true
 				if ($i < $size_array[$x])
 				{
 					print $sorted_extension_data[$x][$i];
 				}
+				// If not, there's nothing to display
 				else
 				{
 					print "";
@@ -384,11 +379,15 @@
 				print "</td>";
 			}
 			print "</tr>";
+
+			// Incrementing $i
 			$i++;
 		}
 
+		// End of the table
 		print "</table>";
 
+		// End of the paragraph
 		print "</p>";
 	}
 
