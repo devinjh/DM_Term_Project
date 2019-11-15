@@ -283,7 +283,7 @@
 		// Now making sure all of the elements are indexed properly
 		$available_extension_array = array_values($available_extension_array);
 
-		print "<p>Available Extensions with a Pattern:</p><p>";
+		print "<p>Available Extensions with a Pattern:<br>(an 'x' denotes any digit)</p><p>";
 
 		// Next, we make a number of patterns that we're looking for. We loop through each pattern and try it
 		$num_of_patterns = 4;
@@ -293,7 +293,9 @@
 		{
 			// Gets a pattern (a regex) based on the length of the extension and the pattern integer we're looking for
 			$pattern = getPattern($extension_number, $i);
-			print "<br><br>" . $pattern . "<br><br>";
+
+			// Getting and displaying the pattern name so the user knows what they're looking at
+			print "<p>" . getPatternName($extension_number, $i) . "</p>";
 
 			// Making sure the pattern is a valid pattern and not the default "DNE"
 			if (strcmp($pattern, "DNE") != 0)
@@ -304,9 +306,11 @@
 					// If the extension matches the pattern, it's displayed
 					if (preg_match_all($pattern, ((string)$available_extension_array[$x]), $the_match))
 					{
-						print "available_extension_array[x]: " . $available_extension_array[$x] . "<br>";
+						print $available_extension_array[$x] . ", ";
 					}
 				}
+
+				print "<br>";
 			}
 		}
 

@@ -465,6 +465,213 @@
 		return $pattern;
 	}
 
+	// This function returns the name (or kind of a brief decsription) based on the extension given and the pattern number
+	function getPatternName($extension, $pattern_num)
+	{
+		// The pattern
+		$pattern_name = "DNE";
+
+		// The pattern number can only be 0 - 3
+		// Too low, make it 0
+		if ($pattern_num < 0)
+		{
+			$pattern_num = 0;
+		}
+		// Too high, make it 3
+		else if ($pattern_num > 3)
+		{
+			$pattern_num = 3;
+		}
+		
+		// We want to find an extension number that matches certain patterns of the given extension. First, we get the number of digits in the extension
+		$num_of_digits = strlen((string)$extension);
+
+		// Extension is a single digit
+		if ($num_of_digits == 1)
+		{
+			// Figuring out which pattern is wanted and creating a regex for it
+			switch ($pattern_num) {
+				// Gets all single digit extensions available
+				case 0:
+					$pattern_name = "Other Single Digit Extensions";
+				break;
+				// No second pattern
+				case 1:
+					$pattern_name = "DNE";
+				break;
+				// No third pattern
+				case 2:
+					$pattern_name = "DNE";
+				break;
+				// No fourth pattern
+				case 3:
+					$pattern_name = "DNE";
+				break;
+			}
+		}
+		// Extension is two digits
+		else if ($num_of_digits == 2)
+		{
+			// Figuring out which pattern is wanted and creating a regex for it
+			switch ($pattern_num) {
+				// Matches the first number
+				case 0:
+					// Getting the first digit of the number
+					$first_digit = substr((string)$extension, 0, 1);
+
+					$pattern_name = $first_digit . "x";
+				break;
+				// Matches the second number
+				case 1:
+					// Getting the second digit of the number
+					$second_digit = substr((string)$extension, 1, 1);
+
+					$pattern_name = "x" . $second_digit;
+				break;
+				// No third pattern
+				case 2:
+					$pattern_name = "DNE";
+				break;
+				// No fourth pattern
+				case 3:
+					$pattern_name = "DNE";
+				break;
+			}
+		}
+		// Extension is three digits
+		else if ($num_of_digits == 3)
+		{
+			// Figuring out which pattern is wanted and creating a regex for it
+			switch ($pattern_num) {
+				// Matches the first number
+				case 0:
+					// Getting the first digit of the number
+					$first_digit = substr((string)$extension, 0, 1);
+
+					$pattern_name = $first_digit . "x";
+				break;
+				// Matches the first and third number
+				case 1:
+					// Getting the first and third digit of the number
+					$first_digit = substr((string)$extension, 0, 1);
+					$third_digit = substr((string)$extension, 2, 1);
+
+					$pattern_name = $first_digit . "x" . $third_digit;
+				break;
+				// Matches the second and third number
+				case 2:
+					// Getting the second and third digit of the number
+					$second_digit = substr((string)$extension, 1, 1);
+					$third_digit = substr((string)$extension, 2, 1);
+
+					$pattern_name = "x" . $second_digit . $third_digit;
+				break;
+				// Matches the third number
+				case 3:
+					// Getting the third digit of the number
+					$third_digit = substr((string)$extension, 2, 1);
+
+					$pattern_name = "xx" . $third_digit;
+				break;
+			}
+		}
+		// Extension is four digits
+		else if ($num_of_digits == 4)
+		{
+			// Figuring out which pattern is wanted and creating a regex for it
+			switch ($pattern_num) {
+				// This matches the first two digits
+				case 0:
+					// Getting the first two digits of the number
+					$first_digit = substr((string)$extension, 0, 1);
+					$second_digit = substr((string)$extension, 1, 1);
+					
+					// Creating the regex expression that gets all extensions that start with the same first two digits that aren't longer than 4 digits themselves
+					$pattern_name = $first_digit . $second_digit . "xx";
+				break;
+				// Matches the last two digits
+				case 1:
+					// Getting the last two digits of the number
+					$third_digit = substr((string)$extension, 2, 1);
+					$fourth_digit = substr((string)$extension, 3, 1);
+					
+					// Creating the regex expression that gets all extensions that end with the same two digits that aren't longer than 4 digits themselves
+					$pattern_name = "xx" . $third_digit . $fourth_digit;
+				break;
+				// Matches the first and third digit
+				case 2:
+					// Getting the first and third digits of the number
+					$first_digit = substr((string)$extension, 0, 1);
+					$third_digit = substr((string)$extension, 2, 1);
+					
+					// Creating the regex expression that gets all extensions that end with the same two digits that aren't longer than 4 digits themselves
+					$pattern_name = $first_digit . "x" . $third_digit . "x";
+				break;
+				// Matches the second and fourth digits of the number
+				case 3:
+					// Getting the second and fourth digits of the number
+					$second_digit = substr((string)$extension, 1, 1);
+					$fourth_digit = substr((string)$extension, 3, 1);
+					
+					// Creating the regex expression that gets all extensions that end with the same two digits that aren't longer than 4 digits themselves
+					$pattern_name = "x" . $second_digit . "x" . $fourth_digit;
+				break;
+			}
+		}
+		// Extension is five digits
+		else if ($num_of_digits == 5)
+		{
+			// Figuring out which pattern is wanted and creating a regex for it
+			switch ($pattern_num) {
+				// This matches the first three digits
+				case 0:
+					// Getting the first three digits of the number
+					$first_digit = substr((string)$extension, 0, 1);
+					$second_digit = substr((string)$extension, 1, 1);
+					$third_digit = substr((string)$extension, 2, 1);
+					
+					// Creating the regex expression that gets all extensions that start with the same first three digits that aren't longer than 5 digits themselves
+					$pattern_name = $first_digit . $second_digit . $third_digit . "xx";
+				break;
+				// Matches the last two digits
+				case 1:
+					// Getting the last three digits of the number
+					$third_digit = substr((string)$extension, 2, 1);
+					$fourth_digit = substr((string)$extension, 3, 1);
+					$fifth_digit = substr((string)$extension, 4, 1);
+					
+					// Creating the regex expression that gets all extensions that start with the last three digits that aren't longer than 5 digits themselves
+					$pattern_name = "xx" . $third_digit . $fourth_digit . $fifth_digit;
+				break;
+				// Matches the first, third, and fifth digit
+				case 2:
+					// Getting the first, third, and fifth digits of the number
+					$first_digit = substr((string)$extension, 0, 1);
+					$third_digit = substr((string)$extension, 2, 1);
+					$fifth_digit = substr((string)$extension, 4, 1);
+					
+					// Creating the regex expression that gets all extensions that end with the same first, third, and fifth digits that aren't longer than 5 digits themselves
+					$pattern_name = $first_digit . "x" . $third_digit . "x" . $fifth_digit;
+				break;
+				// Matches the second and fourth digits of the number
+				case 3:
+					// Getting the second and fourth digits of the number
+					$second_digit = substr((string)$extension, 1, 1);
+					$fourth_digit = substr((string)$extension, 3, 1);
+					
+					// Creating the regex expression that gets all extensions that end with the same second and fourth digits that aren't longer than 5 digits themselves
+					$pattern_name = "x" . $second_digit . "x" . $fourth_digit . "x";
+				break;
+			}
+		}
+		else
+		{
+			// The extension is too long or non-existant, so return the default "DNE" pattern
+		}
+
+		return $pattern_name;
+	}
+
 ?>
 
 
