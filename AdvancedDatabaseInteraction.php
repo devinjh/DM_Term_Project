@@ -227,19 +227,45 @@
 		// Making sure that the range the user offered doesn't take it below zero (since that's impossible)
 		if ($extension_number - $extension_range < 0)
 		{
-			// If it does, then the max amount it can decrease is by the extension numbr itself
+			// If it does, then the max amount it can decrease is by the extension number itself
 			$extension_range_down = $extension_number;
 		}
 
+		// Letting the user know what's being displayed
 		print "<p>Available Extensions:</p><p>";
 
 		// Printing out all of the extensions and showing them in their proper spot
-		for ($extension = $extension_number - $extension_range_down; $extension < $extension_number + $extension_range; $extension++)
+		$bottom = $extension_number - $extension_range_down;
+		$top = $extension_number + $extension_range;
+		$difference = $top - $bottom;
+		$tier_one = array();
+		$tier_two = array();
+		$tier_three = array();
+		$tier_four = array();
+		$tier_five = array();
+		for ($extension = $bottom; $extension < $top; $extension++)
 		{
 			// The extension isn't being used
 			if (binarySearch($used_extension_array, 0, sizeof($used_extension_array), $extension) == -1)
 			{
-				print $extension . ", ";
+				//print $extension . ",";
+				switch ($extension){
+					case ($extension < $bottom + ($difference / 5)):
+						array_push($tier_one, $extension);
+					break;
+					case ($extension < $bottom + (2 * $difference / 5)):
+						array_push($tier_two, $extension);
+					break;
+					case ($extension < $bottom + (3 * $difference / 5)):
+						array_push($tier_three, $extension);
+					break;
+					case ($extension < $bottom + (4 * $difference / 5)):
+						array_push($tier_four, $extension);
+					break;
+					case ($extension < $bottom + $difference):
+						array_push($tier_five, $extension);
+					break;
+				}
 			}
 			// The extension is being used
 			else
@@ -247,6 +273,141 @@
 				// Nothing happens
 			}
 		}
+		// Displaying all of the available extensions in an orderly, clean fashion
+		print "<table width=80%>";
+
+		// Displaying the table headers
+		print "<tr>";
+		$max = -1;
+		for ($i = 0; $i < 5; $i++)
+		{
+			// Displaying what percentage of extensions the user is seeing
+			print "<th>";
+			switch ($i){
+				case 0:
+					print "0-20%";
+				break;
+				case 1:
+					print "21-40%";
+				break;
+				case 2:
+					print "41-60%";
+				break;
+				case 3:
+					print "61-80%";
+				break;
+				case 4:
+					print "81-100%";
+				break;
+			}
+			print "</th>";
+
+			// We also want to see which array is the largest
+			switch ($i){
+				case 0:
+					if (count($tier_one) > $max)
+					{
+						$max = count($tier_one);
+					}
+				break;
+				case 1:
+					if (count($tier_two) > $max)
+					{
+						$max = count($tier_two);
+					}
+				break;
+				case 2:
+					if (count($tier_three) > $max)
+					{
+						$max = count($tier_three);
+					}
+				break;
+				case 3:
+					if (count($tier_four) > $max)
+					{
+						$max = count($tier_four);
+					}
+				break;
+				case 4:
+					if (count($tier_five) > $max)
+					{
+						$max = count($tier_five);
+					}
+				break;
+			}
+		}
+		print "</tr>";
+
+		// Displaying all of the data
+		$i = 0;
+		while ($i < $max)
+		{
+			print "<tr>";
+			for ($x = 0; $x < 5; $x++)
+			{
+				print "<td align='center'>";
+				switch ($x){
+					case 0:
+						if ($i < count($tier_one))
+						{
+							print $tier_one[$i];
+						}
+						else
+						{
+							print "";
+						}
+					break;
+					case 1:
+						if ($i < count($tier_two))
+						{
+							print $tier_two[$i];
+						}
+						else
+						{
+							print "";
+						}
+					break;
+					case 2:
+						if ($i < count($tier_three))
+						{
+							print $tier_three[$i];
+						}
+						else
+						{
+							print "";
+						}
+					break;
+					case 3:
+						if ($i < count($tier_four))
+						{
+							print $tier_four[$i];
+						}
+						else
+						{
+							print "";
+						}
+					break;
+					case 4:
+						if ($i < count($tier_five))
+						{
+							print $tier_five[$i];
+						}
+						else
+						{
+							print "";
+						}
+					break;
+				}
+				print "</td>";
+			}
+			print "</tr>";
+
+			// Incrementing $i
+			$i++;
+		}
+
+		// End of the table
+		print "</table>";
 
 		print "</p>";
 	}
@@ -350,7 +511,7 @@
 			// We also get the size of each array from the sorted extension data (for use later)
 			array_push($size_array, sizeof($sorted_extension_data[$i]));
 
-			// We also want to see if it's the larget one we have. If so, store it
+			// We also want to see if it's the largest one we have. If so, store it
 			if ($size_array[$i] > $max)
 			{
 				$max = $size_array[$i];
