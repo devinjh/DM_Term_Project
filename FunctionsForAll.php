@@ -64,6 +64,11 @@
 			{
 				return true;
 			}
+			// the box isn't checked
+			else if (strcmp($column_header, "DNE") == 0)
+			{
+				return true;
+			}
 			// If it's none of the above, then the column header isn't a part of the table
 			else
 			{
@@ -118,6 +123,11 @@
 			{
 				return true;
 			}
+			// the box isn't checked
+			else if (strcmp($column_header, "DNE") == 0)
+			{
+				return true;
+			}
 			// If it's none of the above, then the column header isn't a part of the table
 			else
 			{
@@ -139,6 +149,11 @@
 			}
 			// name
 			else if (strcmp($column_header, "name") == 0)
+			{
+				return true;
+			}
+			// the box isn't checked
+			else if (strcmp($column_header, "DNE") == 0)
 			{
 				return true;
 			}
