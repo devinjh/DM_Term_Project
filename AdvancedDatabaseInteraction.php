@@ -16,197 +16,191 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-csv/0.71/jquery.csv-0.71.min.js"></script>
 
 <html>
-	<head>
-		<meta charset = "utf-8">
-		<title> Advanced Database </title>
-		<style type = "text/css">
-			td, th, table {
-				border: thin solid black;
-			}
-		</style>
-	</head>
+
+<head>
+    <meta charset="utf-8">
+    <title> Advanced Database </title>
+    <style type="text/css">
+    td,
+    th,
+    table {
+        border: thin solid black;
+    }
+    </style>
+</head>
+
 <body>
 
-<script>
-
-	// Global variables for the help page
-	var helpPage = "<h1><center> Help Page </center></h1>";
+    <script>
+    // Global variables for the help page
+    var helpPage = "<h1><center> Help Page </center></h1>";
     var helpWindow = null;
-    
+
     // Enum for the operations (in case we want to add more)
-	const OperationEnum = Object.freeze({
-		FindClose: 0,
+    const OperationEnum = Object.freeze({
+        FindClose: 0,
         FindPattern: 1,
         UploadInformation: 2
-	});
-	
-	function openHelpPage()
-	{
-		// Making sure the help page isn't already open, and if it is, close it
-		if (helpWindow != null)
-		{
-			helpWindow.close();
-		}
-		
-		// WRITE WHAT WE WANT THE HELP WINDOW TO DISPLAY HERE, STILL NEED TO DO
-		
-		// This is opening the new window with all of the differences added
-		helpWindow = window.open("", "Help Page", "width=1000,height=500");
-		helpWindow.document.write(helpPage);
-		
-		// This resets the page variable, and thus resets the window
-		helpPage = "<h1><center> Help Page </center></h1>";
+    });
+
+    function openHelpPage() {
+        // Making sure the help page isn't already open, and if it is, close it
+        if (helpWindow != null) {
+            helpWindow.close();
+        }
+
+        // WRITE WHAT WE WANT THE HELP WINDOW TO DISPLAY HERE, STILL NEED TO DO
+
+        // This is opening the new window with all of the differences added
+        helpWindow = window.open("", "Help Page", "width=1000,height=500");
+        helpWindow.document.write(helpPage);
+
+        // This resets the page variable, and thus resets the window
+        helpPage = "<h1><center> Help Page </center></h1>";
     }
-    
-    function updateInformation(e)
-    {
+
+    function updateInformation(e) {
         // If the selected function is not upload information
-        if (e != OperationEnum.UploadInformation)
-        {
+        if (e != OperationEnum.UploadInformation) {
             // Make the break hidden so the formatting still looks good
             document.getElementById("br_1").hidden = true;
 
             // Make the information textbox visible so the user can enter in information
-			document.getElementById("information_textbox").hidden = false;
-			
-			// The operation is to find a close extension
-			if (e == OperationEnum.FindClose)
-			{
-				// The range is necessary since they want a close extension
-				document.getElementById("extension_range_textbox").hidden = false;
-			}
-			// The operation is to find a pattern matching the extension given
-			else
-			{
-				// Since there's nothing needed about the range, make that hidden too
-				document.getElementById("extension_range_textbox").hidden = true;
-			}
-						
-			document.getElementById("upload_information").hidden = true;
-			document.getElementById("output").hidden = true;
+            document.getElementById("information_textbox").hidden = false;
+
+            // The operation is to find a close extension
+            if (e == OperationEnum.FindClose) {
+                // The range is necessary since they want a close extension
+                document.getElementById("extension_range_textbox").hidden = false;
+            }
+            // The operation is to find a pattern matching the extension given
+            else {
+                // Since there's nothing needed about the range, make that hidden too
+                document.getElementById("extension_range_textbox").hidden = true;
+            }
+
+            document.getElementById("upload_information").hidden = true;
+            document.getElementById("output").hidden = true;
         }
         // If the selected function is upload information
-        else
-        {
+        else {
             // Make the break visible so the formatting still looks good
             document.getElementById("br_1").hidden = false;
 
             // Make the information textbox hidden since it doesn't have anything to do with uploading information
-			document.getElementById("information_textbox").hidden = true;
-			
-			// Since there's nothing needed about the range, make that hidden too
-			document.getElementById("extension_range_textbox").hidden = true;
+            document.getElementById("information_textbox").hidden = true;
+
+            // Since there's nothing needed about the range, make that hidden too
+            document.getElementById("extension_range_textbox").hidden = true;
 
             // ADD ANYTHING ELSE THAT NEEDS TO HAPPEN
-			document.getElementById("upload_information").hidden = false;
-			document.getElementById("output").hidden = false;
-						
+            document.getElementById("upload_information").hidden = false;
+            document.getElementById("output").hidden = false;
+
         }
-	}
-		
-	// function to upload file data
-	function uploadData()
-	{
-		var filename = "rawdata/" + document.getElementById("myFile").files[0].name;
-		var xhttp = new XMLHttpRequest();
-		var i = 0, j = 0; // loop vars
-		xhttp.onreadystatechange = function()
-		{
-			if (this.readyState == 4 && this.status == 200)
-			{
-				if (filename[8] == 'e') {
-					var test = this.responseText;
-					test = test.replace(/\n/g, ","); // replaces \n with , so it can be stored in an array properly
-				
-					var text = $.csv.toArray(test);
-					var lines = text.length / 9 - 1; // last line the future loop reads is all undefined so -1
-					var htmlOut = "INSERT INTO `export`(`extension`, `type`, `port`, `name`, `room`, `jack`, `cable`, `floor`, `building`) <br> VALUES ";
-				
-					for (j = 1; j < lines-1; j++) { // skip line 0 because this file has the headers as line 0 // j < lines
-						htmlOut += "(";
-						for (i = 0; i < 8; i++) { // i < 8 for all but last column
-							htmlOut += "'" + text[9*j+i].replace('\'','').replace('\\','') + "',";
-						}
-						htmlOut += "'" + text[9*j+8].replace('\'','') + "'),";
-						htmlOut += "<br>";
-					}
-					// need to add last line separately to add on the delimeter ";"
-					htmlOut += "(";
-					for (i = -1; i < 7; i++) { // i < 8 for all but last column
-						htmlOut += "'" + text[9*lines+i].replace('\'','') + "',";
-					}
-					htmlOut += "'" + text[9*lines+7].replace('\'','') + "');";
-					
-					var myWindow = window.open("", "QueryOut");
-					myWindow.document.write(htmlOut);
-					
-				}
-				else if (filename[8] == 'r') {
-					var test = this.responseText;
-					test = test.replace(/\n/g, ","); // replaces \n with , so it can be stored in an array properly
-					
-					var text = $.csv.toArray(test);
-					var lines = (text.length-3) / 8; // first 2 and last line is not important data
-					var htmlOut = "INSERT INTO `akron`(`extension`, `type`, `cor`, `tn`, `coverpath`, `name`, `cos`) <br> VALUES ";
-					
-					for (j = 0; j < lines-1; j++) {
-						htmlOut += "(";
-						for (i = 2; i < 8; i++) { // i < 7 for all but last column
-							htmlOut += "'" + text[8*j+i].replace('\'','').replace('\\','') + "',";
-						}
-						htmlOut += "'" + text[8*j+8].replace('\'','') + "'),";
-						htmlOut += "<br>";
-					}
-					// need to add last line separately to add on the delimeter ";"
-					j = 8*lines-1;
-					htmlOut += "(";
-					for (i = -5; i < 1; i++) {
-						htmlOut += "'" + text[j+i].replace('\'','') + "',";
-					}
-					htmlOut += "'" + text[j+1].replace('\'','') + "');";
-					
-					var myWindow = window.open("", "QueryOut");
-					myWindow.document.write(htmlOut);
-				}
-				else if (filename[8] == 'W') {
-					var test = this.responseText;
-					test = test.replace(/\n/g, ","); // replaces \n with , so it can be stored in an array properly
-					
-					var text = $.csv.toArray(test);
-					var lines = (text.length-3) / 8; // first 2 and last line is not important data
-					var htmlOut = "INSERT INTO `wayne`(`extension`, `type`, `name`, `cor`, `tn`, `coverpath`, `cos`) <br> VALUES ";
-					
-					for (j = 0; j < lines-1; j++) {
-						htmlOut += "(";
-						for (i = 2; i < 8; i++) { // i < 7 for all but last column
-							htmlOut += "'" + text[8*j+i].replace('\'','').replace('\\','') + "',";
-						}
-						htmlOut += "'" + text[8*j+8].replace('\'','') + "'),";
-						htmlOut += "<br>";
-					}
-					// need to add last line separately to add on the delimeter ";"
-					j = 8*lines-1;
-					htmlOut += "(";
-					for (i = -5; i < 1; i++) {
-						htmlOut += "'" + text[j+i].replace('\'','') + "',";
-					}
-					htmlOut += "'" + text[j+1].replace('\'','') + "');";
-					
-					var myWindow = window.open("", "QueryOut");
-					myWindow.document.write(htmlOut);
-				}
-				else
-					window.alert("Wrong data file type");
-			}
-		};
-		xhttp.open("GET", filename, true);
-		xhttp.send();
-  }
+    }
 
-</script>
+    // function to upload file data
+    function uploadData() {
+        var filename = "rawdata/" + document.getElementById("myFile").files[0].name;
+        var xhttp = new XMLHttpRequest();
+        var i = 0,
+            j = 0; // loop vars
+        xhttp.onreadystatechange = function() {
+            if (this.readyState == 4 && this.status == 200) {
+                if (filename[8] == 'e') {
+                    var test = this.responseText;
+                    test = test.replace(/\n/g, ","); // replaces \n with , so it can be stored in an array properly
 
-<!-- Variables. -->
-<?php
+                    var text = $.csv.toArray(test);
+                    var lines = text.length / 9 - 1; // last line the future loop reads is all undefined so -1
+                    var htmlOut =
+                        "INSERT INTO `export`(`extension`, `type`, `port`, `name`, `room`, `jack`, `cable`, `floor`, `building`) <br> VALUES ";
+
+                    for (j = 1; j < lines -
+                        1; j++) { // skip line 0 because this file has the headers as line 0 // j < lines
+                        htmlOut += "(";
+                        for (i = 0; i < 8; i++) { // i < 8 for all but last column
+                            htmlOut += "'" + text[9 * j + i].replace('\'', '').replace('\\', '') + "',";
+                        }
+                        htmlOut += "'" + text[9 * j + 8].replace('\'', '') + "'),";
+                        htmlOut += "<br>";
+                    }
+                    // need to add last line separately to add on the delimeter ";"
+                    htmlOut += "(";
+                    for (i = -1; i < 7; i++) { // i < 8 for all but last column
+                        htmlOut += "'" + text[9 * lines + i].replace('\'', '') + "',";
+                    }
+                    htmlOut += "'" + text[9 * lines + 7].replace('\'', '') + "');";
+
+                    var myWindow = window.open("", "QueryOut");
+                    myWindow.document.write(htmlOut);
+
+                } else if (filename[8] == 'r') {
+                    var test = this.responseText;
+                    test = test.replace(/\n/g, ","); // replaces \n with , so it can be stored in an array properly
+
+                    var text = $.csv.toArray(test);
+                    var lines = (text.length - 3) / 8; // first 2 and last line is not important data
+                    var htmlOut =
+                        "INSERT INTO `akron`(`extension`, `type`, `cor`, `tn`, `coverpath`, `name`, `cos`) <br> VALUES ";
+
+                    for (j = 0; j < lines - 1; j++) {
+                        htmlOut += "(";
+                        for (i = 2; i < 8; i++) { // i < 7 for all but last column
+                            htmlOut += "'" + text[8 * j + i].replace('\'', '').replace('\\', '') + "',";
+                        }
+                        htmlOut += "'" + text[8 * j + 8].replace('\'', '') + "'),";
+                        htmlOut += "<br>";
+                    }
+                    // need to add last line separately to add on the delimeter ";"
+                    j = 8 * lines - 1;
+                    htmlOut += "(";
+                    for (i = -5; i < 1; i++) {
+                        htmlOut += "'" + text[j + i].replace('\'', '') + "',";
+                    }
+                    htmlOut += "'" + text[j + 1].replace('\'', '') + "');";
+
+                    var myWindow = window.open("", "QueryOut");
+                    myWindow.document.write(htmlOut);
+                } else if (filename[8] == 'W') {
+                    var test = this.responseText;
+                    test = test.replace(/\n/g, ","); // replaces \n with , so it can be stored in an array properly
+
+                    var text = $.csv.toArray(test);
+                    var lines = (text.length - 3) / 8; // first 2 and last line is not important data
+                    var htmlOut =
+                        "INSERT INTO `wayne`(`extension`, `type`, `name`, `cor`, `tn`, `coverpath`, `cos`) <br> VALUES ";
+
+                    for (j = 0; j < lines - 1; j++) {
+                        htmlOut += "(";
+                        for (i = 2; i < 8; i++) { // i < 7 for all but last column
+                            htmlOut += "'" + text[8 * j + i].replace('\'', '').replace('\\', '') + "',";
+                        }
+                        htmlOut += "'" + text[8 * j + 8].replace('\'', '') + "'),";
+                        htmlOut += "<br>";
+                    }
+                    // need to add last line separately to add on the delimeter ";"
+                    j = 8 * lines - 1;
+                    htmlOut += "(";
+                    for (i = -5; i < 1; i++) {
+                        htmlOut += "'" + text[j + i].replace('\'', '') + "',";
+                    }
+                    htmlOut += "'" + text[j + 1].replace('\'', '') + "');";
+
+                    var myWindow = window.open("", "QueryOut");
+                    myWindow.document.write(htmlOut);
+                } else
+                    window.alert("Wrong data file type");
+            }
+        };
+        xhttp.open("GET", filename, true);
+        xhttp.send();
+    }
+    </script>
+
+    <!-- Variables. -->
+    <?php
 
     // Setting all of the variables in case they aren't defined
 	$extension_number = "DNE";
@@ -235,8 +229,8 @@
 
 ?>
 
-<!-- Functions. -->
-<?php
+    <!-- Functions. -->
+    <?php
 
 	// Determines the operation being performed and performs it
 	function determineOperation()
@@ -608,14 +602,14 @@
 
 ?>
 
-<center>
-    
-    <h1>
-	    Advanced Database Interaction Page
-    </h1>
+    <center>
 
-    <!-- Displaying the changes/information the user wanted. -->
-	<?php
+        <h1>
+            Advanced Database Interaction Page
+        </h1>
+
+        <!-- Displaying the changes/information the user wanted. -->
+        <?php
 
         // Simply call this method to do the operation and display the results (if applicable)
         determineOperation();
@@ -625,50 +619,53 @@
 
     ?>
 
-    	<!-- Figuring out what operation they would like to perform. -->
-    	<p>
-    	    What operation would you like to do?
-    	</p>
+        <!-- Figuring out what operation they would like to perform. -->
+        <p>
+            What operation would you like to do?
+        </p>
 
-    	<!-- The operation radio buttons. -->
-    	<input type="radio" name="operation" value="find_close" onclick="updateInformation(OperationEnum.FindClose)" checked>Find a Close Extension
-    	<input type="radio" name="operation" value="find_pattern" onclick="updateInformation(OperationEnum.FindPattern)">Find an Extension Matching a Pattern
-    	<input type="radio" name="operation" value="upload_information" onclick="updateInformation(OperationEnum.UploadInformation)">Upload Information
+        <!-- The operation radio buttons. -->
+        <input type="radio" name="operation" value="find_close" onclick="updateInformation(OperationEnum.FindClose)"
+            checked>Find a Close Extension
+        <input type="radio" name="operation" value="find_pattern"
+            onclick="updateInformation(OperationEnum.FindPattern)">Find an Extension Matching a Pattern
+        <input type="radio" name="operation" value="upload_information"
+            onclick="updateInformation(OperationEnum.UploadInformation)">Upload Information
 
-    	<!-- Making sure the next attribute isn't too close to the radio buttons. -->
-    	<br id="br_1" hidden>
+        <!-- Making sure the next attribute isn't too close to the radio buttons. -->
+        <br id="br_1" hidden>
 
-    	<!-- The textboxes that gather all of the appropriate information. -->
-    	<p id="information_textbox">
-    	    Extension: <input type="text" name="extension_number">
-    	</p>
+        <!-- The textboxes that gather all of the appropriate information. -->
+        <p id="information_textbox">
+            Extension: <input type="text" name="extension_number">
+        </p>
 
-		<p id="extension_range_textbox">
-			Range: <input type="text" name="extension_range">
-		</p>
+        <p id="extension_range_textbox">
+            Range: <input type="text" name="extension_range">
+        </p>
 
-		<p id="upload_information" hidden="true">
-				<input type="file" id="myFile">
-				<button type="button" onclick="uploadData()"> Upload! </button>
-		</p>
+        <p id="upload_information" hidden="true">
+            <input type="file" id="myFile">
+            <button type="button" onclick="uploadData()"> Upload! </button>
+        </p>
 
-    	<!-- Submit button. -->
-    	<br><input type="submit">
+        <!-- Submit button. -->
+        <br><input type="submit">
 
-    </form>
+        </form>
 
-</center>
+    </center>
 
-<!-- Button to bring up the help page. -->
-<div align="center" onclick="openHelpPage()">
-	<button> Help Page </button>
-</div>
+    <!-- Button to bring up the help page. -->
+    <div align="center" onclick="openHelpPage()">
+        <button> Help Page </button>
+    </div>
 
-<!-- Making sure the Help Button isn't too close to the next button. -->
-<br>
+    <!-- Making sure the Help Button isn't too close to the next button. -->
+    <br>
 
-<!-- Buttons -->
-<?php
+    <!-- Buttons -->
+    <?php
 
 	// Button to go the Home page
 	print "<div id=\"button\" align=\"center\"><a href=" . getLocation("Home.php") . "><button>Go to Home Page</button></a></div>";
@@ -681,6 +678,7 @@
 
 ?>
 
-	<p id="output" align='center'> </p>
+    <p id="output" align='center'> </p>
 </body>
+
 </html>
