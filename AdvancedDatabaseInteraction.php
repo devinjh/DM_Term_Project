@@ -114,35 +114,65 @@
 		{
 			if (this.readyState == 4 && this.status == 200)
 			{
-				// This will write the entire contents of the selected file to the "output" element on the page
-				// CURRENTLY ONLY WORKS ON THE "export_station" DATA FILE
-
-				var test = this.responseText;
-				test = test.replace(/\n/g, ",") // replaces \n with , so it can be stored in an array properly
+				if (filename[8] == 'e') {
+					var test = this.responseText;
+					test = test.replace(/\n/g, ","); // replaces \n with , so it can be stored in an array properly
 				
-				var text = $.csv.toArray(test);
-				var lines = text.length / 9 - 1; // last line the future loop reads is all undefined so -1
-				var htmlOut = "INSERT INTO `export`(`extension`, `type`, `port`, `name`, `room`, `jack`, `cable`, `floor`, `building`) VALUES ";
+					var text = $.csv.toArray(test);
+					var lines = text.length / 9 - 1; // last line the future loop reads is all undefined so -1
+					var htmlOut = "INSERT INTO `export`(`extension`, `type`, `port`, `name`, `room`, `jack`, `cable`, `floor`, `building`) <br> VALUES ";
 				
-				//
-				// VALUES ([value-1],[value-2],[value-3],[value-4],[value-5],[value-6],[value-7],[value-8],[value-9]),
-				//        ([value-10],[value-11],[value-12],[value-13],[value-14],[value-15],[value-16],[value-17],[value-18]);
-				
-				for (j = 1; j < lines-1; j++) { // skip line 0 because this file has the headers as line 0 // j < lines
-				  htmlOut += "(";
-					for (i = 0; i < 8; i++) { // i < 8 for all but last column
-						htmlOut += "'" + text[9*j+i].replace('\'','').replace('\\','') + "',";
+					for (j = 1; j < lines-1; j++) { // skip line 0 because this file has the headers as line 0 // j < lines
+						htmlOut += "(";
+						for (i = 0; i < 8; i++) { // i < 8 for all but last column
+							htmlOut += "'" + text[9*j+i].replace('\'','').replace('\\','') + "',";
+						}
+						htmlOut += "'" + text[9*j+8].replace('\'','') + "'),";
+						htmlOut += "<br>";
 					}
-					htmlOut += "'" + text[9*j+8].replace('\'','') + "'),";
-					htmlOut += "<br>";
+					// need to add last line separately to add on the delimeter ";"
+					htmlOut += "(";
+					for (i = -1; i < 7; i++) { // i < 8 for all but last column
+						htmlOut += "'" + text[9*lines+i].replace('\'','') + "',";
+					}
+					htmlOut += "'" + text[9*lines+7].replace('\'','') + "');";
+					
+					var myWindow = window.open("", "QueryOut");
+					myWindow.document.write(htmlOut);
+					
 				}
-				// need to add last line separately to add on the delimeter ";"
-				htmlOut += "(";
-				for (i = -1; i < 7; i++) { // i < 8 for all but last column
-					htmlOut += "'" + text[9*lines+i].replace('\'','') + "',";
+				else if (filename[8] == 'r') {
+					var test = this.responseText;
+					test = test.replace(/\n/g, ","); // replaces \n with , so it can be stored in an array properly
+					
+					var text = $.csv.toArray(test);
+					var lines = (text.length-3) / 8; // first 2 and last line is not important data
+					var htmlOut = "INSERT INTO `akron`(`extension`, `type`, `cor`, `tn`, `coverpath`, `name`, `cos`) <br> VALUES ";
+					
+					for (j = 0; j < lines-1; j++) {
+						htmlOut += "(";
+						for (i = 2; i < 8; i++) { // i < 7 for all but last column
+							htmlOut += "'" + text[8*j+i].replace('\'','').replace('\\','') + "',";
+						}
+						htmlOut += "'" + text[8*j+8].replace('\'','') + "'),";
+						htmlOut += "<br>";
+					}
+					// need to add last line separately to add on the delimeter ";"
+					j = 8*lines-1;
+					htmlOut += "(";
+					for (i = -5; i < 1; i++) {
+						htmlOut += "'" + text[j+i].replace('\'','') + "',";
+					}
+					htmlOut += "'" + text[j+1].replace('\'','') + "');";
+					
+					var myWindow = window.open("", "QueryOut");
+					myWindow.document.write(htmlOut);
 				}
-				htmlOut += "'" + text[9*lines+7].replace('\'','') + "');";
-				document.getElementById("output").innerHTML = htmlOut;
+				else if (filename[8] == 'W') {
+					document.getElementById("output").innerHTML = "WAYNE";
+				}
+				else
+					document.getElementById("output").innerHTML = "Wrong data file type";
 			}
 		};
 		xhttp.open("GET", filename, true);
@@ -598,8 +628,6 @@
 				<button type="button" onclick="uploadData()"> Upload! </button>
 		</p>
 
-		<p id="output"> </p>
-
     	<!-- Submit button. -->
     	<br><input type="submit">
 
@@ -629,5 +657,6 @@
 
 ?>
 
+	<p id="output" align='center'> </p>
 </body>
 </html>
