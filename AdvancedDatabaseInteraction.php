@@ -169,10 +169,34 @@
 					myWindow.document.write(htmlOut);
 				}
 				else if (filename[8] == 'W') {
-					document.getElementById("output").innerHTML = "WAYNE";
+					var test = this.responseText;
+					test = test.replace(/\n/g, ","); // replaces \n with , so it can be stored in an array properly
+					
+					var text = $.csv.toArray(test);
+					var lines = (text.length-3) / 8; // first 2 and last line is not important data
+					var htmlOut = "INSERT INTO `wayne`(`extension`, `type`, `name`, `cor`, `tn`, `coverpath`, `cos`) <br> VALUES ";
+					
+					for (j = 0; j < lines-1; j++) {
+						htmlOut += "(";
+						for (i = 2; i < 8; i++) { // i < 7 for all but last column
+							htmlOut += "'" + text[8*j+i].replace('\'','').replace('\\','') + "',";
+						}
+						htmlOut += "'" + text[8*j+8].replace('\'','') + "'),";
+						htmlOut += "<br>";
+					}
+					// need to add last line separately to add on the delimeter ";"
+					j = 8*lines-1;
+					htmlOut += "(";
+					for (i = -5; i < 1; i++) {
+						htmlOut += "'" + text[j+i].replace('\'','') + "',";
+					}
+					htmlOut += "'" + text[j+1].replace('\'','') + "');";
+					
+					var myWindow = window.open("", "QueryOut");
+					myWindow.document.write(htmlOut);
 				}
 				else
-					document.getElementById("output").innerHTML = "Wrong data file type";
+					window.alert("Wrong data file type");
 			}
 		};
 		xhttp.open("GET", filename, true);
