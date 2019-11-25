@@ -20,3 +20,7 @@ Currently, this connects to database on a website that allows for hosting MySQL 
 https://remotemysql.com/
 
 The username and password to this database is provided to those who need it.
+
+# Additional Tools
+This project uses Bootstrap for CSS sheets. The link to view and download bootstrap can be found here:
+https://getbootstrap.com/
