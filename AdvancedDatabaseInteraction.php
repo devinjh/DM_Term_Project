@@ -25,9 +25,7 @@
     <title> Advanced Database </title>
 </head>
 
-<body>
-
-    <script>
+<script>
     // Global variables for the help page
     var helpPage = "<h1><center> Help Page </center></h1>";
     var helpWindow = null;
@@ -58,9 +56,6 @@
     function updateInformation(e) {
         // If the selected function is not upload information
         if (e != OperationEnum.UploadInformation) {
-            // Make the break hidden so the formatting still looks good
-            document.getElementById("br_1").hidden = true;
-
             // Make the information textbox visible so the user can enter in information
             document.getElementById("information_textbox").hidden = false;
 
@@ -80,9 +75,6 @@
         }
         // If the selected function is upload information
         else {
-            // Make the break visible so the formatting still looks good
-            document.getElementById("br_1").hidden = false;
-
             // Make the information textbox hidden since it doesn't have anything to do with uploading information
             document.getElementById("information_textbox").hidden = true;
 
@@ -192,7 +184,9 @@
         xhttp.open("GET", filename, true);
         xhttp.send();
     }
-    </script>
+</script>
+
+<body>
 
 <!-- Variables. -->
 <?php
@@ -232,8 +226,8 @@
 
 ?>
 
-    <!-- Functions. -->
-    <?php
+<!-- Functions. -->
+<?php
 
 	// Determines the operation being performed and performs it
 	function determineOperation()
@@ -625,28 +619,28 @@
 	}
 
 ?>
+	
+<center>
 
-    <center>
+    <h1 style="color: blue">
+        Advanced Database Interaction Page
+    </h1>
 
-        <h1 style="color: blue">
-            Advanced Database Interaction Page
-        </h1>
+    <!-- Displaying the changes/information the user wanted. -->
+    <?php
 
-        <!-- Displaying the changes/information the user wanted. -->
-        <?php
+        // Simply call this method to do the operation and display the results (if applicable)
+        determineOperation();
 
-        	// Simply call this method to do the operation and display the results (if applicable)
-        	determineOperation();
+        // This is the form headers that gathers all the information and relaunches the page
+        print "<form action=" . getLocation("AdvancedDatabaseInteraction.php") . " method='post'>";
 
-        	// This is the form headers that gathers all the information and relaunches the page
-        	print "<form action=" . getLocation("AdvancedDatabaseInteraction.php") . " method='post'>";
+    ?>
 
-    	?>
-
-        <!-- Figuring out what operation they would like to perform. -->
-        <p>
-            What operation would you like to do?
-        </p>
+    	<!-- Figuring out what operation they would like to perform. -->
+    	<p style="color: darkgreen">
+        	What operation would you like to do?
+    	</p>
 
         <!-- The operation radio buttons. -->
         <input type="radio" name="operation" value="find_close" onclick="updateInformation(OperationEnum.FindClose)"
@@ -657,7 +651,7 @@
             onclick="updateInformation(OperationEnum.UploadInformation)">Upload Information
 
         <!-- Making sure the next attribute isn't too close to the radio buttons. -->
-        <br id="br_1" hidden>
+		<br><br>
 
         <!-- The textboxes that gather all of the appropriate information. -->
         <p id="information_textbox">
@@ -676,20 +670,12 @@
         <!-- Submit button. -->
         <br><button class="btn btn-primary mb-2" type="submit">Submit</button>
 
-        </form>
+    </form>
 
-    </center>
+</center>
 
-    <!-- Button to bring up the help page. -->
-    <!--<div align="center" onclick="openHelpPage()">
-        <button> Help Page </button>
-    </div>
-
-    <!-- Making sure the Help Button isn't too close to the next button. -->
-    <br>-->
-
-    <!-- Buttons -->
-    <?php
+<!-- Buttons -->
+<?php
 
 	// Making sure everything is centered
 	print "<center>";
@@ -715,7 +701,15 @@
 
 ?>
 
-    <p id="output" align='center'> </p>
+<p id="output" align='center'> </p>
+
+<?php
+
+	// If any space needs to be added to the bottom
+	addSpaceToBottom(3);
+
+?>
+
 </body>
 
 </html>

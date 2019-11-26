@@ -463,7 +463,7 @@
 	?>
 
 		<!-- Figuring out what operation they would like to perform. -->
-		<p>
+		<p style="color: darkgreen">
 			What operation would you like to do?
 		</p>
 
@@ -473,35 +473,35 @@
 		<input type="radio" name="operation" value="search" onclick="updateInformation(OperationEnum.Search)" id="search_operation">Search
 		<input type="radio" name="operation" value="update" onclick="updateInformation(OperationEnum.Update)" id="update_operation">Update
 		<input type="radio" name="operation" value="delete" onclick="updateInformation(OperationEnum.Delete)" id="delete_operation">Delete<br><br>
-	
+
 		<!-- Figuring out which table they would like to perform it on. -->
-		<p>
+		<p style="color: darkgreen">
 			What table would you like to perform that operation on?
 		</p>
 
 		<?php
-			
+
 			// Displaying the first radio button, making sure it's checked
 			print "<input type=\"radio\" name=\"table\" value=\"all\" checked>All";
-			
+
 			// Getting the table names
 			$table_names = getTableNames();
-			
+
 			// Displaying the table names with radio buttons
 			for ($x = 0; $x < count($table_names); $x++)
 			{
 				print "<input type=\"radio\" name=\"table\" value=\"" . $table_names[$x] . "\">" . $table_names[$x];
 			}
-			
+
 		?>
 
-		<p>
+		<p style="color: darkgreen">
 			Please enter all of the appropriate information to perform the operation.
 		</p>
-		
+
 		<!-- Getting all of the necessary input to perform the operation. -->
 		<!-- This is the explanation of what to do with the textboxes that gets displayed to the user. -->
-		<p id="information_paragraph" hidden>
+		<p id="information_paragraph" style="color: darkgreen" hidden>
 			NOTE: Use the right side only for values that will be updated!<br>
 			Ex: If you want to update the name of every type "station-user"<br>
 			to "worker station", you type in "station-user" in the left side<br>
@@ -511,8 +511,8 @@
 		</p>
 
 		<!-- The checkboxes that gather information on if they're searching for a specific column. Only shows up when the user has the"search" operation selected. -->
-		<p id="search_checkboxes" hidden>
-			
+		<p id="search_checkboxes" style="color: darkgreen" hidden>
+
 			<!-- Little information explaining to the user what the checkboxes are for. -->
 			If you would like to search for (a) specific column(s), please indicate which one(s). If not, leave them all blank.<br><br>
 
@@ -538,7 +538,7 @@
 		</p>
 
 		<!-- This simply tells the user what the asterisk is for. -->
-		<p id="required_paragraph">
+		<p id="required_paragraph" style="color: darkgreen">
 			* = Ignore the asterisk for this operation
 		</p>		
 
@@ -556,7 +556,7 @@
 		Cable: <input type="text" name="cable"> - <input type="text" name="cable_update" id="cable_update_textbox" hidden><br>
 		Floor: <input type="text" name="floor"> - <input type="text" name="floor_update" id="floor_update_textbox" hidden><br>
 		Building: <input type="text" name="building"> - <input type="text" name="building_update" id="building_update_textbox" hidden><br>
-	
+		
 		<!-- Submit button. -->
 		<br><button class="btn btn-primary mb-2" type="submit">Submit</button>
 
@@ -588,6 +588,9 @@
 	print "<button type=\"button\" class=\"btn btn-primary\" onclick=location.href='AdvancedDatabaseInteraction.php'>Go to Advanced Database Page</button>";
 
 	print "</center>";
+
+	// If any space needs to be added to the bottom
+	addSpaceToBottom(3);
 
 ?>
 

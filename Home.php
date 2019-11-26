@@ -75,6 +75,9 @@
 		//print "<div id=\"button\" align=\"center\" class=\"btn btn-primary\"><a href=" . getLocation("AdvancedDatabaseInteraction.php") . "><button>Go to Advanced Database Page</button></a></div>"; // Old
 		print "<button type=\"button\" class=\"btn btn-primary\" onclick=location.href='AdvancedDatabaseInteraction.php'>Go to Advanced Database Page</button>";
 
+		// If any space needs to be added to the bottom
+		addSpaceToBottom(3);
+
 	?>
 
 </center>

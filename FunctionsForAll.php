@@ -687,6 +687,23 @@
 		return $pattern_name;
 	}
 
+	// This function simply adds a set number of breaks to the bottom of a page (that the bottom contents aren't right up against the bottom)
+	function addSpaceToBottom($number_of_breaks = 1)
+	{
+		// If the input isn't numeric, we just return without doing anything.
+		// We also return if the number is negative or 0
+		if (!is_numeric($number_of_breaks) || $number_of_breaks < 1)
+		{
+			return;
+		}
+
+		// Printing out the number of breaks that was sent in (default 1)
+		for ($i = 0; $i < $number_of_breaks; ++$i)
+		{
+			print "<br>";
+		}
+	}
+
 ?>
 
 
