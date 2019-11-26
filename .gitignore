@@ -6,3 +6,6 @@
 ._OperationsHelperFunctions.php
 ._QueryBuilderFunctions.php
 ._AdvancedDatabaseInteraction.php
+
+# This file came along with bootstrap
+.nfs.20051025.35ee
