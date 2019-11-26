@@ -325,7 +325,7 @@
 			}
 		}
 		// Displaying all of the available extensions in an orderly, clean fashion
-		print "<table width=80%>";
+		print "<table align =\"center\" class=\"table table-striped table-dark\">";
 
 		// Displaying the table headers
 		print "<tr>";
@@ -396,7 +396,7 @@
 			print "<tr>";
 			for ($x = 0; $x < 5; $x++)
 			{
-				print "<td align='center'>";
+				print "<td>";
 				switch ($x){
 					case 0:
 						if ($i < count($tier_one))
@@ -540,7 +540,7 @@
 		}
 
 		// Displaying all of the available extensions in an orderly, clean fashion
-		print "<table width=80%>";
+		print "<table align =\"center\" class=\"table table-striped table-dark\">";
 
 		// Displaying the table headers
 		print "<tr>";

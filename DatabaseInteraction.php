@@ -19,14 +19,6 @@
 		
 		<meta charset = "utf-8">
 		<title> Database </title>
-		<style type = "text/css">
-		
-			/* Our table border style */
-			td, th, table {
-				border: thin solid black;
-			}
-			
-		</style>
 	</head>
 <body>
 

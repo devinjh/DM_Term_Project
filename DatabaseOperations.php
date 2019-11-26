@@ -55,10 +55,10 @@
 			$keys = array_keys($row);
 		
 			// The start of our table
-			print "<table align ='center'>";
+			print "<table align =\"center\" class=\"table table-striped table-dark\">";
 			
 			// Starting the first row of the table
-			print "<tr align = 'center'>";
+			print "<tr>";
 			
 			// Looping through and displaying all of the column keys
 			for ($index = 0; $index < $num_fields; $index++)
@@ -79,7 +79,7 @@
 			for ($row_num = 0; $row_num < $num_rows; $row_num++)
 			{
 				// Aligning the rows to have the data in the center
-				print "<tr align = 'center'>";
+				print "<tr>";
 
 				// Getting the values, but not the keys, from the row
 				$values = array_values($row);
