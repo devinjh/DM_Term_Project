@@ -17,13 +17,15 @@
 
 <html>
 
-<head>
-	<!-- Bootstrap include. -->
-	<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+	<head>
+		<!-- Bootstrap include. -->
+		<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="	sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
 		
-    <meta charset="utf-8">
-    <title> Advanced Database </title>
-</head>
+    	<meta charset="utf-8">
+    	<title> Advanced Database </title>
+	</head>
+
+<body class="p-3 mb-2 bg-dark text-white">
 
 <script>
     // Global variables for the help page
@@ -72,6 +74,7 @@
 
             document.getElementById("upload_information").hidden = true;
             document.getElementById("output").hidden = true;
+            document.getElementById("required_paragraph").hidden = false;
         }
         // If the selected function is upload information
         else {
@@ -84,6 +87,7 @@
             // ADD ANYTHING ELSE THAT NEEDS TO HAPPEN
             document.getElementById("upload_information").hidden = false;
             document.getElementById("output").hidden = false;
+            document.getElementById("required_paragraph").hidden = true;
         }
     }
 
@@ -185,8 +189,6 @@
         xhttp.send();
     }
 </script>
-
-<body>
 
 <!-- Variables. -->
 <?php
@@ -295,7 +297,7 @@
 
 		// Printing out all of the extensions and showing them in their proper spot
 		$bottom = $extension_number - $extension_range_down;
-		$top = $extension_number + $extension_range;
+		$top = $extension_number + $extension_range + 1;
 		$difference = $top - $bottom;
 		$tier_one = array();
 		$tier_two = array();
@@ -622,7 +624,23 @@
 	
 <center>
 
-    <h1 style="color: blue">
+	<!-- Navigation bar. -->
+	<nav class="navbar navbar-dark bg-dark">
+		<form>
+    		<button class="btn btn-primary" type="button" onclick=location.href="Home.php">Home</button>
+    	</form>
+		<form class="form-inline">
+    		<button class="btn btn-primary" type="button" onclick=location.href="DatabaseInteraction.php">Basic Database</button>
+    	</form>
+    	<form>
+    		<button class="btn btn-primary" type="button" onclick=location.href="AdvancedDatabaseInteraction.php">Advanced Database</button>
+    	</form>
+    	<form>
+    		<button class="btn btn-primary" type="button" onclick="openHelpPage()">Help</button>
+    	</form>
+    </nav>
+
+    <h1 style="color: gold">
         Advanced Database Interaction Page
     </h1>
 
@@ -638,28 +656,40 @@
     ?>
 
     	<!-- Figuring out what operation they would like to perform. -->
-    	<p style="color: darkgreen">
+    	<p style="color: gold">
         	What operation would you like to do?
     	</p>
 
-        <!-- The operation radio buttons. -->
-        <input type="radio" name="operation" value="find_close" onclick="updateInformation(OperationEnum.FindClose)"
-            checked>Find a Close Extension
-        <input type="radio" name="operation" value="find_pattern"
-            onclick="updateInformation(OperationEnum.FindPattern)">Find an Extension Matching a Pattern
-        <input type="radio" name="operation" value="upload_information"
-            onclick="updateInformation(OperationEnum.UploadInformation)">Upload Information
+        <!-- Radio buttons for getting the operation. -->
+		<div class="custom-control custom-radio custom-control-inline">
+			<input type="radio" name="operation" value="find_close" onclick="updateInformation(OperationEnum.FindClose)" id="find_close_operation" class="custom-control-input" checked>
+				<label class="custom-control-label" for="find_close_operation">Find a Close Extension</label>
+		</div>
+		<div class="custom-control custom-radio custom-control-inline">
+			<input type="radio" name="operation" value="find_pattern"
+            onclick="updateInformation(OperationEnum.FindPattern)" id="find_pattern_operation" class="custom-control-input">
+				<label class="custom-control-label" for="find_pattern_operation">Find an Extension Matching a Pattern</label>
+		</div>
+		<div class="custom-control custom-radio custom-control-inline">
+			<input type="radio" name="operation" value="upload_information"
+            onclick="updateInformation(OperationEnum.UploadInformation)" id="upload_operation" class="custom-control-input">
+				<label class="custom-control-label" for="upload_operation">Upload Information</label>
+		</div>
 
         <!-- Making sure the next attribute isn't too close to the radio buttons. -->
 		<br><br>
 
+		<p style="color: gold" id="required_paragraph">
+			* = This text field must be filled out
+		</p>
+
         <!-- The textboxes that gather all of the appropriate information. -->
         <p id="information_textbox">
-            Extension: <input type="text" name="extension_number">
+            Extension*: <input type="text" name="extension_number">
         </p>
 
         <p id="extension_range_textbox">
-            Range: <input type="text" name="extension_range">
+            Range*: <input type="text" name="extension_range">
         </p>
 
         <p id="upload_information" hidden="true">

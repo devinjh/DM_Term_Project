@@ -18,9 +18,10 @@
 		<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
 		
 		<meta charset = "utf-8">
-		<title> Database </title>
+		<title> Basic Database </title>
 	</head>
-<body>
+
+<body class="p-3 mb-2 bg-dark text-white">
 
 <script>
 
@@ -446,8 +447,24 @@
 
 <center>
 
+	<!-- Navigation bar. -->
+	<nav class="navbar navbar-dark bg-dark">
+		<form>
+    		<button class="btn btn-primary" type="button" onclick=location.href="Home.php">Home</button>
+    	</form>
+		<form class="form-inline">
+    		<button class="btn btn-primary" type="button" onclick=location.href="DatabaseInteraction.php">Basic Database</button>
+    	</form>
+    	<form>
+    		<button class="btn btn-primary" type="button" onclick=location.href="AdvancedDatabaseInteraction.php">Advanced Database</button>
+    	</form>
+    	<form>
+    		<button class="btn btn-primary" type="button" onclick="openHelpPage()">Help</button>
+    	</form>
+    </nav>
+
 	<!-- Header -->
-	<h1 style="color: blue">
+	<h1 style="color: gold">
 		Basic Database Interaction Page
 	</h1>
 	
@@ -463,45 +480,75 @@
 	?>
 
 		<!-- Figuring out what operation they would like to perform. -->
-		<p style="color: darkgreen">
+		<p style="color: gold">
 			What operation would you like to do?
 		</p>
 
-		<!-- The operation radio buttons. -->
-		<input type="radio" name="operation" value="view" onclick="updateInformation(OperationEnum.View)" id="view_operation" checked>View
-		<input type="radio" name="operation" value="insert" onclick="updateInformation(OperationEnum.Insert)" id="insert_operation">Insert
-		<input type="radio" name="operation" value="search" onclick="updateInformation(OperationEnum.Search)" id="search_operation">Search
-		<input type="radio" name="operation" value="update" onclick="updateInformation(OperationEnum.Update)" id="update_operation">Update
-		<input type="radio" name="operation" value="delete" onclick="updateInformation(OperationEnum.Delete)" id="delete_operation">Delete<br><br>
+		<!-- Radio buttons for getting the operation. -->
+		<div class="custom-control custom-radio custom-control-inline">
+			<input type="radio" name="operation" value="view" onclick="updateInformation(OperationEnum.View)" id="view_operation" class="custom-control-input" checked>
+				<label class="custom-control-label" for="view_operation">View</label>
+		</div>
+		<div class="custom-control custom-radio custom-control-inline">
+			<input type="radio" name="operation" value="insert" onclick="updateInformation(OperationEnum.Insert)" id="insert_operation" class="custom-control-input">
+				<label class="custom-control-label" for="insert_operation">Insert</label>
+		</div>
+		<div class="custom-control custom-radio custom-control-inline">
+			<input type="radio" name="operation" value="search" onclick="updateInformation(OperationEnum.Search)" id="search_operation" class="custom-control-input">
+				<label class="custom-control-label" for="search_operation">Search</label>
+		</div>
+		<div class="custom-control custom-radio custom-control-inline">
+			<input type="radio" name="operation" value="update" onclick="updateInformation(OperationEnum.Update)" id="update_operation" class="custom-control-input">
+				<label class="custom-control-label" for="update_operation">Update</label>
+		</div>
+		<div class="custom-control custom-radio custom-control-inline">
+			<input type="radio" name="operation" value="delete" onclick="updateInformation(OperationEnum.Delete)" id="delete_operation" class="custom-control-input">
+				<label class="custom-control-label" for="delete_operation">Delete</label>
+		</div>
+
+		<!-- To make sure spacing looks good. -->
+		<br><br>
 
 		<!-- Figuring out which table they would like to perform it on. -->
-		<p style="color: darkgreen">
+		<p style="color: gold">
 			What table would you like to perform that operation on?
 		</p>
 
 		<?php
 
-			// Displaying the first radio button, making sure it's checked
-			print "<input type=\"radio\" name=\"table\" value=\"all\" checked>All";
-
-			// Getting the table names
+			// Getting all of the table names into an array
 			$table_names = getTableNames();
 
-			// Displaying the table names with radio buttons
-			for ($x = 0; $x < count($table_names); $x++)
+			// Going through the array and displaying all of the table nams along with the "all" option
+			for ($x = -1; $x < count($table_names); $x++)
 			{
-				print "<input type=\"radio\" name=\"table\" value=\"" . $table_names[$x] . "\">" . $table_names[$x];
+				// The "all" option
+				if ($x == -1)
+				{
+					print "<div class=\"custom-control custom-radio custom-control-inline\">"; // Start of the div
+					print "<input type=\"radio\" name=\"table\" value=\"all\" class=\"custom-control-input\" id=\"all\" checked>"; // The actual button with the name all in it
+					print "<label class=\"custom-control-label\" for=\"all\">all</label>"; // The label associated with all
+					print "</div>"; // The end of the div
+				}
+				// All individual table options
+				else
+				{
+					print "<div class=\"custom-control custom-radio custom-control-inline\">"; // Start of the div
+					print "<input type=\"radio\" name=\"table\" value=\"" . $table_names[$x] . "\" class=\"custom-control-input\" id=\"" . $table_names[$x] . "\">"; // The actual button with the table name in it
+					print "<label class=\"custom-control-label\" for=\"" . $table_names[$x] . "\">" . $table_names[$x] . "</label>"; // The label associated with the table name
+					print "</div>"; // The end of the div
+				}
 			}
 
 		?>
 
-		<p style="color: darkgreen">
+		<p style="color: gold">
 			Please enter all of the appropriate information to perform the operation.
 		</p>
 
 		<!-- Getting all of the necessary input to perform the operation. -->
 		<!-- This is the explanation of what to do with the textboxes that gets displayed to the user. -->
-		<p id="information_paragraph" style="color: darkgreen" hidden>
+		<p id="information_paragraph" style="color: gold" hidden>
 			NOTE: Use the right side only for values that will be updated!<br>
 			Ex: If you want to update the name of every type "station-user"<br>
 			to "worker station", you type in "station-user" in the left side<br>
@@ -511,7 +558,7 @@
 		</p>
 
 		<!-- The checkboxes that gather information on if they're searching for a specific column. Only shows up when the user has the"search" operation selected. -->
-		<p id="search_checkboxes" style="color: darkgreen" hidden>
+		<p id="search_checkboxes" style="color: gold" hidden>
 
 			<!-- Little information explaining to the user what the checkboxes are for. -->
 			If you would like to search for (a) specific column(s), please indicate which one(s). If not, leave them all blank.<br><br>
@@ -538,7 +585,7 @@
 		</p>
 
 		<!-- This simply tells the user what the asterisk is for. -->
-		<p id="required_paragraph" style="color: darkgreen">
+		<p id="required_paragraph" style="color: gold">
 			* = Ignore the asterisk for this operation
 		</p>		
 
