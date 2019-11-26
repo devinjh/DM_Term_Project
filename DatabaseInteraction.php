@@ -447,8 +447,8 @@
 <center>
 
 	<!-- Header -->
-	<h1>
-		TLC Information
+	<h1 style="color: blue">
+		Basic Database Interaction Page
 	</h1>
 	
 	<!-- Displaying the changes/information the user wanted. -->
@@ -558,34 +558,36 @@
 		Building: <input type="text" name="building"> - <input type="text" name="building_update" id="building_update_textbox" hidden><br>
 	
 		<!-- Submit button. -->
-		<br><input type="submit">
+		<br><button class="btn btn-primary mb-2" type="submit">Submit</button>
 
 	</form>
 	
 </center>
 
-<p></p>
-
-
-<!-- Button to bring up the help page. -->
-<div align="center" onclick="openHelpPage()">
-	<button> Help Page </button>
-</div>
-
-<!-- Just to separate the Help Page button from the Go to Home Page button. -->
-<br>
-
 <!-- Buttons -->
 <?php
 
-	// Button to go the Home page
-	print "<div id=\"button\" align=\"center\"><a href=" . getLocation("Home.php") . "><button>Go to Home Page</button></a></div>";
+	// Making sure everything is centered
+	print "<center>";
+
+	// Help Page button
+	print "<button class=\"btn btn-primary\" onclick=\"openHelpPage()\"> Help Page </button>";
 
 	// Making sure there's some space
-	print "<br>";
+	print "<br><br>";
 
-	// Button to go the Advanced Database Interaction page
-	print "<div id=\"button\" align=\"center\"><a href=" . getLocation("AdvancedDatabaseInteraction.php") . "><button>Go to Advanced Database Page</button></a></div>";
+	// Button to go the Home page
+	//print "<div id=\"button\" align=\"center\"><a href=" . getLocation("Home.php") . "><button>Go to Home Page</button></a></div>"; // Old
+	print "<button type=\"button\" class=\"btn btn-primary\" onclick=location.href='Home.php'>Go to Home Page</button>";
+
+	// Making sure there's some space
+	print "<br><br>";
+
+	// Button to go the Basic Database Interaction page
+	//print "<div id=\"button\" align=\"center\"><a href=" . getLocation("AdvancedDatabaseInteraction.php") . "><button>Go to Advanced Database Page</button></a></div>"; // Old
+	print "<button type=\"button\" class=\"btn btn-primary\" onclick=location.href='AdvancedDatabaseInteraction.php'>Go to Advanced Database Page</button>";
+
+	print "</center>";
 
 ?>
 
