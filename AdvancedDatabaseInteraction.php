@@ -203,13 +203,19 @@
 	
 	// This section goes through and grabs all of the variables that are defined (not including the updated ones)
 	// extension_number
-	$extension_number = $_POST["extension_number"];
-	$extension_range = $_POST["extension_range"];
+	if (isset($_POST["extension_number"]))
+	{
+		$extension_number = $_POST["extension_number"];
+	}
 	if (empty($extension_number))
 	{
 		$extension_number = 0;
 	}
 	// extension_range
+	if (isset($_POST["extension_range"]))
+	{
+		$extension_range = $_POST["extension_range"];
+	}
 	if (empty($extension_range))
 	{
 		$extension_range = 0;
@@ -622,20 +628,20 @@
 
     <center>
 
-        <h1>
+        <h1 style="color: blue">
             Advanced Database Interaction Page
         </h1>
 
         <!-- Displaying the changes/information the user wanted. -->
         <?php
 
-        // Simply call this method to do the operation and display the results (if applicable)
-        determineOperation();
+        	// Simply call this method to do the operation and display the results (if applicable)
+        	determineOperation();
 
-        // This is the form headers that gathers all the information and relaunches the page
-        print "<form action=" . getLocation("AdvancedDatabaseInteraction.php") . " method='post'>";
+        	// This is the form headers that gathers all the information and relaunches the page
+        	print "<form action=" . getLocation("AdvancedDatabaseInteraction.php") . " method='post'>";
 
-    ?>
+    	?>
 
         <!-- Figuring out what operation they would like to perform. -->
         <p>
@@ -668,31 +674,44 @@
         </p>
 
         <!-- Submit button. -->
-        <br><input type="submit">
+        <br><button class="btn btn-primary mb-2" type="submit">Submit</button>
 
         </form>
 
     </center>
 
     <!-- Button to bring up the help page. -->
-    <div align="center" onclick="openHelpPage()">
+    <!--<div align="center" onclick="openHelpPage()">
         <button> Help Page </button>
     </div>
 
     <!-- Making sure the Help Button isn't too close to the next button. -->
-    <br>
+    <br>-->
 
     <!-- Buttons -->
     <?php
 
-	// Button to go the Home page
-	print "<div id=\"button\" align=\"center\"><a href=" . getLocation("Home.php") . "><button>Go to Home Page</button></a></div>";
+	// Making sure everything is centered
+	print "<center>";
+
+	// Help Page button
+	print "<button class=\"btn btn-primary\" onclick=\"openHelpPage()\"> Help Page </button>";
 
 	// Making sure there's some space
-	print "<br>";
+	print "<br><br>";
 
-	// Button to go the Advanced Database Interaction page
-	print "<div id=\"button\" align=\"center\"><a href=" . getLocation("DatabaseInteraction.php") . "><button>Go to Basic Database Page</button></a></div>";
+	// Button to go the Home page
+	//print "<div id=\"button\" align=\"center\"><a href=" . getLocation("Home.php") . "><button>Go to Home Page</button></a></div>"; // Old
+	print "<button type=\"button\" class=\"btn btn-primary\" onclick=location.href='Home.php'>Go to Home Page</button>";
+
+	// Making sure there's some space
+	print "<br><br>";
+
+	// Button to go the Basic Database Interaction page
+	//print "<div id=\"button\" align=\"center\"><a href=" . getLocation("DatabaseInteraction.php") . "><button>Go to Basic Database Page</button></a></div>"; // Old
+	print "<button type=\"button\" class=\"btn btn-primary\" onclick=location.href='DatabaseInteraction.php'>Go to Basic Database Page</button>";
+
+	print "</center>";
 
 ?>
 
