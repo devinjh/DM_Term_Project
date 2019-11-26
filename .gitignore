@@ -6,6 +6,7 @@
 ._OperationsHelperFunctions.php
 ._QueryBuilderFunctions.php
 ._AdvancedDatabaseInteraction.php
+._AdvancedDatabaseOperations.php
 ._README.md
 
 # This file came along with bootstrap
