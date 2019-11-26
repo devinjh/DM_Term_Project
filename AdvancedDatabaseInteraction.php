@@ -23,13 +23,6 @@
 		
     <meta charset="utf-8">
     <title> Advanced Database </title>
-    <style type="text/css">
-    td,
-    th,
-    table {
-        border: thin solid black;
-    }
-    </style>
 </head>
 
 <body>
@@ -99,7 +92,6 @@
             // ADD ANYTHING ELSE THAT NEEDS TO HAPPEN
             document.getElementById("upload_information").hidden = false;
             document.getElementById("output").hidden = false;
-
         }
     }
 
@@ -202,8 +194,8 @@
     }
     </script>
 
-    <!-- Variables. -->
-    <?php
+<!-- Variables. -->
+<?php
 
     // Setting all of the variables in case they aren't defined
 	$extension_number = "DNE";
@@ -211,14 +203,16 @@
 	
 	// This section goes through and grabs all of the variables that are defined (not including the updated ones)
 	// extension_number
-	if (isset($_POST["extension_number"]))
+	$extension_number = $_POST["extension_number"];
+	$extension_range = $_POST["extension_range"];
+	if (empty($extension_number))
 	{
-		$extension_number = $_POST["extension_number"];
+		$extension_number = 0;
 	}
 	// extension_range
-	if (isset($_POST["extension_range"]))
+	if (empty($extension_range))
 	{
-		$extension_range = $_POST["extension_range"];
+		$extension_range = 0;
 	}
 
 	// Setting the variables in case they aren't defined
@@ -267,6 +261,20 @@
 	{
 		// Using the global variable $extension_number and extension_range
 		global $extension_number, $extension_range;
+
+		// Making sure $extension_number is not 0. If it is, a message is displayed to tell the user their mistake and the function stops
+		if ($extension_number == 0)
+		{
+			print "<p> Error! Please input an extension number. </p>";
+			return;
+		}
+
+		// Making sure $extension_range is not 0. If it is, a message is displayed to tell the user their mistake and the function stops
+		if ($extension_range == 0)
+		{
+			print "<p> Error! Please input an extension range. </p>";
+			return;
+		}
 
 		// Making the array that will hold all of the extnension numbers and filling it with all the used extensions
 		$used_extension_array = array();
@@ -469,6 +477,13 @@
 		// Using the global variable $extension_number
 		global $extension_number;
 
+		// Making sure $extension_number is not 0. If it is, a message is displayed to tell the user their mistake and the function stops
+		if ($extension_number == 0)
+		{
+			print "<p> Error! Please input an extension number. </p>";
+			return;
+		}
+
 		// Getting all of the table names
 		$table_names = getTableNames();
 
@@ -577,7 +592,7 @@
 			print "<tr>";
 			for ($x = 0; $x < $num_of_patterns; $x++)
 			{
-				print "<td align='center'>";
+				print "<td>";
 				// If there's still an extension to be displayed, this will be true
 				if ($i < $size_array[$x])
 				{
