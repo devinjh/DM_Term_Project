@@ -605,7 +605,7 @@
 		Building: <input type="text" name="building"> - <input type="text" name="building_update" id="building_update_textbox" hidden><br>
 		
 		<!-- Submit button. -->
-		<br><button class="btn btn-primary mb-2" type="submit">Submit</button>
+		<br><button class="btn btn-success" type="submit">Submit</button>
 
 	</form>
 	

@@ -387,7 +387,7 @@
 		?>
 
         <!-- Submit button. -->
-        <br><button class="btn btn-primary mb-2" type="submit">Submit</button>
+        <br><button class="btn btn-success" type="submit">Submit</button>
 
     </form>
 
