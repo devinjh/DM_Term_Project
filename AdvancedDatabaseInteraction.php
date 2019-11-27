@@ -243,7 +243,8 @@
 
     // Setting all of the variables in case they aren't defined
 	$extension_number = "DNE";
-	$extension_range = "DNE";
+    $extension_range = "DNE";
+    $table = "DNE";
 	
 	// This section goes through and grabs all of the variables that are defined (not including the updated ones)
 	// extension_number
@@ -263,6 +264,11 @@
 	if (empty($extension_range))
 	{
 		$extension_range = 0;
+    }
+    // table
+	if (isset($_POST["table"]))
+	{
+		$table = $_POST["table"];
 	}
 
 	// Setting the variables in case they aren't defined
@@ -272,7 +278,7 @@
 	if (isset($_POST["operation"]))
 	{
 		$operation = $_POST["operation"];
-	}
+    }
 
 ?>
 	

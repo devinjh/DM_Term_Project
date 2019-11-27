@@ -36,9 +36,66 @@
 			else if (strcmp($operation, "upload_information") == 0)
 			{
 				// Performs the upload information function
-				// TO DO
+				// This is done AdvancedDatabaseInteraction.php file
+			}
+			else if (strcmp($operation, "find_max_and_min_information") == 0)
+			{
+				// Performs the find max and min information function
+				findMaxAndMin();
 			}
 		}
+	}
+
+	function findMaxAndMin()
+	{
+		// Test
+		print "<p> In findMaxAndMin! </p>";
+
+		// Using these global variables
+		global $table;
+
+		// Getting an array of the table names
+		$table_names = getTableNames();
+
+		// If they are looking for the overall max and min
+		if (strcmp($table, "all") == 0)
+		{
+			// Goes through each of the tables
+			for ($correct_table_num = 0; $correct_table_num < count($table_names); $correct_table_num++)
+			{
+				// The transaction
+				displayOrModifyTable($table_names[$correct_table_num], "START TRANSACTION"); // Starts the transaction
+				displayOrModifyTable($table_names[$correct_table_num], "SELECT MAX(extension) FROM " . $table_names[$correct_table_num]); // Gets the max
+				displayOrModifyTable($table_names[$correct_table_num], "SELECT MIN(extension) FROM " . $table_names[$correct_table_num]); // Gets the min
+				displayOrModifyTable($table_names[$correct_table_num], "COMMIT"); // Commits the changes
+			}
+		}
+		// They are looking at an individual table for the max or min
+		else
+		{
+			// This gets the position 
+			$correct_table_num = array_search($table, $table_names);
+
+			// The table name was found
+			if ($correct_table_num != -1)
+			{
+				// The transaction
+				displayOrModifyTable($table_names[$correct_table_num], "START TRANSACTION"); // Starts the transaction
+				displayOrModifyTable($table_names[$correct_table_num], "SELECT MAX(extension) FROM " . $table_names[$correct_table_num]); // Gets the max
+				displayOrModifyTable($table_names[$correct_table_num], "SELECT MIN(extension) FROM " . $table_names[$correct_table_num]); // Gets the min
+				displayOrModifyTable($table_names[$correct_table_num], "COMMIT"); // Commits the changes
+			}
+			// The table name was not found
+			else
+			{
+				// Tell the user there was an error and stop the function
+				print "<p> Error. The table name given was not found. </p>";
+				return;
+			}
+		}
+		
+		// Test
+		print "<p> Made it to the end of findMaxandMin! </p>";
 	}
 
 	// Function that returns available extensions that are close to the given extension
