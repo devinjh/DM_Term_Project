@@ -465,7 +465,7 @@
 
 	<!-- Header -->
 	<h1 style="color: gold">
-		Basic Database Interaction Page
+		Basic Database
 	</h1>
 	
 	<!-- Displaying the changes/information the user wanted. -->

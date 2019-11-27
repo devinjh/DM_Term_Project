@@ -36,7 +36,8 @@
     const OperationEnum = Object.freeze({
         FindClose: 0,
         FindPattern: 1,
-        UploadInformation: 2
+        UploadInformation: 2,
+        FindMaxAndMin: 3
     });
 
     function openHelpPage() {
@@ -57,17 +58,15 @@
 
     function updateInformation(e) {
         // If the selected function is not upload information
-        if (e != OperationEnum.UploadInformation) {
-            // Make the information textbox visible so the user can enter in information
-            document.getElementById("information_textbox").hidden = false;
-
+        if (e == OperationEnum.FindClose || e == OperationEnum.FindPattern) {
             // The operation is to find a close extension
             if (e == OperationEnum.FindClose) {
                 // The range is necessary since they want a close extension
                 document.getElementById("extension_range_textbox").hidden = false;
             }
             // The operation is to find a pattern matching the extension given
-            else {
+            else
+            {
                 // Since there's nothing needed about the range, make that hidden too
                 document.getElementById("extension_range_textbox").hidden = true;
             }
@@ -75,6 +74,37 @@
             document.getElementById("upload_information").hidden = true;
             document.getElementById("output").hidden = true;
             document.getElementById("required_paragraph").hidden = false;
+
+            // Make the information textbox visible so the user can enter in information
+            document.getElementById("information_textbox").hidden = false;
+        }
+        // If the selection is find the max and min extension
+        else if (e == OperationEnum.FindMaxAndMin)
+        {
+            // Make the information textbox hidden since it doesn't have anything to do with uploading information
+            document.getElementById("information_textbox").hidden = true;
+
+            // Since there's nothing needed about the range, make that hidden too
+            document.getElementById("extension_range_textbox").hidden = true;
+
+            // Making all of the upload information stuff hidden
+            document.getElementById("upload_information").hidden = true;
+            document.getElementById("output").hidden = true;
+            document.getElementById("required_paragraph").hidden = true;
+
+            // Making sure all of the information regarding the tables is visible
+            document.getElementById("table_radio_buttons_-1").hidden = false;
+            document.getElementById("br1").hidden = false;
+            document.getElementById("br2").hidden = false;
+            try {
+                var i;
+                for (i = 0; i < Number.MAX_SAFE_INTEGER; i++)
+                {
+                    document.getElementById("table_radio_buttons_" + i.toString()).hidden = false;
+                }
+            }catch (err) {
+                // do nothing with it since it's just a mechanism to stop the loop (since we don't know how many tables the user has and don't have a way to figure it out)
+            }
         }
         // If the selected function is upload information
         else {
@@ -88,6 +118,24 @@
             document.getElementById("upload_information").hidden = false;
             document.getElementById("output").hidden = false;
             document.getElementById("required_paragraph").hidden = true;
+        }
+
+        // This just makes the table radio buttons hidden if they don't have "find the max and min extension" selected
+        if (e != OperationEnum.FindMaxAndMin)
+        {
+            // Making sure all of the information regarding the tables is invisible
+            document.getElementById("table_radio_buttons_-1").hidden = true;
+            document.getElementById("br1").hidden = true;
+            document.getElementById("br2").hidden = true;
+            try {
+                var i;
+                for (i = 0; i < Number.MAX_SAFE_INTEGER; i++)
+                {
+                    document.getElementById("table_radio_buttons_" + i.toString()).hidden = true;
+                }
+            }catch (err) {
+                // do nothing with it since it's just a mechanism to stop the loop (since we don't know how many tables the user has and don't have a way to figure it out)
+            }
         }
     }
 
@@ -247,7 +295,7 @@
     </nav>
 
     <h1 style="color: gold">
-        Advanced Database Interaction Page
+        Advanced Database
     </h1>
 
     <!-- Displaying the changes/information the user wanted. -->
@@ -269,17 +317,19 @@
         <!-- Radio buttons for getting the operation. -->
 		<div class="custom-control custom-radio custom-control-inline">
 			<input type="radio" name="operation" value="find_close" onclick="updateInformation(OperationEnum.FindClose)" id="find_close_operation" class="custom-control-input" checked>
-				<label class="custom-control-label" for="find_close_operation">Find a Close Extension</label>
+			<label class="custom-control-label" for="find_close_operation">Find a Close Extension</label>
 		</div>
 		<div class="custom-control custom-radio custom-control-inline">
-			<input type="radio" name="operation" value="find_pattern"
-            onclick="updateInformation(OperationEnum.FindPattern)" id="find_pattern_operation" class="custom-control-input">
-				<label class="custom-control-label" for="find_pattern_operation">Find an Extension Matching a Pattern</label>
+			<input type="radio" name="operation" value="find_pattern" onclick="updateInformation(OperationEnum.FindPattern)" id="find_pattern_operation" class="custom-control-input">
+			<label class="custom-control-label" for="find_pattern_operation">Find an Extension Matching a Pattern</label>
 		</div>
 		<div class="custom-control custom-radio custom-control-inline">
-			<input type="radio" name="operation" value="upload_information"
-            onclick="updateInformation(OperationEnum.UploadInformation)" id="upload_operation" class="custom-control-input">
-				<label class="custom-control-label" for="upload_operation">Upload Information</label>
+			<input type="radio" name="operation" value="upload_information" onclick="updateInformation(OperationEnum.UploadInformation)" id="upload_operation" class="custom-control-input">
+			<label class="custom-control-label" for="upload_operation">Upload Information</label>
+		</div>
+        <div class="custom-control custom-radio custom-control-inline">
+			<input type="radio" name="operation" value="find_max_and_min_information" onclick="updateInformation(OperationEnum.FindMaxAndMin)" id="find_max_and_min_operation" class="custom-control-input">
+			<label class="custom-control-label" for="find_max_and_min_operation">Find the Max and Min Extension</label>
 		</div>
 
         <!-- Making sure the next attribute isn't too close to the radio buttons. -->
@@ -290,18 +340,51 @@
 		</p>
 
         <!-- The textboxes that gather all of the appropriate information. -->
+        <!-- extension_number -->
         <p id="information_textbox">
             Extension*: <input type="text" name="extension_number">
         </p>
-
+        <!-- extension_range -->
         <p id="extension_range_textbox">
             Range*: <input type="text" name="extension_range">
         </p>
-
+        <!-- upload_information -->
         <p id="upload_information" hidden="true">
             <input type="file" id="myFile">
             <button type="button" onclick="uploadData()"> Upload! </button>
         </p>
+        <!-- table names -->
+        <?php
+
+			// Getting all of the table names into an array
+			$table_names = getTableNames();
+
+			// Going through the array and displaying all of the table nams along with the "all" option
+			for ($x = -1; $x < count($table_names); $x++)
+			{
+				// The "all" option
+				if ($x == -1)
+				{
+					print "<div class=\"custom-control custom-radio custom-control-inline\" id=\"table_radio_buttons_-1\" hidden>"; // Start of the div
+					print "<input type=\"radio\" name=\"table\" value=\"all\" class=\"custom-control-input\" id=\"all\" checked>"; // The actual button with the name all in it
+					print "<label class=\"custom-control-label\" for=\"all\">all</label>"; // The label associated with all
+					print "</div>"; // The end of the div
+				}
+				// All individual table options
+				else
+				{
+					print "<div class=\"custom-control custom-radio custom-control-inline\" id=\"table_radio_buttons_" . $x . "\" hidden>"; // Start of the div
+					print "<input type=\"radio\" name=\"table\" value=\"" . $table_names[$x] . "\" class=\"custom-control-input\" id=\"" . $table_names[$x] . "\">"; // The actual button with the table name in it
+					print "<label class=\"custom-control-label\" for=\"" . $table_names[$x] . "\">" . $table_names[$x] . "</label>"; // The label associated with the table name
+					print "</div>"; // The end of the div
+				}
+            }
+            
+            // Keeps it looking nice
+            print "<br id=\"br1\" hidden>";
+            print "<br id=\"br2\" hidden>";
+
+		?>
 
         <!-- Submit button. -->
         <br><button class="btn btn-primary mb-2" type="submit">Submit</button>
