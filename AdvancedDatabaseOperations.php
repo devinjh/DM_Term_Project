@@ -48,9 +48,6 @@
 
 	function findMaxAndMin()
 	{
-		// Test
-		print "<p> In findMaxAndMin! </p>";
-
 		// Using these global variables
 		global $table;
 
@@ -93,9 +90,6 @@
 				return;
 			}
 		}
-		
-		// Test
-		print "<p> Made it to the end of findMaxandMin! </p>";
 	}
 
 	// Function that returns available extensions that are close to the given extension
